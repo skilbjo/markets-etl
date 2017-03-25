@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+set -eou pipefail
+
+docker run --name postgres -p 5432:5432 --detach kiasaki/alpine-postgres:9.5

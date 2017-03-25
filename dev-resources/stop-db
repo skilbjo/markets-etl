@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+set -eou pipefail
+
+docker ps -a --format 'table {{.ID}}\t{{.Image}}\t{{.Names}}' | \
+  grep 'postgres' | \
+  awk '{print $1}' | \
+  xargs docker rm --force

@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+set -eou pipefail
+
+user=$(whoami)
+dir="/home/${user}/deploy/app"
+app=$(basename $(pwd) | sed -e 's/.git//')
+deploy_dir="$dir/$app"
+cron_dir="/etc/cron.d"
+
+GIT_WORK_TREE="$deploy_dir" git checkout -f
+
+cd "$deploy_dir"
+
+## build steps here ##
+case "$user" in
+  (skilbjo) sudo cp deploy/tasks/crontab "$cron_dir/$app" ;;
+  (pi) sudo cp deploy/tasks/crontab-rspi "$cron_dir/$app" ;;
+esac
+
+echo "all done"
+
+exit 0
