@@ -5,6 +5,7 @@
             [clojure.pprint :as p]
             [clojure.string :as string]
             [markets-etl.api :as api]
+            [jobs.fixture :as f]
             [markets-etl.sql :as sql]
             [markets-etl.util :as util])
   (:gen-class))
@@ -13,19 +14,19 @@
 
 (def datasets
   '({:dataset "wiki"
-     :ticker ["FB" "SNAP"]}))
+     :ticker ["FB"]}))
 
 (defn -main [& args]
   (let [flatten-ticker  (fn [dataset ticker]
                           {:dataset dataset
-                           :data    (-> (api/get-quandl-api dataset ticker)
-                                        ;(api/http-get))})
-                                        str)})
+                           :data    (-> (api/query-quandl dataset ticker)
+                                        json/read-str)})
         get-quandl-data (fn [{:keys [dataset ticker] :as m}]
                           (map #(flatten-ticker dataset %) ticker))
         ;_               (p/pprint (get-quandl-data (first datasets)))
                          ]
-    ;nil))
-    (->> (map get-quandl-data datasets)
+    (->> f/fixture
          util/printit
+    ;(->> (map get-quandl-data datasets)
+         ;util/printit
          )))

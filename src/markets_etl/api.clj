@@ -6,25 +6,23 @@
     [environ.core :refer [env]]
     [markets-etl.util :as util]))
 
-(def quandl-api
+(def ^:private quandl-api
   {:protocol  "https://"
    :url       "www.quandl.com/api/v3/datasets/"
-   :series    {:wiki   "WIKI/"
-               :stocks "stocks"}
-   :format    "data.json"
-   :api-key   (str "?api_key=" (env :quandl-api-key))})
+   :format    "data.json"})
 
-(defn get-quandl-api [series ticker]
-  (str (:protocol quandl-api)
-       (:url quandl-api)
-       (str series "/")
-       (str ticker "/")
-       (:format quandl-api)
-       (:api-key quandl-api)))
-
-(defn http-get [uri]
-  (println uri)
-  (let [response        (http/get uri)]
+(defn- http-get [uri]
+  (let [response (http/get uri
+                           {:query-params {"api_key" (env :quandl-api-key)}})]
     (if (= 200 (:status response))
       (:body response)
       (:status response))))
+
+(defn query-quandl [dataset ticker]
+  (-> (str (:protocol quandl-api)
+           (:url quandl-api)
+           (str dataset "/")
+           (str ticker "/")
+           (:format quandl-api))
+      http-get))
+
