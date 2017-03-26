@@ -1,4 +1,4 @@
-(ns market-etl.util
+(ns markets-etl.util
   (:require
    [clojure.string :as s]))
 
@@ -19,9 +19,9 @@
 (defn sleep [ms]
   (Thread/sleep ms))
 
-;(defn printit [x] ; This fails in circleCI tests but is helpful for development
-  ;(clojure.pprint/pprint x)
-  ;x)
+(defn printit [x] ; This fails in circleCI tests but is helpful for development
+  (clojure.pprint/pprint x)
+  x)
 
 (defn string->decimal [n]
   (try

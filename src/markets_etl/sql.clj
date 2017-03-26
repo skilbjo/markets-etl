@@ -1,8 +1,8 @@
-(ns market-etl.sql
+(ns markets-etl.sql
   (:require
    [clojure.java.jdbc :as jdbc]
    [environ.core :refer [env]]
-   [market-etl.util :as util]
+   [markets-etl.util :as util]
    [clj-time.jdbc]
    [clojure.string :as string])
   (:import

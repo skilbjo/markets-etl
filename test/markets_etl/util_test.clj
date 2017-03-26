@@ -1,6 +1,6 @@
-(ns market-etl.util-test
+(ns markets-etl.util-test
   (:require [clojure.test :refer :all]
-            [market-etl.util :as util])
+            [markets-etl.util :as util])
   (:gen-class))
 
 (deftest string->decimal-test
