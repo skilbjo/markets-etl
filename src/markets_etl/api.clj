@@ -35,8 +35,8 @@
       (:status response))))
 
 (defn- request [url params]
-  (let [_           (util/printit (str url " " params))
-        auth-params (merge {:api_key (env :quandl-api-key)} params) ; Allow custom value.
+  (let [auth-params (merge {:api_key (env :quandl-api-key)} params) ; Allow custom value.
+        _   (println "auth-params are " auth-params)
         {:keys [status headers body error]} (http/get url {:query-params auth-params})]
     (if error
         (println "Failed request, exception: " error)
@@ -44,14 +44,14 @@
 
 (defn query-quandl
   [dataset ticker & params]
-  {:pre [(every? #(doseq [[k v] %]
-                    (util/allowed? k v)) params)]}
+  {:pre [(every? true? (util/allowed? params))]}
   (let [url                         (str (:protocol quandl-api)
                                          (:url quandl-api)
                                          (str dataset "/")
                                          (str ticker "/")
                                          (:format quandl-api))
-        response                    (request url params)
+        _                           (println params)
+        response                    (request url (first params))
         {:keys [status body data]}  response]
     (if (= 200 status)
       (println "Failed request, exception: " status))

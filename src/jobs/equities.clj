@@ -19,7 +19,9 @@
 (defn -main [& args]
   (let [flatten-ticker  (fn [dataset ticker]
                           {:dataset dataset
-                           :data    (-> (api/query-quandl dataset ticker {:limit 5})
+                           :data    (-> (api/query-quandl dataset
+                                                          ticker
+                                                          {:limit 5})
                                         util/printit
                                         json/read-str)})
         get-quandl-data (fn [{:keys [dataset ticker] :as m}]

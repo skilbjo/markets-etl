@@ -43,26 +43,16 @@
                         :end_date     date-time?})
 
 (defn allowed? [m]
-  (doseq [[k v] m]
-    (println k " & " v)
-    (println ((allowed k) v))
-    ((allowed k) v))
-  ;(println k)
-  ;(println v))
-  ;(let [k (keys m)]
-    ;(println k)
-    ;;(map #(allowed %)  k)
-    ;(println ((allowed (first k))
-              ;((first k) m)))
-    ;((allowed (first k))
-              ;((first k) m))))
-
-    ;(map allowed k))
-
-    ;(println (allowed k)))
-    ;(println (str "allowed? " k))
-    ;(allowed k))
-  ;((allowed k) m))
+  (->> m
+       first
+       (map (fn [[k v]]
+              ((allowed k) v)))))
+         ;((allowed k) v)))))
+  ;(println m)
+  ;(for [[k v] m]
+    ;(println k " & " v)
+    ;(println ((allowed k) v))
+    ;((allowed k) v)))
 
 (defn sequentialize [x]
   (if (sequential? x)
