@@ -21,8 +21,11 @@
                           {:dataset dataset
                            :data    (-> (api/query-quandl dataset
                                                           ticker
-                                                          {:limit 5})
-                                        util/printit
+                                                          {:limit 1
+                                                           :start_date "2017-01-04"
+                                                           :end_date "2017-01-05"})
+                                        ;)})
+                                        ;util/printit)})
                                         json/read-str)})
         get-quandl-data (fn [{:keys [dataset ticker] :as m}]
                           (map #(flatten-ticker dataset %) ticker))
@@ -31,5 +34,6 @@
     ;(->> f/fixture
          ;util/printit
     (->> (map get-quandl-data datasets)
+         flatten
          util/printit
          )))

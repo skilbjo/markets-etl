@@ -47,12 +47,6 @@
        first
        (map (fn [[k v]]
               ((allowed k) v)))))
-         ;((allowed k) v)))))
-  ;(println m)
-  ;(for [[k v] m]
-    ;(println k " & " v)
-    ;(println ((allowed k) v))
-    ;((allowed k) v)))
 
 (defn sequentialize [x]
   (if (sequential? x)
