@@ -2,6 +2,16 @@
   (:require
    [clojure.string :as s]))
 
+(defn date-time? [d] (or (string? d) (instance? org.joda.time.DateTime d)))
+(def ^:private allowed {:collapse     #{"none" "daily" "weekly" "monthly" "quarterly" "annual"}
+                        :transform    #{"none" "rdiff" "diff" "cumul" "normalize"}
+                        :order        #{"asc" "desc"}
+                        :rows         integer?
+                        :limit        integer?
+                        :column_index integer?
+                        :start_date   date-time?
+                        :end_date     date-time?})
+
 (defn dasherize [s]
   (s/replace s #"_" "-"))
 
@@ -11,17 +21,17 @@
 (defn random-uuid []
   (str (java.util.UUID/randomUUID)))
 
-(defn get-property [p]
-  (System/getProperty p))
-
-(def temp-dir (get-property "java.io.tmpdir"))
-
 (defn sleep [ms]
   (Thread/sleep ms))
 
 (defn printit [x] ; This fails in circleCI tests but is helpful for development
   (clojure.pprint/pprint x)
   x)
+
+(defn keywordize [s]
+  (-> s
+      (s/replace #"\s" "-")
+      s/lower-case keyword))
 
 (defn string->decimal [n]
   (try
@@ -30,17 +40,6 @@
       n)
     (catch NullPointerException e
       n)))
-
-(defn date-time? [d] (or (string? d) (instance? org.joda.time.DateTime d)))
-
-(def ^:private allowed {:collapse     #{"none" "daily" "weekly" "monthly" "quarterly" "annual"}
-                        :transform    #{"none" "rdiff" "diff" "cumul" "normalize"}
-                        :order        #{"asc" "desc"}
-                        :rows         integer?
-                        :limit        integer?
-                        :column_index integer?
-                        :start_date   date-time?
-                        :end_date     date-time?})
 
 (defn allowed? [m]
   (->> m
