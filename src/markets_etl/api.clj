@@ -17,11 +17,13 @@
 (defn date-time? [d] (or (string? d) (instance? org.joda.time.DateTime d)))
 
 (defn- clean-dataset [d]
-  (let [column-names    (get d "column_names")
+  (let [column-names    (map util/keywordize (get d "column_names"))
         data            (get d "data")]
-  (p/pprint column-names)
-  (p/pprint data)
-  (zipmap (map util/keywordize column-names)
+  ;(p/pprint column-names)
+  ;(p/pprint data)
+  ;(map (fn [seq]
+         ;(zipmap column-names seq)))))
+  (zipmap column-names
           (apply map vector data))))
           ;:date
           ;#(map format/parse %)))
