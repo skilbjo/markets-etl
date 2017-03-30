@@ -14,26 +14,39 @@
 
 (def datasets
   '({:dataset "wiki"
-     :ticker ["FB"]}))
+     :ticker ["FB" "AMZN" "GOOG"]}))
 
 (defn -main [& args]
   (let [flatten-ticker  (fn [dataset ticker]
                           {:dataset dataset
+                           :ticker  ticker
                            :data    (-> (api/query-quandl dataset
                                                           ticker
-                                                          {:limit 10
+                                                          {:limit 2
                                                            :start_date "2017-01-04"
-                                                           :end_date "2017-01-05"})
-                                        ;)})
-                                        util/printit)})
+                                                           :end_date "2017-01-05"}))})
+                                        ;util/printit)})
                                         ;json/read-str)})
         get-quandl-data (fn [{:keys [dataset ticker] :as m}]
                           (map #(flatten-ticker dataset %) ticker))
-        ;_               (p/pprint (get-quandl-data (first datasets)))
+        clean-dataset   (fn [{:keys [dataset ticker data] :as response}]
+                          (let [column-names    (map util/keywordize
+                                                     (-> data
+                                                         (get "dataset_data")
+                                                         (get "column_names")))
+                                data            (-> data
+                                                    (get "dataset_data")
+                                                    (get "data"))]
+                            {:dataset dataset
+                             :ticker  ticker
+                             :data    (map #(zipmap column-names %) data)}))
                          ]
-    ;(->> f/fixture
+    ;(->> f/fixture                         ; Testing
+         ;flatten
+         ;(map clean-dataset)
          ;util/printit
-    (->> (map get-quandl-data datasets)
+    (->> (map get-quandl-data datasets)    ; Live call
          flatten
+         (map clean-dataset)
          util/printit
          )))

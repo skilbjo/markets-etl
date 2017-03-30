@@ -40,9 +40,12 @@
       (:status response))))
 
 (defn- request [url params]
-  (let [auth-params (merge {:api_key (env :quandl-api-key)} params) ; Allow custom value.
-        response (http/get url {:query-params auth-params})
-        {:keys [status headers body error]} (http/get url {:query-params auth-params})]
+  (let [auth-params                         (merge {:api_key (env :quandl-api-key)}
+                                                   params)
+        response                            (http/get url
+                                                      {:query-params auth-params})
+        {:keys [status headers body error]} (http/get url
+                                                      {:query-params auth-params})]
     {:status status :body body}))
 
 (defn query-quandl
@@ -58,9 +61,10 @@
         ;_        (p/pprint response)
         {:keys [status body]}  response]
     (if (= 200 status)
-      (clean-dataset (-> body
-                         json/read-str
-                         (get "dataset_data")))
+      (-> body
+        json/read-str)
+        ;util/printit)
+        ;(get "dataset_data"))
       (println "Failed request, exception: " status))))
   ;(-> (str (:protocol quandl-api)
            ;(:url quandl-api)
