@@ -1,6 +1,7 @@
 (ns markets-etl.util
   (:require
-   [clojure.string :as s]))
+   [clojure.pprint :as pprint]
+   [clojure.string :as string]))
 
 (defn date-time? [d] (or (string? d) (instance? org.joda.time.DateTime d)))
 (def ^:private allowed {:collapse     #{"none" "daily" "weekly" "monthly" "quarterly" "annual"}
@@ -13,10 +14,10 @@
                         :end_date     date-time?})
 
 (defn dasherize [s]
-  (s/replace s #"_" "-"))
+  (string/replace s #"_" "-"))
 
 (defn underscoreize [s]
-  (s/replace s #"-" "_"))
+  (string/replace s #"-" "_"))
 
 (defn random-uuid []
   (str (java.util.UUID/randomUUID)))
@@ -24,14 +25,18 @@
 (defn sleep [ms]
   (Thread/sleep ms))
 
+(defn print-and-die [x] ; This fails in circleCI tests but is helpful for development
+  (pprint/pprint x)
+  (System/exit 0))
+
 (defn printit [x] ; This fails in circleCI tests but is helpful for development
-  (clojure.pprint/pprint x)
+  (pprint/pprint x)
   x)
 
 (defn keywordize [s]
   (-> s
-      (s/replace #"\s" "-")
-      s/lower-case keyword))
+      (string/replace #"\s" "-")
+      string/lower-case keyword))
 
 (defn string->decimal [n]
   (try
@@ -54,5 +59,5 @@
 
 (defn multi-line-string [& lines]
   (->> (map sequentialize lines)
-       (map s/join)
-       (s/join "\n")))
+       (map string/join)
+       (string/join "\n")))

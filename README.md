@@ -1,3 +1,5 @@
 # markets
 
-lein trampoline run -m jobs.equities
+## Run manually
+
+    lein trampoline run -m jobs.equities

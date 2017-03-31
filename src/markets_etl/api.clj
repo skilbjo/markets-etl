@@ -1,7 +1,6 @@
 (ns markets-etl.api
   (:require
     [clj-http.client :as http]
-    [clj-http.client :as http]
     [clj-time.format :as format]
     [clojure.data.json :as json]
     [clojure.pprint :as p]
@@ -13,24 +12,6 @@
   {:protocol  "https://"
    :url       "www.quandl.com/api/v3/datasets/"
    :format    "data.json"})
-
-(defn date-time? [d] (or (string? d) (instance? org.joda.time.DateTime d)))
-
-(defn- clean-dataset [d]
-  (let [column-names    (map util/keywordize (get d "column_names"))
-        data            (get d "data")]
-  ;(p/pprint column-names)
-  ;(p/pprint data)
-  ;(map (fn [seq]
-         ;(zipmap column-names seq)))))
-  (zipmap column-names
-          (apply map vector data))))
-          ;:date
-          ;#(map format/parse %)))
-  ;(update (zipmap (map util/keywordize column-names)
-                  ;(apply map vector data)))
-          ;:date
-          ;#(map format/parse %)))
 
 (defn- http-get [uri]
   (let [response (http/get uri
@@ -58,18 +39,8 @@
                       (str ticker "/")
                       (:format quandl-api))
         response (request url params)
-        ;_        (p/pprint response)
         {:keys [status body]}  response]
     (if (= 200 status)
       (-> body
         json/read-str)
-        ;util/printit)
-        ;(get "dataset_data"))
       (println "Failed request, exception: " status))))
-  ;(-> (str (:protocol quandl-api)
-           ;(:url quandl-api)
-           ;(str dataset "/")
-           ;(str ticker "/")
-           ;(:format quandl-api))
-      ;http-get))
-

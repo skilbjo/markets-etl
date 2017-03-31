@@ -1,9 +1,6 @@
 (ns jobs.equities
-  (:require [clj-time.coerce :as coerce]
-            [clj-time.core :as time]
-            [clojure.data.json :as json]
+  (:require [clj-time.core :as time]
             [clojure.pprint :as p]
-            [clojure.string :as string]
             [markets-etl.api :as api]
             [jobs.fixture :as f]
             [markets-etl.sql :as sql]
@@ -16,17 +13,21 @@
   '({:dataset "wiki"
      :ticker ["FB" "AMZN" "GOOG"]}))
 
+(def query-params
+  {:limit 2
+   :start_date "2017-01-01"
+   :end_date now-utc})
+
 (defn -main [& args]
   (let [flatten-ticker  (fn [dataset ticker]
                           {:dataset dataset
                            :ticker  ticker
                            :data    (-> (api/query-quandl dataset
                                                           ticker
-                                                          {:limit 2
-                                                           :start_date "2017-01-04"
-                                                           :end_date "2017-01-05"}))})
-                                        ;util/printit)})
-                                        ;json/read-str)})
+                                                          query-params))})
+                                                          ;{:limit 2
+                                                           ;:start_date "2017-01-04"
+                                                           ;:end_date "2017-01-05"}))})
         get-quandl-data (fn [{:keys [dataset ticker] :as m}]
                           (map #(flatten-ticker dataset %) ticker))
         clean-dataset   (fn [{:keys [dataset ticker data] :as response}]
@@ -40,13 +41,20 @@
                             {:dataset dataset
                              :ticker  ticker
                              :data    (map #(zipmap column-names %) data)}))
-                         ]
-    ;(->> f/fixture                         ; Testing
+        prepare-row     (fn [{:keys [dataset ticker data] :as m}]
+                            (map #(assoc %
+                                         :dataset dataset
+                                         :ticker ticker
+                                         ) data))]
+    ;(->> f/fixture-multi                    ; Testing
          ;flatten
          ;(map clean-dataset)
+         ;(map prepare-row)
          ;util/printit
     (->> (map get-quandl-data datasets)    ; Live call
          flatten
          (map clean-dataset)
+         (map prepare-row)
          util/printit
+         (sql/insert-dw-multi! (sql/get-dw-conn) :dw.equities)
          )))

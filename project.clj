@@ -6,7 +6,7 @@
                  [environ "1.1.0"]
                  [org.clojure/data.json "0.2.6"]
                  [org.clojure/java.jdbc "0.5.8"]
-                 [org.postgresql/postgresql "9.4.1209"]]
+                 [org.postgresql/postgresql "42.0.0"]]
   :plugins [[lein-environ "1.1.0"]]
   :target-path "target/%s"
   ;:aot :all
