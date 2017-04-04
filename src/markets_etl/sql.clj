@@ -14,9 +14,7 @@
 (def internalize-map-identifier (comp keyword string/lower-case util/dasherize))
 
 (def query-dw jdbc/query)
-(defn insert-dw-multi! [t-con table rows]
-  (jdbc/insert-multi! t-con table rows))
+(def insert-dw-multi! jdbc/insert-multi!)
 
 (defn get-dw-conn []
   {:connection-uri (env :db-jdbc-uri)})
-

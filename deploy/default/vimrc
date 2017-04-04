@@ -1,6 +1,15 @@
 " == settings.vim ===============================================
 
 " -- general ----------------------------------------------------
+set number
+set nowrap
+
+set tabstop=2
+set shiftwidth=2
+set softtabstop=2
+set smarttab
+set expandtab
+
 scriptencoding utf-8
 set encoding=utf-8
 

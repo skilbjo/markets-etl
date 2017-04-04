@@ -55,6 +55,7 @@
          flatten
          (map clean-dataset)
          (map prepare-row)
+         flatten
          util/printit
          (sql/insert-dw-multi! (sql/get-dw-conn) :dw.equities)
          )))
