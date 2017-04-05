@@ -34,22 +34,29 @@
                           (let [column-names    (map util/keywordize
                                                      (-> data
                                                          (get "dataset_data")
-                                                         (get "column_names")))
+                                                         (get "column_names")
+                                                         util/postgreserize))
                                 data            (-> data
                                                     (get "dataset_data")
                                                     (get "data"))]
+                            ;(println column-names)
                             {:dataset dataset
                              :ticker  ticker
                              :data    (map #(zipmap column-names %) data)}))
         prepare-row     (fn [{:keys [dataset ticker data] :as m}]
-                            (map #(assoc %
-                                         :dataset dataset
-                                         :ticker ticker
-                                         ) data))]
+                            (->> data
+                                 ;(map (fn [[k v]]
+                                        ;(postgreserize k)))
+                                 (map #(assoc %
+                                              :dataset dataset
+                                              :ticker ticker)
+                                      )))]
     ;(->> f/fixture-multi                    ; Testing
          ;flatten
          ;(map clean-dataset)
+         ;;util/printit
          ;(map prepare-row)
+         ;flatten
          ;util/printit
     (->> (map get-quandl-data datasets)    ; Live call
          flatten

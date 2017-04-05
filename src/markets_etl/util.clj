@@ -19,17 +19,24 @@
 (defn underscoreize [s]
   (string/replace s #"-" "_"))
 
+(defn no-doterize [s]
+  (string/replace s #"." ""))
+
+(defn postgreserize [s]
+  (no-doterize s))
+  ;(comp underscoreize no-doterize s))
+
 (defn random-uuid []
   (str (java.util.UUID/randomUUID)))
 
 (defn sleep [ms]
   (Thread/sleep ms))
 
-(defn print-and-die [x] ; This fails in circleCI tests but is helpful for development
+(defn print-and-die [x]
   (pprint/pprint x)
   (System/exit 0))
 
-(defn printit [x] ; This fails in circleCI tests but is helpful for development
+(defn printit [x]
   (pprint/pprint x)
   x)
 
