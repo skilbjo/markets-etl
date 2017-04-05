@@ -12,6 +12,16 @@
                         :column_index integer?
                         :start_date   date-time?
                         :end_date     date-time?})
+(defn print-and-die [x]
+  (pprint/pprint x)
+  (System/exit 0))
+
+(defn just-die [x]
+  (System/exit 0))
+
+(defn printit [x]
+  (pprint/pprint x)
+  x)
 
 (defn dasherize [s]
   (string/replace s #"_" "-"))
@@ -23,22 +33,14 @@
   (string/replace s #"." ""))
 
 (defn postgreserize [s]
-  (no-doterize s))
-  ;(comp underscoreize no-doterize s))
+  (printit s)
+  (comp underscoreize no-doterize s))
 
 (defn random-uuid []
   (str (java.util.UUID/randomUUID)))
 
 (defn sleep [ms]
   (Thread/sleep ms))
-
-(defn print-and-die [x]
-  (pprint/pprint x)
-  (System/exit 0))
-
-(defn printit [x]
-  (pprint/pprint x)
-  x)
 
 (defn keywordize [s]
   (-> s

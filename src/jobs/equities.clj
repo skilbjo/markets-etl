@@ -25,17 +25,13 @@
                            :data    (-> (api/query-quandl dataset
                                                           ticker
                                                           query-params))})
-                                                          ;{:limit 2
-                                                           ;:start_date "2017-01-04"
-                                                           ;:end_date "2017-01-05"}))})
         get-quandl-data (fn [{:keys [dataset ticker] :as m}]
                           (map #(flatten-ticker dataset %) ticker))
         clean-dataset   (fn [{:keys [dataset ticker data] :as response}]
                           (let [column-names    (map util/keywordize
                                                      (-> data
                                                          (get "dataset_data")
-                                                         (get "column_names")
-                                                         util/postgreserize))
+                                                         (get "column_names")))
                                 data            (-> data
                                                     (get "dataset_data")
                                                     (get "data"))]
@@ -45,8 +41,13 @@
                              :data    (map #(zipmap column-names %) data)}))
         prepare-row     (fn [{:keys [dataset ticker data] :as m}]
                             (->> data
-                                 ;(map (fn [[k v]]
-                                        ;(postgreserize k)))
+                                 first
+                                 ;(map postgres-cols)
+                                 (map (fn [[k v]]
+                                        (println "printing my k v")
+                                        (println k)
+                                        (println v)
+                                        {k v}))
                                  (map #(assoc %
                                               :dataset dataset
                                               :ticker ticker)
@@ -61,8 +62,10 @@
     (->> (map get-quandl-data datasets)    ; Live call
          flatten
          (map clean-dataset)
+         ;util/printit
          (map prepare-row)
-         flatten
-         util/printit
+         ;util/just-die
+         util/print-and-die
+         ;util/printit
          (sql/insert-dw-multi! (sql/get-dw-conn) :dw.equities)
          )))
