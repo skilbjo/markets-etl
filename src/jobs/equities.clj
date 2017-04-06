@@ -35,37 +35,39 @@
                                 data            (-> data
                                                     (get "dataset_data")
                                                     (get "data"))]
-                            ;(println column-names)
                             {:dataset dataset
                              :ticker  ticker
                              :data    (map #(zipmap column-names %) data)}))
+        map-kv           (fn [f coll]
+                          (reduce-kv (fn [m k v]
+                                       (assoc m (f k) v)) {} coll))
+        mapp-kv         (fn [f coll]
+                          (map #(map-kv f %) coll))
+        ;map-kv          (fn [f coll]
+                          ;(reduce-kv (fn [m k v] (assoc m k (f v))) (empty coll) coll))
         prepare-row     (fn [{:keys [dataset ticker data] :as m}]
                             (->> data
-                                 first
-                                 ;(map postgres-cols)
-                                 (map (fn [[k v]]
-                                        (println "printing my k v")
-                                        (println k)
-                                        (println v)
-                                        {k v}))
+                                 (mapp-kv util/postgreserize)
+                                ;(reduce-kv (fn [[k v]]
+                                             ;{k v}) {})
+                                 ;(map (fn [m]
+                                        ;(reduce-kv (fn [[k v]]
+                                                     ;{k v}) {} m)))
+                                        ;{k v}))
                                  (map #(assoc %
                                               :dataset dataset
                                               :ticker ticker)
                                       )))]
-    ;(->> f/fixture-multi                    ; Testing
-         ;flatten
-         ;(map clean-dataset)
-         ;;util/printit
-         ;(map prepare-row)
-         ;flatten
-         ;util/printit
-    (->> (map get-quandl-data datasets)    ; Live call
+    (->> f/fixture-multi                    ; Testing
          flatten
          (map clean-dataset)
-         ;util/printit
          (map prepare-row)
-         ;util/just-die
-         util/print-and-die
-         ;util/printit
+         flatten
+    ;(->> (map get-quandl-data datasets)    ; Live call
+         ;flatten
+         ;(map clean-dataset)
+         ;(map prepare-row)
+         ;flatten
+         util/printit
          (sql/insert-dw-multi! (sql/get-dw-conn) :dw.equities)
          )))
