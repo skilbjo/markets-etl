@@ -1,6 +1,7 @@
-#!/bin/sh
-set -e
+#!/usr/bin/env bash
+set -eou pipefail
 
+JAVA_OPTS="-Xms256m -Xmx256m -XX:MaxMetaspaceSize=128m"
 CMD="java -jar app.jar"
 
 exec $CMD $@

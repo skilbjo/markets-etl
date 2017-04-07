@@ -13,8 +13,26 @@
 (def internalize-identifier (comp string/lower-case util/dasherize))
 (def internalize-map-identifier (comp keyword string/lower-case util/dasherize))
 
-(def query-dw jdbc/query)
-(def insert-dw-multi! jdbc/insert-multi!)
-
 (defn get-dw-conn []
-  {:connection-uri (env :db-jdbc-uri)})
+  (env :db-jdbc-uri))
+
+(defn query [sql params]
+  (with-open [conn (get-dw-conn)]
+    (jdbc/query conn sql params)))
+
+(defn insert-multi! [table data]
+  (jdbc/with-db-connection [conn (get-dw-conn)]
+    (jdbc/insert-multi! conn table data)))
+
+(defn insert! [table data]
+  (jdbc/with-db-connection [conn (get-dw-conn)]
+    (jdbc/insert! conn table data)))
+
+(defn update-or-insert! [table where-clause data]
+  (jdbc/with-db-connection [conn (get-dw-conn)]
+    (jdbc/with-db-transaction [conn conn]
+      (let [result (jdbc/update! conn table data where-clause)]
+        (if (zero? (first result))
+          (insert! table data)
+          result)))))
+

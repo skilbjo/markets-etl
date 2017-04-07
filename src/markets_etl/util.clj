@@ -49,6 +49,8 @@
       (keywordize)))
 
 ; -- data types ----------------------------------------
+(def to-date coerce/to-sql-date)
+
 (defn string->decimal [n]
   (try
     (BigDecimal. n)

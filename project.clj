@@ -10,4 +10,6 @@
   :plugins [[lein-environ "1.1.0"]]
   :target-path "target/%s"
   ;:aot :all
-  :jvm-opts ["-Xmx1g" "-server" "-Duser.timezone=UTC"])
+  :jvm-opts ["-Xms256m" "-Xmx256m" "-XX:MaxMetaspaceSize=128m"
+             "-server" "-Duser.timezone=UTC"
+             "-XX:-OmitStackTraceInFastThrow"])
