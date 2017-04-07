@@ -2,8 +2,8 @@
 
 ## TODOs
 
-- Generic key mapper (xform into postgres column names)
-- Generic value mapper (xform into postgres dates
+- [X] Generic key mapper (xform into postgres column names)
+- [X] Generic value mapper (xform into postgres dates)
 - Better naming, any ideas for refactoring
 - Upsert
 

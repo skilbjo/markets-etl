@@ -1,26 +1,11 @@
 (ns markets-etl.util
   (:require
+   [clj-time.core :as time]
+   [clj-time.coerce :as coerce]
    [clojure.pprint :as pprint]
    [clojure.string :as string]))
 
-; Type checking
-(defn date-time? [d] (or (string? d) (instance? org.joda.time.DateTime d)))
-(def ^:private allowed {:collapse     #{"none" "daily" "weekly" "monthly" "quarterly" "annual"}
-                        :transform    #{"none" "rdiff" "diff" "cumul" "normalize"}
-                        :order        #{"asc" "desc"}
-                        :rows         integer?
-                        :limit        integer?
-                        :column_index integer?
-                        :start_date   date-time?
-                        :end_date     date-time?})
-
-(defn allowed? [m]
-  (->> m
-       first
-       (map (fn [[k v]]
-              ((allowed k) v)))))
-
-; Dev
+; -- dev -----------------------------------------------
 (defn print-and-die [x]
   (pprint/pprint x)
   (System/exit 0))
@@ -38,7 +23,10 @@
 (defn random-uuid []
   (str (java.util.UUID/randomUUID)))
 
-; String
+; -- time ----------------------------------------------
+(def now-utc (time/now))
+
+; -- string --------------------------------------------
 (defn dasherize [s]
   (string/replace s #"_" "-"))
 
@@ -56,11 +44,11 @@
 (defn postgreserize [s]
   (-> s
       (string/replace #":" "")  ; remove keyword
-      (underscoreize)           ; clojure - in keys to postgres -
+      (underscoreize)           ; clojure - to postgres _
       (no-doterize)             ; remote .'s
       (keywordize)))
 
-; Casting
+; -- data types ----------------------------------------
 (defn string->decimal [n]
   (try
     (BigDecimal. n)
@@ -68,6 +56,53 @@
       n)
     (catch NullPointerException e
       n)))
+
+(defn date-me [k v]
+  (condp #(string/starts-with? %2 %1) (name k)
+    "date"    (coerce/to-sql-date v)
+    v))
+
+(defn date-time? [d]
+  (or (string? d)
+      (instance? org.joda.time.DateTime d)))
+
+(def ^:private allowed
+  {:collapse     #{"none" "daily" "weekly" "monthly" "quarterly" "annual"}
+   :transform    #{"none" "rdiff" "diff" "cumul" "normalize"}
+   :order        #{"asc" "desc"}
+   :rows         integer?
+   :limit        integer?
+   :column_index integer?
+   :start_date   date-time?
+   :end_date     date-time?})
+
+(defn allowed? [m]
+  (->> m
+       first
+       (map (fn [[k v]]
+              ((allowed k) v)))))
+
+; -- collections ---------------------------------------
+(defn map-f-k [f coll]
+  (reduce-kv (fn [m k v]
+    (assoc m (f k) v)) {} coll))
+
+(defn map-f-v [f coll]
+  (reduce-kv (fn [m k v]
+    (assoc m k (f v))) {} coll))
+
+(defn map-fkv-v [f coll]
+  (reduce-kv (fn [m k v]
+    (assoc m k (f k v))) {} coll))
+
+(defn map-seq-f-k [f coll]
+  (map #(map-f-k f %) coll))
+
+(defn map-seq-f-v [f coll]
+  (map #(map-f-v f %) coll))
+
+(defn map-seq-fkv-v [f coll]
+  (map #(map-fkv-v f %) coll))
 
 (defn sequentialize [x]
   (if (sequential? x)
