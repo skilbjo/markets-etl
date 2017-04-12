@@ -6,5 +6,6 @@ job_cmd="usr/local/deploy/bin/run-job"
 
 docker run --rm \
   -e db_uri="$(echo $db_uri)" \
+  -e db_jdbc_uri="$(echo $db_jdbc_uri)" \
   "$img" \
   "$job_cmd" $@
