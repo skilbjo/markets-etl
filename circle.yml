@@ -1,0 +1,15 @@
+machine:
+  services:
+    - docker
+  environment:
+    DOCKER_REMOTE: quay.io/skilbjo/markets-etl
+
+test:
+  override:
+    - lein test
+
+deployment:
+  quay:
+    branch: /.*/
+    commands:
+      - deploy/bin/publish-image

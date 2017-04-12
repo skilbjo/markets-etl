@@ -3,7 +3,8 @@ set -eux
 
 # Set these environment variables in circle.yml if you want to override the
 # defaults set here
-: ${APP_NAME:=router-logs}
+: ${APP_NAME:=markets-etl}
+: ${UBERJAR:="target/uberjar/${APP_NAME}.jar"}
 : ${DOCKER_REGISTRY:='quay.io'}
 : ${DOCKER_REMOTE:="quay.io/skilbjo/$APP_NAME"}
 : ${EMAIL:='skilbjo@github.com'}
@@ -15,7 +16,8 @@ if [[ ! -f './Dockerfile' ]]
 then
   cat './deploy/default/Dockerfile' | \
     sed "s;__CONSUL_PREFIX__;${CONSUL_PREFIX};" | \
-    sed "s;__CONSUL_SECRET_PREFIX__;${CONSUL_SECRET_PREFIX};" \
+    sed "s;__CONSUL_SECRET_PREFIX__;${CONSUL_SECRET_PREFIX};" | \
+    sed "s;__UBERJAR__;${UBERJAR};" \
     > Dockerfile
 fi
 
@@ -32,6 +34,7 @@ echo $(git rev-parse HEAD) > .tag
 docker login -u $QUAY_ROBOT_USERNAME -p $QUAY_ROBOT_PASSWORD -e $EMAIL $DOCKER_REGISTRY
 
 # Build
+lein uberjar
 docker build --rm -t $DOCKER_REMOTE:$IMAGE_TAG .
 
 # Tag

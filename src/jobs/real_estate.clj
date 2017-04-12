@@ -11,7 +11,7 @@
      :ticker ["Z94108_A"]}))
 
 (def query-params
-  {:limit 10
+  {:limit 100
    :start_date "2016-01-01"
    :end_date util/now-utc})
 
@@ -44,7 +44,7 @@
                                                           (string/split #"[a-zA-Z]")
                                                           (nth 1)
                                                           (string/replace #"_" ""))]
-                                  {:dataset         dataset
+                                  {:dataset        dataset
                                    :ticker         ticker
                                    :date           date
                                    :value          value
@@ -63,8 +63,8 @@
                                 (map (fn [{:keys [dataset
                                                   ticker
                                                   date
-                                                  area-category
-                                                  indicator-code
+                                                  area_category
+                                                  indicator_code
                                                   area] :as m}]
                                        (sql/update-or-insert! table
                                                               [(util/multi-line-string
@@ -77,8 +77,8 @@
                                                                dataset
                                                                ticker
                                                                date
-                                                               area-category
-                                                               indicator-code
+                                                               area_category
+                                                               indicator_code
                                                                area]
                                                               m)) col))]
     ;(->> f/fixture-multi                    ; Testing
@@ -93,6 +93,5 @@
          flatten
          (map-update-or-insert! :dw.real_estate)
          util/printit
-         ;util/printit
          )))
 

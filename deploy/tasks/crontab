@@ -1,10 +1,10 @@
-
 ### variables ##
   SHELL=/bin/bash
   PATH=:/bin:/usr/bin:/usr/local/bin:/usr/sbin:/usr/local/sbin
   MAILTO=john.skilbeck@gmail.com
-  cmd="deploy/bin/run-job -m jobs.stock-market"
-  app_dir="/home/skilbjo/deploy/app/router-logs"
+  cmd="deploy/bin/run-docker"
+  app_dir="/home/skilbjo/deploy/app/markets-etl"
 
 ## jobs ##
-5 * * * * skilbjo . /home/skilbjo/.profilelocal; cd "$app_dir" ; $cmd >/dev/null
+5 12 * * * skilbjo . /home/skilbjo/.profilelocal; cd "$app_dir" ; $cmd -m jobs.equities >/dev/null
+5 7 * * * skilbjo . /home/skilbjo/.profilelocal; cd "$app_dir" ; $cmd -m jobs.real-estate >/dev/null
