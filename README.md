@@ -1,5 +1,10 @@
 # markets
 
+[CircleCI Builds](https://circleci.com/gh/skilbjo/markets-etl)
+
+![CircleCI](https://circleci.com/gh/skilbjo/markets-etl/tree/master.svg?style=shield&circle_token=df58a0027114c540a956e9d1a075d58897ede76d)
+[![quay.io](https://quay.io/repository/skilbjo/markets-etl/status "Docker Repository on Quay")](https://quay.io/repository/skilbjo/markets-etl)
+
 ## TODOs
 
 - [X] Generic key mapper (xform into postgres column names)
