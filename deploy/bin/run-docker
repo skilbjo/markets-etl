@@ -5,7 +5,6 @@ img="quay.io/skilbjo/markets-etl:latest"
 job_cmd="usr/local/deploy/bin/run-job"
 
 docker run --rm \
-  -e id_rsa="$(cat ~/.ssh/id_rsa)" \
   -e db_uri="$(echo $db_uri)" \
   "$img" \
   "$job_cmd" $@
