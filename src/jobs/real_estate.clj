@@ -1,5 +1,6 @@
 (ns jobs.real-estate
-  (:require [markets-etl.api :as api]
+  (:require [clojure.string :as string]
+            [markets-etl.api :as api]
             [jobs.fixture :as f]
             [markets-etl.sql :as sql]
             [markets-etl.util :as util])
@@ -10,8 +11,8 @@
      :ticker ["Z94108_A"]}))
 
 (def query-params
-  {:limit 1
-   :start_date "2000-01-01"
+  {:limit 10
+   :start_date "2016-01-01"
    :end_date util/now-utc})
 
 (defn -main [& args]
@@ -34,21 +35,51 @@
                                   {:dataset dataset
                                    :ticker  ticker
                                    :data    (map #(zipmap column-names %) data)}))
+        tranform              (fn [{:keys [dataset ticker date value] :as m}]
+                                (let [area-category   (re-find #"[a-zA-Z]" ticker)
+                                      indicator-code  (-> ticker
+                                                          (string/split #"_")
+                                                          (nth 1))
+                                      area            (-> ticker
+                                                          (string/split #"[a-zA-Z]")
+                                                          (nth 1)
+                                                          (string/replace #"_" ""))]
+                                  {:dataset         dataset
+                                   :ticker         ticker
+                                   :date           date
+                                   :value          value
+                                   :area-category  area-category
+                                   :indicator-code indicator-code
+                                   :area           area}))
         database-it           (fn [{:keys [dataset ticker data] :as m}]
                                   (->> data
-                                       (util/map-seq-f-k util/postgreserize)
-                                       (util/map-seq-fkv-v util/date-me)
                                        (map #(assoc %
                                                     :dataset dataset
-                                                    :ticker ticker))))
+                                                    :ticker ticker))
+                                       (map tranform)
+                                       (util/map-seq-f-k util/postgreserize)
+                                       (util/map-seq-fkv-v util/date-me)))
         map-update-or-insert! (fn [table col]
-                                (map (fn [{:keys [dataset ticker date] :as m}]
+                                (map (fn [{:keys [dataset
+                                                  ticker
+                                                  date
+                                                  area-category
+                                                  indicator-code
+                                                  area] :as m}]
                                        (sql/update-or-insert! table
                                                               [(util/multi-line-string
-                                                                "dataset = ? and    "
-                                                                "ticker  = ? and    "
-                                                                "date    = ?        ")
-                                                               dataset ticker date]
+                                                                "dataset        = ? and    "
+                                                                "ticker         = ? and    "
+                                                                "date           = ? and    "
+                                                                "area_category  = ? and    "
+                                                                "indicator_code = ? and    "
+                                                                "area    = ?        ")
+                                                               dataset
+                                                               ticker
+                                                               date
+                                                               area-category
+                                                               indicator-code
+                                                               area]
                                                               m)) col))]
     ;(->> f/fixture-multi                    ; Testing
          ;flatten
@@ -60,8 +91,8 @@
          (map clean-dataset)
          (map database-it)
          flatten
+         (map-update-or-insert! :dw.real_estate)
          util/printit
-         ;(map-update-or-insert! :dw.equities)
          ;util/printit
          )))
 

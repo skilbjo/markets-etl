@@ -16,8 +16,18 @@ begin;
     adj_volume    decimal(10,2),
     ex_dividend   decimal(10,2)
   );
+  create table dw.real_estate (
+    dataset         text,
+    ticker          text,
+    date            date,
+    value           decimal(10,2),
+    area_category   text,
+    indicator_code  text,
+    area            text  -- usually a zip(int), but could be city(text)
+  );
 commit;
 
 begin;
   drop table if exists dw.equities;
+  drop table if exists dw.real_estate;
 commit;
