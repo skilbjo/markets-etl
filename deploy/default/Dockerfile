@@ -12,4 +12,6 @@ COPY deploy/default/vimrc           /root/.vimrc
 COPY __UBERJAR__                    /app.jar
 
 RUN ["qemu-arm-static","/sbin/apk","-U","add","openjdk8"]
-RUN ["qemu-arm-static","/sbin/apk","fix"]
+
+## Need to investigate why it needs fixing
+#RUN ["qemu-arm-static","/sbin/apk","fix"]

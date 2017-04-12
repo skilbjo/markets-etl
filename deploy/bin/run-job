@@ -4,4 +4,7 @@ set -eou pipefail
 java_opts="-Xms256m -Xmx256m -XX:MaxMetaspaceSize=128m"
 cmd="java $java_opts -jar app.jar"
 
+# Prereqs
+apk fix
+
 exec $cmd $@
