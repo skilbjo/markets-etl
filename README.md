@@ -12,6 +12,8 @@
 - [X] Generic value mapper (xform into postgres dates)
 - [ ] Better naming, any ideas for refactoring
 - [X] Upsert-multi function <<-- this was a hard one
+- [ ] Come up with a time/now - subtract 5 days
+- [ ] Look at JVM settings in profile.clj (does jar need profile?) & deploy/bin/run-job
 
 ## Run manually
 

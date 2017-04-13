@@ -10,7 +10,7 @@
      :ticker ["FB" "AMZN" "GOOG"]}))
 
 (def query-params
-  {:limit 2
+  {:limit 120
    :start_date "2017-01-01"
    :end_date util/now-utc})
 
