@@ -10,9 +10,9 @@
      :ticker ["FB" "AMZN" "GOOG"]}))
 
 (def query-params
-  {:limit 120
-   :start_date "2017-01-01"
-   :end_date util/now-utc})
+  {:limit 20
+   :start_date util/last-week
+   :end_date util/now})
 
 (defn -main [& args]
   (let [flatten-ticker        (fn [dataset ticker]

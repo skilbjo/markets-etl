@@ -1,4 +1,4 @@
-(ns jobs.currency
+(ns jobs.interest-rates
   (:require [markets-etl.api :as api]
             [jobs.fixture :as f]
             [markets-etl.sql :as sql]
@@ -6,12 +6,14 @@
   (:gen-class))
 
 (def datasets
-  '({:dataset "CURRFX"
-     :ticker ["EURUSD" "GBPUSD"]}))
+  '({:dataset "FED"
+     :ticker ["B1248NCBD"]}
+    {:dataset "USTREASURY"
+     :ticker ["YIELD"]}))
 
 (def query-params
-  {:limit 20
-   :start_date util/last-week
+  {:limit 1
+   :start_date util/last-year
    :end_date util/now})
 
 (defn -main [& args]
@@ -50,7 +52,7 @@
                                                                 "date    = ?        ")
                                                                dataset ticker date]
                                                               m)) col))]
-    ;(->> f/fixture-multi                  ; Testing
+    ;(->> f/fixture-multi                    ; Testing
          ;flatten
          ;(map clean-dataset)
          ;(map database-it)
@@ -62,5 +64,6 @@
          flatten
          util/printit
          ;(map-update-or-insert! :dw.equities)
+         ;util/printit
          )))
 

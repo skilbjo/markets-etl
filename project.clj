@@ -9,7 +9,7 @@
                  [org.postgresql/postgresql "42.0.0"]]
   :plugins [[lein-environ "1.1.0"]]
   :target-path "target/%s"
-  ;:aot :all
+  :aot :all
   :jvm-opts ["-Xms256m" "-Xmx256m" "-XX:MaxMetaspaceSize=128m"
-             "-server" "-Duser.timezone=UTC"
+             "-client" "-Duser.timezone=PST"
              "-XX:-OmitStackTraceInFastThrow"])

@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 set -eou pipefail
 
-java_opts="-Xms256m -Xmx256m -XX:MaxMetaspaceSize=128m"
+java_opts="-Xms256m -Xmx256m -XX:MaxMetaspaceSize=128m \
+  -server -Duser.timezone=PST"
 cmd="java $java_opts -jar app.jar"
 
 # Prereqs

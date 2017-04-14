@@ -7,16 +7,12 @@
 
 (def datasets
   '({:dataset "FRED"
-     :ticker ["GDP" "M1" "DFF" "UNRATE"]}
-    {:dataset "FED"
-     :ticker ["B1248NCBD"]}
-    {:dataset "USTREASURY"
-     :ticker ["YIELD"]}))
+     :ticker ["GDP" "M1" "DFF" "UNRATE"]}))
 
 (def query-params
   {:limit 1
-   :start_date "2000-01-01"
-   :end_date util/now-utc})
+   :start_date util/last-year
+   :end_date util/now})
 
 (defn -main [& args]
   (let [flatten-ticker        (fn [dataset ticker]

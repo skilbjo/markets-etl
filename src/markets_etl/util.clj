@@ -24,7 +24,13 @@
   (str (java.util.UUID/randomUUID)))
 
 ; -- time ----------------------------------------------
-(def now-utc (time/now))
+(def now (time/now))
+
+(def yesterday (time/yesterday))
+
+(def last-week (-> 1 time/weeks time/ago))
+
+(def last-year (-> 1 time/years time/ago))
 
 ; -- string --------------------------------------------
 (defn dasherize [s]
@@ -36,6 +42,11 @@
 (defn no-doterize [s]
   (string/replace s #"\." ""))
 
+(defn no-parens [s]
+  (-> s
+      (string/replace #"\(" "")
+      (string/replace #"\)" "")))
+
 (defn keywordize [s]
   (-> s
       (string/replace #"\s" "-")
@@ -45,7 +56,8 @@
   (-> s
       (string/replace #":" "")  ; remove keyword
       (underscoreize)           ; clojure - to postgres _
-      (no-doterize)             ; remote .'s
+      (no-parens)               ; remove ()'s
+      (no-doterize)             ; remove .'s
       (keywordize)))
 
 ; -- data types ----------------------------------------

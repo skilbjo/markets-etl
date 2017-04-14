@@ -25,9 +25,32 @@ begin;
     indicator_code  text,
     area            text  -- usually a zip(int), but could be city(text)
   );
+  create table dw.currency (
+    dataset         text,
+    ticker          text,
+    date            date,
+    rate            decimal(24,14),
+    high            decimal(24,14),
+    low             decimal(24,14)
+  );
+  create table dw.economics (
+    dataset         text,
+    ticker          text,
+    date            date,
+    value           decimal(10,2)
+  );
+  create table dw.interest_rates (
+    dataset         text,
+    ticker          text,
+    date            date,
+    value           decimal(10,2)
+  );
 commit;
 
 begin;
   drop table if exists dw.equities;
   drop table if exists dw.real_estate;
+  drop table if exists dw.currency;
+  drop table if exists dw.economics;
+  drop table if exists dw.interest_rates;
 commit;
