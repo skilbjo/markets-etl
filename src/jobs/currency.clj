@@ -50,17 +50,12 @@
                                                                 "date    = ?        ")
                                                                dataset ticker date]
                                                               m)) col))]
-    ;(->> f/fixture-multi                  ; Testing
-         ;flatten
-         ;(map clean-dataset)
-         ;(map database-it)
-         ;flatten
     (->> (map get-quandl-data datasets)    ; Live call
          flatten
          (map clean-dataset)
          (map database-it)
          flatten
+         (map-update-or-insert! :dw.equities)
          util/printit
-         ;(map-update-or-insert! :dw.equities)
          )))
 

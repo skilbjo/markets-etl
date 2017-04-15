@@ -81,11 +81,6 @@
                                                                indicator_code
                                                                area]
                                                               m)) col))]
-    ;(->> f/fixture-multi                    ; Testing
-         ;flatten
-         ;(map clean-dataset)
-         ;(map database-it)
-         ;flatten
     (->> (map get-quandl-data datasets)    ; Live call
          flatten
          (map clean-dataset)
