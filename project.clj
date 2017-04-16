@@ -11,5 +11,5 @@
   :target-path "target/%s"
   :aot :all
   :jvm-opts ["-Xms256m" "-Xmx256m" "-XX:MaxMetaspaceSize=128m"
-             "-client" "-Duser.timezone=PST"
+             "-client" "-Duser.timezone=PST8PDT"
              "-XX:-OmitStackTraceInFastThrow"])

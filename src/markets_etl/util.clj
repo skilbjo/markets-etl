@@ -39,6 +39,11 @@
 (defn underscoreize [s]
   (string/replace s #"-" "_"))
 
+(defn spacerize [s]
+  (-> s
+      (string/replace #"_" " ")
+      (string/replace #"-" " ")))
+
 (defn no-doterize [s]
   (string/replace s #"\." ""))
 

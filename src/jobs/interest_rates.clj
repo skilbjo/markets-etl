@@ -1,19 +1,19 @@
 (ns jobs.interest-rates
-  (:require [markets-etl.api :as api]
-            [jobs.fixture :as f]
+  (:require [clojure.string :as string]
+            [markets-etl.api :as api]
             [markets-etl.sql :as sql]
             [markets-etl.util :as util])
   (:gen-class))
 
 (def datasets
   '({:dataset "FED"
-     :ticker ["B1248NCBD"]}
+     :ticker ["RIFSPFF_N_D"]}
     {:dataset "USTREASURY"
-     :ticker ["YIELD"]}))
+     :ticker ["YIELD" "LONGTERMRATES"]}))
 
 (def query-params
-  {:limit 1
-   :start_date util/last-year
+  {:limit 20
+   :start_date util/last-week
    :end_date util/now})
 
 (defn -main [& args]
@@ -36,34 +36,50 @@
                                   {:dataset dataset
                                    :ticker  ticker
                                    :data    (map #(zipmap column-names %) data)}))
+        tranform              (fn [{:keys [dataset ticker date] :as m}]
+                                (->> m
+                                     (map (fn [[k v]]
+                                        (condp #(string/starts-with? %2 %1) (name k)
+                                          "dataset" nil
+                                          "ticker"  nil
+                                          "date"    nil
+                                          {(keyword "key") (-> k
+                                                               name
+                                                               util/spacerize)
+                                           (keyword "value") v})))
+                                     (remove nil?)
+                                     (map #(merge {:dataset        dataset
+                                                   :ticker         ticker
+                                                   :date           date}
+                                                   %))))
         database-it           (fn [{:keys [dataset ticker data] :as m}]
                                   (->> data
+                                       (map #(assoc %
+                                                    :dataset dataset
+                                                    :ticker ticker))
+                                       (map tranform)
+                                       flatten
                                        (util/map-seq-f-k util/postgreserize)
                                        (util/map-seq-fkv-v util/date-me)
                                        (map #(assoc %
                                                     :dataset dataset
                                                     :ticker ticker))))
         map-update-or-insert! (fn [table col]
-                                (map (fn [{:keys [dataset ticker date] :as m}]
+                                (map (fn [{:keys [dataset ticker date key] :as m}]
                                        (sql/update-or-insert! table
                                                               [(util/multi-line-string
                                                                 "dataset = ? and    "
                                                                 "ticker  = ? and    "
-                                                                "date    = ?        ")
-                                                               dataset ticker date]
+                                                                "date    = ? and    "
+                                                                "key     = ?        ")
+                                                               dataset ticker date key]
                                                               m)) col))]
-    ;(->> f/fixture-multi                    ; Testing
-         ;flatten
-         ;(map clean-dataset)
-         ;(map database-it)
-         ;flatten
-    (->> (map get-quandl-data datasets)    ; Live call
+    (->> (map get-quandl-data datasets)
          flatten
          (map clean-dataset)
          (map database-it)
          flatten
+         (map-update-or-insert! :dw.interest_rates)
          util/printit
-         ;(map-update-or-insert! :dw.equities)
-         ;util/printit
          )))
 

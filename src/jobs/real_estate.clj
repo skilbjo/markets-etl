@@ -1,7 +1,6 @@
 (ns jobs.real-estate
   (:require [clojure.string :as string]
             [markets-etl.api :as api]
-            [jobs.fixture :as f]
             [markets-etl.sql :as sql]
             [markets-etl.util :as util])
   (:gen-class))
@@ -81,7 +80,7 @@
                                                                indicator_code
                                                                area]
                                                               m)) col))]
-    (->> (map get-quandl-data datasets)    ; Live call
+    (->> (map get-quandl-data datasets)
          flatten
          (map clean-dataset)
          (map database-it)

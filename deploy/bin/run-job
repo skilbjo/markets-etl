@@ -2,7 +2,7 @@
 set -eou pipefail
 
 java_opts="-Xms256m -Xmx256m -XX:MaxMetaspaceSize=128m \
-  -server -Duser.timezone=PST"
+  -server -Duser.timezone=PST8PDT"
 cmd="java $java_opts -jar app.jar"
 
 # Prereqs

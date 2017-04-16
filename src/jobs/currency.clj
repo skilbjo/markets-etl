@@ -1,6 +1,6 @@
 (ns jobs.currency
-  (:require [markets-etl.api :as api]
-            [jobs.fixture :as f]
+  (:require [clojure.string :as string]
+            [markets-etl.api :as api]
             [markets-etl.sql :as sql]
             [markets-etl.util :as util])
   (:gen-class))
@@ -40,7 +40,9 @@
                                        (util/map-seq-fkv-v util/date-me)
                                        (map #(assoc %
                                                     :dataset dataset
-                                                    :ticker ticker))))
+                                                    :ticker ticker
+                                                    :currency (-> ticker
+                                                                  (string/replace "USD" ""))))))
         map-update-or-insert! (fn [table col]
                                 (map (fn [{:keys [dataset ticker date] :as m}]
                                        (sql/update-or-insert! table
@@ -50,12 +52,12 @@
                                                                 "date    = ?        ")
                                                                dataset ticker date]
                                                               m)) col))]
-    (->> (map get-quandl-data datasets)    ; Live call
+    (->> (map get-quandl-data datasets)
          flatten
          (map clean-dataset)
          (map database-it)
          flatten
-         (map-update-or-insert! :dw.equities)
+         (map-update-or-insert! :dw.currency)
          util/printit
          )))
 

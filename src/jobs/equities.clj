@@ -6,7 +6,7 @@
   (:gen-class))
 
 (def datasets
-  '({:dataset "wiki"
+  '({:dataset "WIKI"
      :ticker ["FB" "AMZN" "GOOG"]}))
 
 (def query-params

@@ -1,6 +1,6 @@
 (ns jobs.economics
-  (:require [markets-etl.api :as api]
-            [jobs.fixture :as f]
+  (:require [clojure.string :as string]
+            [markets-etl.api :as api]
             [markets-etl.sql :as sql]
             [markets-etl.util :as util])
   (:gen-class))
@@ -10,8 +10,8 @@
      :ticker ["GDP" "M1" "DFF" "UNRATE"]}))
 
 (def query-params
-  {:limit 100
-   :start_date "2016-01-01"
+  {:limit 20
+   :start_date util/last-week
    :end_date util/now})
 
 (defn -main [& args]
@@ -34,13 +34,29 @@
                                   {:dataset dataset
                                    :ticker  ticker
                                    :data    (map #(zipmap column-names %) data)}))
+        tranform              (fn [{:keys [dataset ticker date] :as m}]
+                                (->> m
+                                     (map (fn [[k v]]
+                                        (condp #(string/starts-with? %2 %1) (name k)
+                                          "dataset" nil
+                                          "ticker"  nil
+                                          "date"    nil
+                                          {(keyword "value") v})))
+                                     (remove nil?)
+                                     ;(util/printit)
+                                     (map #(merge {:dataset        dataset
+                                                   :ticker         ticker
+                                                   :date           date}
+                                                   %))))
         database-it           (fn [{:keys [dataset ticker data] :as m}]
                                   (->> data
-                                       (util/map-seq-f-k util/postgreserize)
-                                       (util/map-seq-fkv-v util/date-me)
                                        (map #(assoc %
                                                     :dataset dataset
-                                                    :ticker ticker))))
+                                                    :ticker ticker))
+                                       (map tranform)
+                                       flatten
+                                       (util/map-seq-f-k util/postgreserize)
+                                       (util/map-seq-fkv-v util/date-me)))
         map-update-or-insert! (fn [table col]
                                 (map (fn [{:keys [dataset ticker date] :as m}]
                                        (sql/update-or-insert! table
@@ -50,12 +66,12 @@
                                                                 "date    = ?        ")
                                                                dataset ticker date]
                                                               m)) col))]
-    (->> (map get-quandl-data datasets)    ; Live call
+    (->> (map get-quandl-data datasets)
          flatten
          (map clean-dataset)
          (map database-it)
          flatten
-         (map-update-or-insert! :dw.equities)
+         (map-update-or-insert! :dw.economics)
          util/printit
          )))
 
