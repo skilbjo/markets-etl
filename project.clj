@@ -12,4 +12,5 @@
   :aot :all
   :jvm-opts ["-Xms256m" "-Xmx256m" "-XX:MaxMetaspaceSize=128m"
              "-client" "-Duser.timezone=PST8PDT"
+             "-Dclojure.compiler.direct-linking=true"
              "-XX:-OmitStackTraceInFastThrow"])
