@@ -1,9 +1,9 @@
-#!/bin/bash
-set -eux
+#!/usr/bin/env bash
+set -euxo pipefail
 
 # Set these environment variables in circle.yml if you want to override the
 # defaults set here
-: ${APP_NAME:=markets-etl}
+: ${APP_NAME:=$(basename $(pwd))}
 : ${UBERJAR:="target/uberjar/${APP_NAME}.jar"}
 : ${DOCKER_REGISTRY:='quay.io'}
 : ${DOCKER_REMOTE:="quay.io/skilbjo/$APP_NAME"}

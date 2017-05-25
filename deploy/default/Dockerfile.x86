@@ -1,20 +1,16 @@
 FROM gliderlabs/alpine:latest
 
-ENV CONSUL_PREFIX __CONSUL_PREFIX__
-ENV CONSUL_SECRET_PREFIX __CONSUL_SECRET_PREFIX__
+ENV JAVA_HOME /usr/lib/jvm/java-1.8-openjdk8
 
-RUN apk add -U && \
-    postgresql-client && \
-    postfix mutt && \
-    tzdata && \
-    bash bash-completion curl vim && \
-    coreutils bc && \
+RUN apk add -U openjdk8 \
+    bash bash-completion curl vim git \
+    tzdata coreutils && \
     cp /usr/share/zoneinfo/America/Los_Angeles /etc/localtime && \
     echo "America/Los_Angeles" > /etc/timezone && \
     rm -rf /var/cache/apk/*
 
 COPY deploy                         /usr/local/deploy
+COPY src                            /usr/local/src
+
 COPY deploy/default/bashrc          /root/.bashrc
 COPY deploy/default/vimrc           /root/.vimrc
-
-COPY src                            /src

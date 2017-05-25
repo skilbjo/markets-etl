@@ -6,12 +6,10 @@ ENV QEMU_EXECVE 1
 COPY deploy/qemu/qemu-arm-static    /usr/bin/
 
 COPY deploy                         /usr/local/deploy
+COPY src                            /usr/local/src
 COPY deploy/default/bashrc          /root/.bashrc
 COPY deploy/default/vimrc           /root/.vimrc
 
 COPY __UBERJAR__                    /app.jar
 
 RUN ["qemu-arm-static","/sbin/apk","-U","add","openjdk8"]
-
-## Need to investigate why it needs fixing
-#RUN ["qemu-arm-static","/sbin/apk","fix"]
