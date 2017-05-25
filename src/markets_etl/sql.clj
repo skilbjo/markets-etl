@@ -10,15 +10,33 @@
 
 (clojure.lang.RT/loadClassForName "org.postgresql.Driver")
 
-(def internalize-identifier (comp string/lower-case util/dasherize))
-(def internalize-map-identifier (comp keyword string/lower-case util/dasherize))
-
 (defn get-dw-conn []
   (env :db-jdbc-uri))
 
-(defn query [sql params]
-  (with-open [conn (get-dw-conn)]
-    (jdbc/query conn sql params)))
+(defn get-custom-dw-conn []
+  (DriverManager/getConnection
+    (env :db-jdbc-uri)))
+
+(defn- prepare-statement
+  [sql params]
+  (loop [sql sql
+         kvs (map identity params)]
+    (if (empty? kvs)
+      sql
+      (let [[[k v] & others] kvs]
+        (recur (string/replace sql (str k) (str (jdbc/sql-value v)))
+               others)))))
+
+(defn query
+  ([sql]
+   (query sql {}))
+  ([sql params]
+   (with-open [conn (get-custom-dw-conn)]
+     (let [sql     (prepare-statement sql params)
+           results (-> conn
+                       (.createStatement)
+                       (.executeQuery sql))]
+       (jdbc/metadata-result results)))))
 
 (defn insert-multi! [table data]
   (jdbc/with-db-connection [conn (get-dw-conn)]
