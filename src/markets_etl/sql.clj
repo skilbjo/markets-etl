@@ -15,7 +15,7 @@
 
 (defn get-custom-dw-conn []
   (DriverManager/getConnection
-    (env :db-jdbc-uri)))
+   (env :db-jdbc-uri)))
 
 (defn- prepare-statement
   [sql params]
