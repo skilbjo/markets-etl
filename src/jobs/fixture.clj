@@ -165,57 +165,57 @@
           757.18
           2510526.0]],
         "frequency" "daily"}}}
-{:dataset "wiki",
- :ticker "GOOG",
- :data
- {"dataset_data"
-  {"collapse" nil,
-   "end_date" "2017-01-05",
-   "column_index" nil,
-   "transform" nil,
-   "limit" 2,
-   "order" nil,
-   "start_date" "2017-01-04",
-   "column_names"
-   ["Date"
-    "Open"
-    "High"
-    "Low"
-    "Close"
-    "Volume"
-    "Ex-Dividend"
-    "Split Ratio"
-    "Adj. Open"
-    "Adj. High"
-    "Adj. Low"
-    "Adj. Close"
-    "Adj. Volume"],
-   "data"
-   [["2017-01-05"
-     786.08
-     794.48
-     785.02
-     794.02
-     1297561.0
-     0.0
-     1.0
-     786.08
-     794.48
-     785.02
-     794.02
-     1297561.0]
-    ["2017-01-04"
-     788.36
-     791.34
-     783.16
-     786.9
-     1060648.0
-     0.0
-     1.0
-     788.36
-     791.34
-     783.16
-     786.9
-     1060648.0]],
-   "frequency" "daily"}}})))
+     {:dataset "wiki",
+      :ticker "GOOG",
+      :data
+      {"dataset_data"
+       {"collapse" nil,
+        "end_date" "2017-01-05",
+        "column_index" nil,
+        "transform" nil,
+        "limit" 2,
+        "order" nil,
+        "start_date" "2017-01-04",
+        "column_names"
+        ["Date"
+         "Open"
+         "High"
+         "Low"
+         "Close"
+         "Volume"
+         "Ex-Dividend"
+         "Split Ratio"
+         "Adj. Open"
+         "Adj. High"
+         "Adj. Low"
+         "Adj. Close"
+         "Adj. Volume"],
+        "data"
+        [["2017-01-05"
+          786.08
+          794.48
+          785.02
+          794.02
+          1297561.0
+          0.0
+          1.0
+          786.08
+          794.48
+          785.02
+          794.02
+          1297561.0]
+         ["2017-01-04"
+          788.36
+          791.34
+          783.16
+          786.9
+          1060648.0
+          0.0
+          1.0
+          788.36
+          791.34
+          783.16
+          786.9
+          1060648.0]],
+        "frequency" "daily"}}})))
 

@@ -104,15 +104,15 @@
 ; -- collections ---------------------------------------
 (defn map-f-k [f coll]
   (reduce-kv (fn [m k v]
-    (assoc m (f k) v)) {} coll))
+               (assoc m (f k) v)) {} coll))
 
 (defn map-f-v [f coll]
   (reduce-kv (fn [m k v]
-    (assoc m k (f v))) {} coll))
+               (assoc m k (f v))) {} coll))
 
 (defn map-fkv-v [f coll]
   (reduce-kv (fn [m k v]
-    (assoc m k (f k v))) {} coll))
+               (assoc m k (f k v))) {} coll))
 
 (defn map-seq-f-k [f coll]
   (map #(map-f-k f %) coll))

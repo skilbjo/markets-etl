@@ -1,12 +1,11 @@
 (ns markets-etl.api
-  (:require
-    [clj-http.client :as http]
-    [clj-time.format :as format]
-    [clojure.data.json :as json]
-    [clojure.pprint :as p]
-    [clojure.string :as string]
-    [environ.core :refer [env]]
-    [markets-etl.util :as util]))
+  (:require [clj-http.client :as http]
+            [clj-time.format :as format]
+            [clojure.data.json :as json]
+            [clojure.pprint :as p]
+            [clojure.string :as string]
+            [environ.core :refer [env]]
+            [markets-etl.util :as util]))
 
 (def ^:private quandl-api
   {:protocol  "https://"
@@ -42,5 +41,5 @@
         {:keys [status body]}  response]
     (if (= 200 status)
       (-> body
-        json/read-str)
+          json/read-str)
       (println "Failed request, exception: " status))))

@@ -51,13 +51,13 @@
                                    :indicator-code indicator-code
                                    :area           area}))
         database-it           (fn [{:keys [dataset ticker data] :as m}]
-                                  (->> data
-                                       (map #(assoc %
-                                                    :dataset dataset
-                                                    :ticker ticker))
-                                       (map tranform)
-                                       (util/map-seq-f-k util/postgreserize)
-                                       (util/map-seq-fkv-v util/date-me)))
+                                (->> data
+                                     (map #(assoc %
+                                                  :dataset dataset
+                                                  :ticker ticker))
+                                     (map tranform)
+                                     (util/map-seq-f-k util/postgreserize)
+                                     (util/map-seq-fkv-v util/date-me)))
         map-update-or-insert! (fn [table col]
                                 (map (fn [{:keys [dataset
                                                   ticker
@@ -86,6 +86,5 @@
          (map database-it)
          flatten
          (map-update-or-insert! :dw.real_estate)
-         util/printit
-         )))
+         util/printit)))
 

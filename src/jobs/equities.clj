@@ -35,12 +35,12 @@
                                    :ticker  ticker
                                    :data    (map #(zipmap column-names %) data)}))
         database-it           (fn [{:keys [dataset ticker data] :as m}]
-                                  (->> data
-                                       (util/map-seq-f-k util/postgreserize)
-                                       (util/map-seq-fkv-v util/date-me)
-                                       (map #(assoc %
-                                                    :dataset dataset
-                                                    :ticker ticker))))
+                                (->> data
+                                     (util/map-seq-f-k util/postgreserize)
+                                     (util/map-seq-fkv-v util/date-me)
+                                     (map #(assoc %
+                                                  :dataset dataset
+                                                  :ticker ticker))))
         map-update-or-insert! (fn [table col]
                                 (map (fn [{:keys [dataset ticker date] :as m}]
                                        (sql/update-or-insert! table
@@ -61,6 +61,5 @@
          (map database-it)
          flatten
          (map-update-or-insert! :dw.equities)
-         util/printit
-         )))
+         util/printit)))
 

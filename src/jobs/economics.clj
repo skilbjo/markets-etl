@@ -37,26 +37,26 @@
         tranform              (fn [{:keys [dataset ticker date] :as m}]
                                 (->> m
                                      (map (fn [[k v]]
-                                        (condp #(string/starts-with? %2 %1) (name k)
-                                          "dataset" nil
-                                          "ticker"  nil
-                                          "date"    nil
-                                          {(keyword "value") v})))
+                                            (condp #(string/starts-with? %2 %1) (name k)
+                                              "dataset" nil
+                                              "ticker"  nil
+                                              "date"    nil
+                                              {(keyword "value") v})))
                                      (remove nil?)
                                      ;(util/printit)
                                      (map #(merge {:dataset        dataset
                                                    :ticker         ticker
                                                    :date           date}
-                                                   %))))
+                                                  %))))
         database-it           (fn [{:keys [dataset ticker data] :as m}]
-                                  (->> data
-                                       (map #(assoc %
-                                                    :dataset dataset
-                                                    :ticker ticker))
-                                       (map tranform)
-                                       flatten
-                                       (util/map-seq-f-k util/postgreserize)
-                                       (util/map-seq-fkv-v util/date-me)))
+                                (->> data
+                                     (map #(assoc %
+                                                  :dataset dataset
+                                                  :ticker ticker))
+                                     (map tranform)
+                                     flatten
+                                     (util/map-seq-f-k util/postgreserize)
+                                     (util/map-seq-fkv-v util/date-me)))
         map-update-or-insert! (fn [table col]
                                 (map (fn [{:keys [dataset ticker date] :as m}]
                                        (sql/update-or-insert! table
@@ -72,6 +72,5 @@
          (map database-it)
          flatten
          (map-update-or-insert! :dw.economics)
-         util/printit
-         )))
+         util/printit)))
 

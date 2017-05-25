@@ -10,7 +10,7 @@
      :ticker ["EURUSD" "GBPUSD"]}))
 
 (def query-params
-  {:limit 20
+  {:limit 200
    :start_date util/last-week
    :end_date util/now})
 
@@ -35,14 +35,14 @@
                                    :ticker  ticker
                                    :data    (map #(zipmap column-names %) data)}))
         database-it           (fn [{:keys [dataset ticker data] :as m}]
-                                  (->> data
-                                       (util/map-seq-f-k util/postgreserize)
-                                       (util/map-seq-fkv-v util/date-me)
-                                       (map #(assoc %
-                                                    :dataset dataset
-                                                    :ticker ticker
-                                                    :currency (-> ticker
-                                                                  (string/replace "USD" ""))))))
+                                (->> data
+                                     (util/map-seq-f-k util/postgreserize)
+                                     (util/map-seq-fkv-v util/date-me)
+                                     (map #(assoc %
+                                                  :dataset dataset
+                                                  :ticker ticker
+                                                  :currency (-> ticker
+                                                                (string/replace "USD" ""))))))
         map-update-or-insert! (fn [table col]
                                 (map (fn [{:keys [dataset ticker date] :as m}]
                                        (sql/update-or-insert! table
@@ -58,6 +58,5 @@
          (map database-it)
          flatten
          (map-update-or-insert! :dw.currency)
-         util/printit
-         )))
+         util/printit)))
 
