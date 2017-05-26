@@ -19,23 +19,23 @@ if [[ ! -f './Dockerfile' ]]; then
 fi
 
 if [[ $CIRCLE_BRANCH == master ]]; then
-  IMAGE_TAG='latest'
+  image_tag='latest'
 else
-  IMAGE_TAG="${CIRCLE_BRANCH}_${CIRCLE_BUILD_NUM}"
+  image_tag="${CIRCLE_BRANCH}_${CIRCLE_BUILD_NUM}"
 fi
 
 # Add git revision
 echo $(git rev-parse HEAD) > .tag
 
 # Login
-docker login -u $QUAY_ROBOT_USERNAME -p $QUAY_ROBOT_PASSWORD -e $EMAIL $DOCKER_REGISTRY
+docker login -u $QUAY_ROBOT_USERNAME -p $QUAY_ROBOT_PASSWORD -e $email $docker_registry
 
 # Build
 lein uberjar
-docker build --rm -t $DOCKER_REMOTE:$IMAGE_TAG .
+docker build --rm -t $docker_remote:$image_tag .
 
 # Tag
-docker tag $DOCKER_REMOTE:$IMAGE_TAG $DOCKER_REMOTE:$CIRCLE_SHA1
+docker tag $docker_remote:$image_tag $docker_remote:$CIRCLE_SHA1
 
 # Push it real good
-docker push $DOCKER_REMOTE
+docker push $docker_remote
