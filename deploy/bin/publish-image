@@ -1,23 +1,20 @@
 #!/usr/bin/env bash
 set -euxo pipefail
 
-# Set these environment variables in circle.yml if you want to override the
-# defaults set here
-: ${APP_NAME:=$(basename $(pwd))}
-: ${UBERJAR:="target/uberjar/${APP_NAME}.jar"}
-: ${DOCKER_REGISTRY:='quay.io'}
-: ${DOCKER_REMOTE:="quay.io/skilbjo/$APP_NAME"}
-: ${EMAIL:='skilbjo@github.com'}
-: ${CONSUL_PREFIX:="$(echo $APP_NAME | tr '-' '_')/config"}
-: ${CONSUL_SECRET_PREFIX:="$(echo $APP_NAME | tr '-' '_')/secrets"}
+app_name=$(basename $(pwd))
+uberjar="target/uberjar/${app_name}.jar"
+consul_prefix="$(echo $app_name | tr '-' '_')/config"
+consul_secret_prefix="$(echo $app_name | tr '-' '_')/secrets"
+docker_registry='quay.io'
+docker_remote="quay.io/fundingcircle/$app_name"
+email='skilbjo@github.com'
 
 # Use default Dockerfile if one doesn't exist
-if [[ ! -f './Dockerfile' ]]
-then
+if [[ ! -f './Dockerfile' ]]; then
   cat './deploy/default/Dockerfile' | \
-    sed "s;__CONSUL_PREFIX__;${CONSUL_PREFIX};" | \
-    sed "s;__CONSUL_SECRET_PREFIX__;${CONSUL_SECRET_PREFIX};" | \
-    sed "s;__UBERJAR__;${UBERJAR};" \
+    sed "s;__CONSUL_PREFIX__;${consul_prefix};" | \
+    sed "s;__CONSUL_SECRET_PREFIX__;${consul_secret_prefix};" | \
+    sed "s;__UBERJAR__;${uberjar};" \
     > Dockerfile
 fi
 

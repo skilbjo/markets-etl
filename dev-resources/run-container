@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+set -eou pipefail
+
+docker run -it quay.io/skilbjo/markets-etl:dev bash
+

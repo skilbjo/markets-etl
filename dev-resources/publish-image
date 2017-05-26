@@ -1,43 +1,40 @@
-#!/bin/bash
-set -eux
+#!/usr/bin/env bash
+set -eoux pipefail
 
-# Set these environment variables in circle.yml if you want to override the
-# defaults set here
-: ${APP_NAME:=us-airflow-etl}
-: ${DOCKER_REGISTRY:='quay.io'}
-: ${DOCKER_REMOTE:="quay.io/fundingcircle/$APP_NAME"}
-: ${EMAIL:='engineering@fundingcircle.com'}
-: ${CONSUL_PREFIX:="$(echo $APP_NAME | tr '-' '_')/config"}
-: ${CONSUL_SECRET_PREFIX:="$(echo $APP_NAME | tr '-' '_')/secrets"}
+app_name=$(basename $(dirname $(pwd)))
+consul_prefix="$(echo $app_name | tr '-' '_')/config"
+consul_secret_prefix="$(echo $app_name | tr '-' '_')/secrets"
+docker_registry='quay.io'
+docker_remote="quay.io/fundingcircle/$app_name"
+email='john.skilbeck@someemail.com'
 
 # Use default Dockerfile if one doesn't exist
-if [[ ! -f './Dockerfile' ]]
-then
+if [[ ! -f './Dockerfile' ]]; then
   cat '../deploy/default/Dockerfile' | \
-    sed "s;__CONSUL_PREFIX__;${CONSUL_PREFIX};" | \
-    sed "s;__CONSUL_SECRET_PREFIX__;${CONSUL_SECRET_PREFIX};" \
+    sed "s;__CONSUL_PREFIX__;${consul_prefix};" | \
+    sed "s;__CONSUL_SECRET_PREFIX__;${consul_secret_prefix};" \
     > ../Dockerfile
 fi
 
-IMAGE_TAG='latest'
+image_tag='dev'
+
+cd ..
 
 # Add git revision
 echo $(git rev-parse HEAD) > .tag
 
 # Login
-#docker login -u $QUAY_ROBOT_USERNAME -p $QUAY_ROBOT_PASSWORD -e $EMAIL $DOCKER_REGISTRY
-
-cd ..
+#docker login -u $QUAY_ROBOT_USERNAME -p $QUAY_ROBOT_PASSWORD -e $email $docker_registry
 
 # Build
-docker build --rm -t $DOCKER_REMOTE:$IMAGE_TAG .
+lein uberjar
+docker build --rm -t $docker_remote:$image_tag .
 
 # Tag
-docker tag $DOCKER_REMOTE:$IMAGE_TAG $DOCKER_REMOTE
+docker tag $docker_remote:$image_tag $docker_remote
 
 # Push it real good
-docker push $DOCKER_REMOTE
+docker push $docker_remote
 
-# Cleanup
 rm Dockerfile
 rm .tag
