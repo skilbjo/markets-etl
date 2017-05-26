@@ -6,7 +6,7 @@ uberjar="target/uberjar/${app_name}.jar"
 consul_prefix="$(echo $app_name | tr '-' '_')/config"
 consul_secret_prefix="$(echo $app_name | tr '-' '_')/secrets"
 docker_registry='quay.io'
-docker_remote="quay.io/fundingcircle/$app_name"
+docker_remote="quay.io/skilbjo/$app_name"
 email='skilbjo@github.com'
 
 # Use default Dockerfile if one doesn't exist
