@@ -2,29 +2,31 @@
 set -eoux pipefail
 
 app_name=$(basename $(dirname $(pwd)))
+uberjar="target/uberjar/${app_name}.jar"
 consul_prefix="$(echo $app_name | tr '-' '_')/config"
 consul_secret_prefix="$(echo $app_name | tr '-' '_')/secrets"
 docker_registry='quay.io'
-docker_remote="quay.io/fundingcircle/$app_name"
+docker_remote="quay.io/skilbjo/$app_name"
 email='john.skilbeck@someemail.com'
 
 # Use default Dockerfile if one doesn't exist
 if [[ ! -f './Dockerfile' ]]; then
   cat '../deploy/default/Dockerfile' | \
     sed "s;__CONSUL_PREFIX__;${consul_prefix};" | \
-    sed "s;__CONSUL_SECRET_PREFIX__;${consul_secret_prefix};" \
+    sed "s;__CONSUL_SECRET_PREFIX__;${consul_secret_prefix};" | \
+    sed "s;__UBERJAR__;${uberjar};" \
     > ../Dockerfile
 fi
 
 image_tag='dev'
 
+# Login
+#docker login -u $QUAY_ROBOT_USERNAME -p $QUAY_ROBOT_PASSWORD -e $EMAIL $DOCKER_REGISTRY
+
 cd ..
 
 # Add git revision
 echo $(git rev-parse HEAD) > .tag
-
-# Login
-#docker login -u $QUAY_ROBOT_USERNAME -p $QUAY_ROBOT_PASSWORD -e $email $docker_registry
 
 # Build
 lein uberjar
