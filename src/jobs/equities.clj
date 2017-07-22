@@ -1,16 +1,17 @@
 (ns jobs.equities
-  (:require [markets-etl.api :as api]
+  (:require [clojure.core.reducers :as r]
             [jobs.fixture :as f]
+            [markets-etl.api :as api]
             [markets-etl.sql :as sql]
             [markets-etl.util :as util])
   (:gen-class))
 
 (def datasets
   '({:dataset "WIKI"
-     :ticker ["FB" "AMZN" "GOOG"]}))
+     :ticker ["FB" "AMZN" "GOOG" "NVDA"]}))
 
 (def query-params
-  {:limit 20
+  {:limit 10
    :start_date util/last-week
    :end_date util/now})
 
@@ -52,14 +53,17 @@
                                                               m)) col))]
     ;(->> f/fixture-multi                  ; Testing
          ;flatten
-         ;(map clean-dataset)
-         ;(map database-it)
+         ;(r/map clean-dataset)
+         ;(r/map database-it)
+         ;(into '())
          ;flatten
+         ;util/printit)))
     (->> (map get-quandl-data datasets)    ; Live call
          flatten
-         (map clean-dataset)
-         (map database-it)
+         (r/map clean-dataset)
+         (r/map database-it)
+         (into '())
          flatten
          (map-update-or-insert! :dw.equities)
-         util/printit)))
+         doall)))
 

@@ -8,6 +8,7 @@ begin;
   ('WIKI',       'FB',            'Facebook'),
   ('WIKI',       'AMZN',          'Amazon'),
   ('WIKI',       'GOOG',          'Google'),
+  ('WIKI',       'NVDA',          'Nvidia'),
   ('FED',        'RIFSPFF_N_D',   'Federal funds effective rate, daily'),
   ('USTREASURY', 'YIELD',         'Treasury yield curve rates'),
   ('USTREASURY', 'LONGTERMRATES', 'Treasury long term rates, 30-year constant maturity series'),
