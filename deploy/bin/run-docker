@@ -5,7 +5,7 @@ img="quay.io/skilbjo/markets-etl:latest"
 job_cmd="usr/local/deploy/bin/run-job"
 
 docker run --rm \
-  -e db_uri="$(echo $db_uri)" \
   -e db_jdbc_uri="$(echo $db_jdbc_uri)" \
+  -e quandl_api_key="$(echo $quandl_api_key)" \
   "$img" \
   "$job_cmd" $@
