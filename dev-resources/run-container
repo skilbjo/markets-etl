@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 set -eou pipefail
 
-docker run -it quay.io/skilbjo/markets-etl:dev bash
+dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+app_name=$(basename $(dirname $(dirname $dir)))
 
+docker run -it "$app_name":dev bash

@@ -1,0 +1,33 @@
+#!/usr/bin/env bash
+set -euxo pipefail
+
+build_x86() {
+  rm Dockerfile
+
+  cat deploy/bin/publish-image | \
+    sed "s/cat '.\/deploy\/default\/Dockerfile'/cat '.\/deploy\/default\/Dockerfile'/g" | \
+    sed "s/image_tag='latest'/image_tag='x86'/g" | \
+    sed 's/$docker_remote:$CIRCLE_SHA1/$docker_remote:$CIRCLE_SHA1-x86/g' | \
+    sed 's/image_tag="${CIRCLE_BRANCH}_${CIRCLE_BUILD_NUM}"/image_tag="${CIRCLE_BRANCH}_${CIRCLE_BUILD_NUM}_x86"/g' \
+    >>deploy/bin/publish-image-x86
+
+  chmod u+x deploy/bin/publish-image-x86 && \
+    deploy/bin/publish-image-x86
+}
+
+build_arm() {
+  rm Dockerfile
+
+  cat deploy/bin/publish-image | \
+    sed "s/cat '.\/deploy\/default\/Dockerfile'/cat '.\/deploy\/default\/Dockerfile.arm'/g" | \
+    sed "s/image_tag='latest'/image_tag='arm'/g" | \
+    sed 's/$docker_remote:$CIRCLE_SHA1/$docker_remote:$CIRCLE_SHA1-arm/g' | \
+    sed 's/image_tag="${CIRCLE_BRANCH}_${CIRCLE_BUILD_NUM}"/image_tag="${CIRCLE_BRANCH}_${CIRCLE_BUILD_NUM}_arm"/g' \
+    >>deploy/bin/publish-image-arm
+
+  chmod u+x deploy/bin/publish-image-arm && \
+    deploy/bin/publish-image-arm
+}
+
+build_x86 && \
+  build_arm

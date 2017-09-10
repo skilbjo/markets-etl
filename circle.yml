@@ -13,5 +13,4 @@ deployment:
   quay:
     branch: /.*/
     commands:
-      - deploy/bin/publish-image
-      - deploy/bin/x86
+      - deploy/bin/cpu-arch-publish-image

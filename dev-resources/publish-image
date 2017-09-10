@@ -1,42 +1,21 @@
 #!/usr/bin/env bash
 set -eoux pipefail
 
-app_name=$(basename $(dirname $(pwd)))
+dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+app_name=$(basename $(dirname $dir))
 uberjar="target/uberjar/${app_name}.jar"
-consul_prefix="$(echo $app_name | tr '-' '_')/config"
-consul_secret_prefix="$(echo $app_name | tr '-' '_')/secrets"
-docker_registry='quay.io'
-docker_remote="quay.io/skilbjo/$app_name"
-email='john.skilbeck@someemail.com'
-
-# Use default Dockerfile if one doesn't exist
-if [[ ! -f './Dockerfile' ]]; then
-  cat '../deploy/default/Dockerfile' | \
-    sed "s;__CONSUL_PREFIX__;${consul_prefix};" | \
-    sed "s;__CONSUL_SECRET_PREFIX__;${consul_secret_prefix};" | \
-    sed "s;__UBERJAR__;${uberjar};" \
-    > ../Dockerfile
-fi
-
 image_tag='dev'
 
-# Login
-#docker login -u $QUAY_ROBOT_USERNAME -p $QUAY_ROBOT_PASSWORD -e $EMAIL $DOCKER_REGISTRY
+cd "${dir}/.."
 
-cd ..
+cp "${dir}/../deploy/default/Dockerfile" Dockerfile
 
-# Add git revision
-echo $(git rev-parse HEAD) > .tag
+cat "${dir}/../deploy/default/Dockerfile" | \
+  sed "s;__UBERJAR__;${uberjar};" \
+  >Dockerfile
 
-# Build
 lein uberjar
-docker build --rm -t $docker_remote:$image_tag .
-
-# Tag
-docker tag $docker_remote:$image_tag $docker_remote
-
-# Push it real good
-docker push $docker_remote
+docker build --rm -t $app_name:$image_tag .
+docker tag $app_name:$image_tag $app_name
 
 rm Dockerfile
-rm .tag

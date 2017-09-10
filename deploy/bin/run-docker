@@ -1,7 +1,16 @@
 #!/usr/bin/env bash
 set -eou pipefail
 
-img="quay.io/skilbjo/markets-etl:latest"
+arch=""
+
+case $(uname -a) in
+  *amd64* | *x_86* | *x_86_64* )
+    arch="x86" ;;
+  *arm* )
+    arch="arm" ;;
+esac
+
+img="quay.io/skilbjo/markets-etl:$arch"
 job_cmd="usr/local/deploy/bin/run-job"
 
 docker run --rm \

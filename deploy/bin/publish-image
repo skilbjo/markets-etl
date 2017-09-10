@@ -15,7 +15,7 @@ if [[ ! -f './Dockerfile' ]]; then
     sed "s;__CONSUL_PREFIX__;${consul_prefix};" | \
     sed "s;__CONSUL_SECRET_PREFIX__;${consul_secret_prefix};" | \
     sed "s;__UBERJAR__;${uberjar};" \
-    > Dockerfile
+    >Dockerfile
 fi
 
 if [[ $CIRCLE_BRANCH == master ]]; then
