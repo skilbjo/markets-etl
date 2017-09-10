@@ -14,3 +14,4 @@ deployment:
     branch: /.*/
     commands:
       - deploy/bin/publish-image
+      - deploy/bin/x86
