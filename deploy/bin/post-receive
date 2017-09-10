@@ -12,9 +12,11 @@ GIT_WORK_TREE="$deploy_dir" git checkout -f
 cd "$deploy_dir"
 
 ## build steps here ##
-case "$user" in
-  (skilbjo) sudo cp deploy/tasks/crontab "$cron_dir/$app" ;;
-  (pi) sudo cp deploy/tasks/crontab-rspi "$cron_dir/$app" ;;
+case "$kernel" in
+  (Linux)
+    sudo cp deploy/tasks/crontab "$cron_dir/$app" ;;
+  (FreeBSD)
+    sudo cp deploy/tasks/crontab "/var/cron/tabs/$app" ;;
 esac
 
 echo "all done"
