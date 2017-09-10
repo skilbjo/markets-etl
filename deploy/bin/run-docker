@@ -4,7 +4,7 @@ set -eou pipefail
 arch=""
 
 case $(uname -a) in
-  *amd64* | *x_86* | *x_86_64* )
+  *amd64* | *x_86* | *x86_64* )
     arch="x86" ;;
   *arm* )
     arch="arm" ;;
