@@ -1,7 +1,11 @@
 #!/usr/bin/env bash
 set -eou pipefail
 
+dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+app_name=$(basename $(dirname $(dirname $dir)))
 arch=""
+
+cd "${dir}/../.."
 
 case $(uname -a) in
   *amd64* | *x_86* | *x86_64* )
@@ -10,11 +14,11 @@ case $(uname -a) in
     arch="arm" ;;
 esac
 
-img="quay.io/skilbjo/markets-etl:$arch"
+img="quay.io/skilbjo/$app_name:$arch"
 job_cmd="usr/local/deploy/bin/run-job"
 
 docker run --rm \
-  -e db_jdbc_uri="$(echo $db_jdbc_uri)" \
-  -e quandl_api_key="$(echo $quandl_api_key)" \
+  -p 8080:8080 \
+  -e ro_db_jdbc_uri="$(echo $ro_db_jdbc_uri)" \
   "$img" \
   "$job_cmd" $@
