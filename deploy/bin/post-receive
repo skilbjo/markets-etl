@@ -9,10 +9,10 @@ cron_dir="/etc/cron.d"
 
 GIT_WORK_TREE="$deploy_dir" git checkout -f
 
-cd "$deploy_dir"
+mkdir -p "$deploy_dir" && cd "$deploy_dir"
 
 ## build steps here ##
-case "$kernel" in
+case $(uname) in
   (Linux)
     sudo cp deploy/tasks/crontab "$cron_dir/$app" ;;
   (FreeBSD)
