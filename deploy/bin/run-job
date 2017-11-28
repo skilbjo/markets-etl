@@ -1,11 +1,13 @@
 #!/usr/bin/env bash
 set -eou pipefail
 
-java_opts="-Xms256m -Xmx256m -XX:MaxMetaspaceSize=128m \
+java_opts="-Xms256m -Xmx512m -XX:MaxMetaspaceSize=128m \
   -server -Duser.timezone=PST8PDT"
 cmd="java $java_opts -jar app.jar"
 
 # Prereqs
-apk fix
+set +e
+apk fix || echo 'Unable to reach apk... continuing...'
+set -e
 
 exec $cmd $@
