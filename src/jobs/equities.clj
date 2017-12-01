@@ -1,6 +1,6 @@
 (ns jobs.equities
   (:require [clojure.core.reducers :as r]
-            [jobs.fixture :as f]
+            [fixtures.equities :as f]
             [markets-etl.api :as api]
             [markets-etl.sql :as sql]
             [markets-etl.util :as util])
@@ -30,6 +30,7 @@
                                       :data    (api/query-quandl dataset
                                                                  %
                                                                  query-params)}) ticker))
+        data (-> f/fixture)
         clean-dataset         (fn [{:keys [dataset ticker data] :as response}]
                                 (let [column-names    (map util/keywordize
                                                            (-> data
@@ -56,7 +57,11 @@
                                                                 "ticker  = ? and    "
                                                                 "date    = ?        ")
                                                                dataset ticker date]
-                                                              m)) col))]
+                                                              m)) col))
+        ]
+    (->> data
+         util/print-it)
+
     (->> (api/query-quandl "WIKI" "FB" query-params)
          util/print-it)
     ;(->> f/fixture-multi                  ; Testing
