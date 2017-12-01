@@ -32,7 +32,10 @@
    (query sql {}))
   ([sql params]
    (with-open [conn (get-custom-dw-conn)]
-     (let [sql     (prepare-statement sql params)
+     (let [sql     (-> sql
+                       (string/replace #";" "")
+                       (string/replace #"--" "")
+                       (prepare-statement params))
            results (-> conn
                        (.createStatement)
                        (.executeQuery sql))]
