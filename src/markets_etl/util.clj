@@ -6,22 +6,9 @@
    [clojure.string :as string]))
 
 ; -- dev -----------------------------------------------
-(defn print-and-die [x]
-  (pprint/pprint x)
-  (System/exit 0))
-
-(defn just-die [x]
-  (System/exit 0))
-
-(defn printit [x]
+(defn print-it [x]
   (pprint/pprint x)
   x)
-
-(defn sleep [ms]
-  (Thread/sleep ms))
-
-(defn random-uuid []
-  (str (java.util.UUID/randomUUID)))
 
 ; -- time ----------------------------------------------
 (def now (time/now))

@@ -7,8 +7,8 @@
   (:gen-class))
 
 (def datasets
-  '({:dataset "WIKI"
-     :ticker ["FB" "AMZN" "GOOG" "NVDA"]}))
+  {:dataset "WIKI"
+   :ticker ["FB" "AMZN" "GOOG" "NVDA"]})
 
 (def query-params
   {:limit 10
@@ -24,6 +24,12 @@
                                                                 query-params))})
         get-quandl-data       (fn [{:keys [dataset ticker] :as m}]
                                 (map #(flatten-ticker dataset %) ticker))
+        data                (fn [{:keys [dataset ticker] :as m}]
+                              (map #({:dataset dataset
+                                      :ticker  %
+                                      :data    (api/query-quandl dataset
+                                                                 %
+                                                                 query-params)}) ticker))
         clean-dataset         (fn [{:keys [dataset ticker data] :as response}]
                                 (let [column-names    (map util/keywordize
                                                            (-> data
@@ -51,6 +57,8 @@
                                                                 "date    = ?        ")
                                                                dataset ticker date]
                                                               m)) col))]
+    (->> (api/query-quandl "WIKI" "FB" query-params)
+         util/print-it)
     ;(->> f/fixture-multi                  ; Testing
          ;flatten
          ;(r/map clean-dataset)
@@ -58,7 +66,7 @@
          ;(into '())
          ;flatten
          ;util/printit)))
-    (->> (map get-quandl-data datasets)    ; Live call
+    #_(->> (map get-quandl-data datasets)    ; Live call
          flatten
          (r/map clean-dataset)
          (r/map database-it)
