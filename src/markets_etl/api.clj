@@ -28,7 +28,7 @@
                                                       {:query-params auth-params})]
     {:status status :body body}))
 
-(defn query-quandl
+(defn query-quandl!
   [dataset ticker & paramz]
   {:pre [(every? true? (util/allowed? paramz))]}
   (let [params   (first paramz)

@@ -7,8 +7,8 @@
   (:gen-class))
 
 (def datasets
-  {:dataset "WIKI"
-   :ticker ["FB" "AMZN" "GOOG" "NVDA"]})
+  '({:dataset "WIKI"
+   :ticker ["FB" "AMZN" "GOOG" "NVDA"]}))
 
 (def query-params
   {:limit 10
@@ -16,21 +16,15 @@
    :end_date util/now})
 
 (defn -main [& args]
-  (let [flatten-ticker        (fn [dataset ticker]
-                                {:dataset dataset
-                                 :ticker  ticker
-                                 :data    (-> (api/query-quandl dataset
-                                                                ticker
-                                                                query-params))})
-        get-quandl-data       (fn [{:keys [dataset ticker] :as m}]
-                                (map #(flatten-ticker dataset %) ticker))
-        data                (fn [{:keys [dataset ticker] :as m}]
-                              (map #({:dataset dataset
-                                      :ticker  %
-                                      :data    (api/query-quandl dataset
-                                                                 %
-                                                                 query-params)}) ticker))
-        data (-> f/fixture)
+  (let [get-quandl-data       (fn [{:keys [dataset ticker]}]
+                                (println ticker)
+                                (->> ticker
+                                     (map #({:dataset dataset
+                                             :ticker  ticker
+                                             :data    (api/query-quandl! dataset
+                                                                         %
+                                                                         query-params)}))))
+        ;data (-> f/fixture)
         clean-dataset         (fn [{:keys [dataset ticker data] :as response}]
                                 (let [column-names    (map util/keywordize
                                                            (-> data
@@ -59,11 +53,13 @@
                                                                dataset ticker date]
                                                               m)) col))
         ]
-    (->> data
+    #_(->> data
          util/print-it)
 
-    (->> (api/query-quandl "WIKI" "FB" query-params)
-         util/print-it)
+    (->> datasets
+         (map get-quandl-data)
+         util/print-it
+         doall)
     ;(->> f/fixture-multi                  ; Testing
          ;flatten
          ;(r/map clean-dataset)
