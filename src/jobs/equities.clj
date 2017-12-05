@@ -17,12 +17,12 @@
 
 (defn -main [& args]
   (let [get-quandl-data       (fn [{:keys [dataset ticker]}]
-                                (println ticker)
                                 (->> ticker
-                                     (map #({:dataset dataset
+                                     (map (fn [ticker]
+                                            {:dataset dataset
                                              :ticker  ticker
                                              :data    (api/query-quandl! dataset
-                                                                         %
+                                                                         ticker
                                                                          query-params)}))))
         ;data (-> f/fixture)
         clean-dataset         (fn [{:keys [dataset ticker data] :as response}]
