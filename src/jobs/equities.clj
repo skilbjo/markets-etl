@@ -24,7 +24,10 @@
                                              :data    (api/query-quandl! dataset
                                                                          ticker
                                                                          query-params)}))))
-        ;data (-> f/fixture)
+
+        data                (->> datasets
+                                 (map get-quandl-data))
+        ;data                (-> f/fixture)
         clean-dataset         (fn [{:keys [dataset ticker data] :as response}]
                                 (let [column-names    (map util/keywordize
                                                            (-> data
@@ -53,10 +56,10 @@
                                                                dataset ticker date]
                                                               m)) col))
         ]
-    #_(->> data
+    (->> data
          util/print-it)
 
-    (->> datasets
+    #_(->> datasets
          (map get-quandl-data)
          util/print-it
          doall)
