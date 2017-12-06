@@ -18,11 +18,21 @@
 
 ## Run manually
 
-    lein trampoline run -m jobs.equities
-    LEIN_FAST_TRAMPOLINE=true lein trampoline run -m jobs.equities
-    llein run -m jobs.equities
+```bash
+lein trampoline run -m jobs.equities
+LEIN_FAST_TRAMPOLINE=true lein trampoline run -m jobs.equities
+llein run -m jobs.equities
+```
+
+## lein
+
+```bash
+lein deps :tree 2>deps 1>/dev/null && vim deps
+```
 
 ## Git remotes
 
-    $ git remote add pi-vpn ssh://skilbjo@router.:43/~/deploy/git/markets-etl.git
-    $ git remote add pi-home ssh://skilbjo@pi1/~/deploy/git/markets-etl.git
+```bash
+git remote add pi-vpn ssh://skilbjo@router.:43/~/deploy/git/markets-etl.git
+git remote add pi-home ssh://skilbjo@pi1/~/deploy/git/markets-etl.git
+```
