@@ -41,5 +41,5 @@
         {:keys [status body]}  response]
     (if (= 200 status)
       (-> body
-          json/read-str)
+          (json/read-str :key-fn keyword))
       (println "Failed request, exception: " status))))

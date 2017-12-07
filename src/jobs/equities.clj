@@ -1,5 +1,6 @@
 (ns jobs.equities
-  (:require [clojure.core.reducers :as r]
+  (:require [clojure.string :as string]
+            [clojure.core.reducers :as r]
             [fixtures.equities :as f]
             [markets-etl.api :as api]
             [markets-etl.sql :as sql]
@@ -25,20 +26,36 @@
                                                                          ticker
                                                                          query-params)}))))
 
-        data                (->> datasets
-                                 (map get-quandl-data))
-        ;data                (-> f/fixture)
-        clean-dataset         (fn [{:keys [dataset ticker data] :as response}]
-                                (let [column-names    (map util/keywordize
-                                                           (-> data
-                                                               (get "dataset_data")
-                                                               (get "column_names")))
-                                      data            (-> data
-                                                          (get "dataset_data")
-                                                          (get "data"))]
-                                  {:dataset dataset
-                                   :ticker  ticker
-                                   :data    (map #(zipmap column-names %) data)}))
+        ;data                (->> datasets
+                                 ;(map get-quandl-data)
+                                 ;flatten)
+        data                (-> f/fixture flatten)
+        prepare-row         (fn [{:keys [data] :as m}]
+                              (let [data'   (-> data :dataset_data)
+                                    columns (->> (-> data' :column_names string/lower-case)
+                                                 util/print-it
+                                                 (map keyword))
+                                    _ (println columns)
+                                    data*   (-> data' :data)
+                                    ]
+                              #_(->> data*
+                                   (zipmap columns))))
+
+        ;(fn [{:keys [dataset
+                                         ;ticker
+                                         ;data]}]
+                              ;(let [column-names    (map util/keywordize
+                                                         ;(-> data
+                                                               ;(get "dataset_data")
+                                                               ;(get "column_names")))
+                                      ;data            (-> data
+                                                          ;(get "dataset_data")
+                                                          ;(get "data"))]
+                                  ;{:dataset dataset
+                                   ;:ticker  ticker
+                                   ;:data    (
+
+                                   ;(map #(zipmap column-names %) data)}))
         database-it           (fn [{:keys [dataset ticker data] :as m}]
                                 (->> data
                                      (util/map-seq-f-k util/postgreserize)
@@ -57,7 +74,10 @@
                                                               m)) col))
         ]
     (->> data
-         util/print-it)
+         (map prepare-row)
+         ;util/print-it
+         doall
+         )
 
     #_(->> datasets
          (map get-quandl-data)
