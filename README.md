@@ -16,6 +16,13 @@
 - [X] For currency, parse out usd currency and put in column (ie, EUR)
 - [ ] Better naming, any ideas for refactoring
 
+## environment variables
+```bash
+export quandl_api_key=''
+export jdbc_db_uri=''
+export test_jdbc_db_uri=$jdbc_db_uri
+```
+
 ## Run manually
 
 ```bash
