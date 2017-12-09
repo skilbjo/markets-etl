@@ -14,33 +14,24 @@
    :ticker ["FB" "AMZN" "GOOG" "NVDA"]}))
 
 (def query-params
-  {:limit 10
+  {:limit      10
    :start_date util/last-week
-   :end_date util/now})
+   :end_date   util/now})
 
 (defn -main [& args]
-  (let [
-        get-quandl-data       (fn [{:keys [dataset
-                                           ticker]}]
-                                (->> ticker
-                                     (map (fn [ticker]
-                                            {:dataset dataset
-                                             :ticker  ticker
-                                             :data    (api/query-quandl! dataset
-                                                                         ticker
-                                                                         query-params)}))))
-        ;get-quandl-data       (fn [{:keys [dataset ticker]}]
-                                ;(->> ticker
-                                     ;(map (fn [ticker]
-                                            ;(api/query-quandl! dataset
-                                                               ;ticker
-                                                               ;query-params)))))
+  (let [get-data       (fn [{:keys [dataset
+                                    ticker]}]
+                         (->> ticker
+                              (map (fn [tkr]
+                                     (-> (api/query-quandl! dataset
+                                                            tkr
+                                                            query-params)
+                                         (assoc :dataset dataset :ticker tkr))))))
         ;data                (->> datasets
-                                 ;(map get-quandl-data)
-                                 ;flatten)
+                                 ;(map get-data))
         ;data                (-> f/fixture flatten)
         data              (->> datasets
-                               (map get-quandl-data))
+                               (map get-data))
         prepare-row         (fn [{:keys [dataset
                                          ticker
                                          data] :as m}]
@@ -91,7 +82,7 @@
          doall
          )
 
-    ;#_(->> (map get-quandl-data datasets)    ; Live call
+    ;#_(->> (map get-data datasets)    ; Live call
          ;flatten
          ;(r/map clean-dataset)
          ;(r/map database-it)

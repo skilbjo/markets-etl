@@ -21,12 +21,13 @@
 
 (defn allowed? [m]
   (->> m
-       first
        (map (fn [[k v]]
               ((allowed k) v)))))
 
 (defn query-quandl!
-  [dataset ticker & paramz]
+  ([dataset ticker]
+   (query-quandl! dataset ticker {}))
+  ([dataset ticker paramz]
   {:pre [(every? true? (allowed? paramz))]}
   (let [url      (str (:protocol quandl-api)
                       (:url quandl-api)
@@ -34,12 +35,11 @@
                       (str ticker "/")
                       (:format quandl-api))
         params   (-> paramz
-                     first
-                     (assoc :api_key (env :quandl-api-key))
-                     util/print-it)
-        response (http/get url params)
+                     (assoc :api_key (env :quandl-api-key)))
+        response (http/get url
+                           {:query-params params})
         {:keys [status body]}  response]
     (if (= 200 status)
       (-> body
           (json/read-str :key-fn keyword))
-      (println "Failed request, exception: " status))))
+      (println "Failed request, exception: " status)))))
