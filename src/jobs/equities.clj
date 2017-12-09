@@ -19,7 +19,9 @@
    :end_date util/now})
 
 (defn -main [& args]
-  (let [get-quandl-data       (fn [{:keys [dataset ticker]}]
+  (let [
+        get-quandl-data       (fn [{:keys [dataset
+                                           ticker]}]
                                 (->> ticker
                                      (map (fn [ticker]
                                             {:dataset dataset
@@ -27,10 +29,18 @@
                                              :data    (api/query-quandl! dataset
                                                                          ticker
                                                                          query-params)}))))
+        ;get-quandl-data       (fn [{:keys [dataset ticker]}]
+                                ;(->> ticker
+                                     ;(map (fn [ticker]
+                                            ;(api/query-quandl! dataset
+                                                               ;ticker
+                                                               ;query-params)))))
         ;data                (->> datasets
                                  ;(map get-quandl-data)
                                  ;flatten)
-        data                (-> f/fixture flatten)
+        ;data                (-> f/fixture flatten)
+        data              (->> datasets
+                               (map get-quandl-data))
         prepare-row         (fn [{:keys [dataset
                                          ticker
                                          data] :as m}]
@@ -76,7 +86,7 @@
                                                               m)) col))
         ]
     (->> data
-         (map prepare-row)
+         ;(map prepare-row)
          util/print-it
          doall
          )

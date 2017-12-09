@@ -8,6 +8,7 @@
 ; -- dev -----------------------------------------------
 (defn print-it [x]
   (pprint/pprint x)
+  (System/exit 0)
   x)
 
 ; -- time ----------------------------------------------
@@ -71,22 +72,6 @@
 (defn date-time? [d]
   (or (string? d)
       (instance? org.joda.time.DateTime d)))
-
-(def ^:private allowed
-  {:collapse     #{"none" "daily" "weekly" "monthly" "quarterly" "annual"}
-   :transform    #{"none" "rdiff" "diff" "cumul" "normalize"}
-   :order        #{"asc" "desc"}
-   :rows         integer?
-   :limit        integer?
-   :column_index integer?
-   :start_date   date-time?
-   :end_date     date-time?})
-
-(defn allowed? [m]
-  (->> m
-       first
-       (map (fn [[k v]]
-              ((allowed k) v)))))
 
 ; -- collections ---------------------------------------
 (defn map-f-k [f coll]
