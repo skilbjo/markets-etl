@@ -11,7 +11,7 @@
                              [lein-cljfmt "0.5.7"]]}
              :uberjar {:aot :all}}
   :target-path "target/%s"
-  :jvm-opts ["-Duser.timezone=PST"
+  :jvm-opts ["-Duser.timezone=PST8PDT"
              ; Same JVM options as deploy/bin/run-job uses in production
              "-Xms256m"
              "-Xmx2g"
