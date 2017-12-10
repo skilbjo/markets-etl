@@ -3,7 +3,7 @@ begin;
 
   create schema if not exists dw;
 
-  drop table if exists dw.markets;
+  drop table if exists dw.markets cascade;
   create table if not exists dw.markets (
     dataset         text,
     ticker          text,
@@ -12,7 +12,7 @@ begin;
     constraint markets_pk primary key (dataset, ticker)
   );
 
-  truncate dw.markets;
+  truncate dw.markets cascade;
   insert into dw.markets values
     ('FRED',       'GDP',           'Gross domistic product, in billions of $'),
     ('FRED',       'M1',            'M1 money stock is funds that are readily accesible for spending, in billions of $'),

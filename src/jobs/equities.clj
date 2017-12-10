@@ -1,11 +1,9 @@
 (ns jobs.equities
   (:require [clj-time.coerce :as coerce]
-            [clojure.core.reducers :as r]
             [clojure.data.json :as json]
             [clojure.java.jdbc :as jdbc]
             [clojure.string :as string]
             [environ.core :refer [env]]
-            [fixtures.equities :as f]
             [markets-etl.api :as api]
             [markets-etl.sql :as sql]
             [markets-etl.util :as util])
@@ -17,8 +15,8 @@
 
 (def query-params
   {:limit      10
-   :start_date util/yesterday
-   :end_date   util/last-week})
+   :start_date util/last-week
+   :end_date   util/now})
 
 (defn prepare-row [{:keys [dataset
                            ticker]
@@ -56,7 +54,7 @@
          (map prepare-row)
          flatten
          (map #(update-or-insert! txn %))
-         util/print-it)))
+         doall)))
 
 (defn -main [& args]
   (jdbc/with-db-connection [cxn (env :jdbc-db-uri)]
@@ -67,9 +65,9 @@
                                  (-> (api/query-quandl! dataset
                                                         tkr
                                                         query-params)
-                                     (assoc :dataset dataset :ticker tkr))))
-                          flatten))
-          ;data        (->> datasets (map get-data))
-          data          f/source]
+                                     (assoc :dataset dataset :ticker tkr))))))
+          data        (->> datasets
+                           (map get-data)
+                           flatten)]
 
       (execute! cxn data))))
