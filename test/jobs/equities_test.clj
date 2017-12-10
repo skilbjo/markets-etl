@@ -1,13 +1,20 @@
 (ns jobs.equities-test
-  (:require [clojure.test :refer :all]
-            [jobs.equities :as equities]
-            [jobs.fixture :as fixture])
-  (:gen-class))
+  (:require [clojure.java.io :as io]
+            [clojure.java.jdbc :as jdbc]
+            [clojure.test :refer :all]
+            [environ.core :refer [env]]
+            [jobs.equities :refer :all :rename {-main _}]
+            [fixtures.equities :as f]
+            [fixtures.fixtures :refer [*cxn*] :as fix]))
 
-(deftest generate-sql-test
-  (testing "does generate-sql generate sql?"
-    (is (= true true))))
+(use-fixtures :each (fix/with-database))
 
-(deftest split-stats-test
-  (testing "split-stats splits a wide map into many deep maps"
-    (is (= true true))))
+(deftest integration-test
+  (->> f/source
+       (execute! *cxn*))
+
+  (testing "some stuff"
+    (is (= f/result
+           (->> "select * from dw.equities"
+                (jdbc/query *cxn*)
+                flatten)))))

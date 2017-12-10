@@ -1,17 +1,22 @@
 (defproject markets-etl "0.1.0-SNAPSHOT"
   :uberjar-name "markets-etl.jar"
   :dependencies [[org.clojure/clojure "1.8.0"]
-                 [clj-http "2.3.0"]
-                 [clj-time "0.12.2"]
+                 [clj-http "3.7.0"]
+                 [clj-time "0.14.2"]
                  [environ "1.1.0"]
                  [org.clojure/data.json "0.2.6"]
-                 [org.clojure/java.jdbc "0.5.8"]
-                 [org.postgresql/postgresql "42.0.0"]]
+                 [org.clojure/java.jdbc "0.7.3"]
+                 [org.postgresql/postgresql "42.1.4"]]
   :profiles {:dev {:plugins [[lein-environ "1.1.0"]
-                             [lein-cljfmt "0.5.6"]]}
+                             [lein-cljfmt "0.5.7"]]}
              :uberjar {:aot :all}}
   :target-path "target/%s"
-  :jvm-opts ["-Xms256m" "-Xmx256m" "-XX:MaxMetaspaceSize=128m"
-             "-client" "-Duser.timezone=PST8PDT"
+  :jvm-opts ["-Duser.timezone=PST8PDT"
+             ; Same JVM options as deploy/bin/run-job uses in production
+             "-Xms256m"
+             "-Xmx2g"
+             "-XX:MaxMetaspaceSize=128m"
+             ; https://clojure.org/reference/compilation
              "-Dclojure.compiler.direct-linking=true"
+             ; https://stackoverflow.com/questions/4659151/recurring-exception-without-a-stack-trace-how-to-reset
              "-XX:-OmitStackTraceInFastThrow"])

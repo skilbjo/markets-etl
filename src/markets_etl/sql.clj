@@ -2,20 +2,16 @@
   (:require [clojure.string :as string]
             [clojure.java.jdbc :as jdbc]
             [environ.core :refer [env]]
-            [markets-etl.util :as util]
-            [clj-time.jdbc])
-  (:import [java.sql BatchUpdateException]
-           [java.util Properties]
-           [java.sql DriverManager Connection]))
+            [markets-etl.util :as util])
+  (:import [java.sql DriverManager]))
 
 (clojure.lang.RT/loadClassForName "org.postgresql.Driver")
 
-(defn get-dw-conn []
-  (env :db-jdbc-uri))
-
-(defn get-custom-dw-conn []
-  (DriverManager/getConnection
-   (env :db-jdbc-uri)))
+(defn update-or-insert! [db table where-clause data]
+  (let [result (jdbc/update! db table data where-clause)]
+    (if (zero? (first result))
+      (jdbc/insert! db table data)
+      result)))
 
 (defn- prepare-statement
   [sql params]
@@ -27,30 +23,16 @@
         (recur (string/replace sql (str k) (str (jdbc/sql-value v)))
                others)))))
 
-(defn query
+(defn query'
   ([sql]
-   (query sql {}))
+   (query' sql {}))
   ([sql params]
-   (with-open [conn (get-custom-dw-conn)]
-     (let [sql     (prepare-statement sql params)
+   (with-open [conn (-> :jdbc-db-uri env DriverManager/getConnection)]
+     (let [sql     (-> sql
+                       (string/replace #";" "")
+                       (string/replace #"--" "")
+                       (prepare-statement params))
            results (-> conn
                        (.createStatement)
                        (.executeQuery sql))]
        (jdbc/metadata-result results)))))
-
-(defn insert-multi! [table data]
-  (jdbc/with-db-connection [conn (get-dw-conn)]
-    (jdbc/insert-multi! conn table data)))
-
-(defn insert! [table data]
-  (jdbc/with-db-connection [conn (get-dw-conn)]
-    (jdbc/insert! conn table data)))
-
-(defn update-or-insert! [table where-clause data]
-  (jdbc/with-db-connection [conn (get-dw-conn)]
-    (jdbc/with-db-transaction [conn conn]
-      (let [result (jdbc/update! conn table data where-clause)]
-        (if (zero? (first result))
-          (insert! table data)
-          result)))))
-

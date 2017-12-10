@@ -1,8 +1,7 @@
 machine:
   services:
     - docker
-  environment:
-    DOCKER_REMOTE: quay.io/skilbjo/markets-etl
+    - postgresql
 
 test:
   override:
