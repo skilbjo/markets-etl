@@ -1,14 +1,17 @@
 (ns markets-etl.util
-  (:require
-   [clj-time.core :as time]
-   [clj-time.coerce :as coerce]
-   [clojure.pprint :as pprint]
-   [clojure.string :as string]))
+  (:require [clj-time.core :as time]
+            [clj-time.coerce :as coerce]
+            [clojure.pprint :as pprint]
+            [clojure.string :as string]))
 
 ; -- dev -----------------------------------------------
 (defn print-it [coll]
   (pprint/pprint coll)
   coll)
+
+(defn print-and-die [coll]
+  (pprint/pprint coll)
+  (System/exit 0))
 
 ; -- time ----------------------------------------------
 (def now (time/now))
