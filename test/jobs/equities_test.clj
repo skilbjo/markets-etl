@@ -5,7 +5,7 @@
             [environ.core :refer [env]]
             [jobs.equities :refer :all :rename {-main _}]
             [fixtures.equities :as f]
-            [markets-etl.fixtures :refer [*cxn*] :as fix]))
+            [fixtures.fixtures :refer [*cxn*] :as fix]))
 
 (use-fixtures :each (fix/with-database))
 

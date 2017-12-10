@@ -1,4 +1,4 @@
-(ns markets-etl.fixtures
+(ns fixtures.fixtures
   (:require [clojure.java.io :as io]
             [clojure.java.jdbc :as jdbc]
             [environ.core :refer [env]]))
