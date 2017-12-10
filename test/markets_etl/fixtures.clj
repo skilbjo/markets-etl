@@ -9,7 +9,7 @@
 (defn with-database []
   (fn [f]
     (binding [*cxn* (env :test-jdbc-db-uri)]
-      (->> "test/setup.sql"
+      (->> "test/ddl.sql"
            io/resource
            slurp
            (jdbc/execute! *cxn*))

@@ -1,6 +1,10 @@
 -- Dimension table
 begin;
-  create table dw.markets (
+
+  create schema if not exists dw;
+
+  drop table if exists dw.markets;
+  create table if not exists dw.markets (
     dataset         text,
     ticker          text,
     description     text,
@@ -8,27 +12,30 @@ begin;
     constraint markets_pk primary key (dataset, ticker)
   );
 
+  truncate dw.markets;
   insert into dw.markets values
-  ('FRED',       'GDP',           'Gross domistic product, in billions of $'),
-  ('FRED',       'M1',            'M1 money stock is funds that are readily accesible for spending, in billions of $'),
-  ('FRED',       'DFF',           'Effective federal funds rate'),
-  ('FRED',       'UNRATE',        'Civilian unemployment rate'),
-  ('WIKI',       'FB',            'Facebook'),
-  ('WIKI',       'AMZN',          'Amazon'),
-  ('WIKI',       'GOOG',          'Google'),
-  ('WIKI',       'NVDA',          'Nvidia'),
-  ('FED',        'RIFSPFF_N_D',   'Federal funds effective rate, daily'),
-  ('USTREASURY', 'YIELD',         'Treasury yield curve rates'),
-  ('USTREASURY', 'LONGTERMRATES', 'Treasury long term rates, 30-year constant maturity series'),
-  ('ZILL',       'Z94108_A',      'Zillow home value index, all properties (condos, SFR) in zipcode'),
-  ('CURRFX',     'EURUSD',        'Value of 1 EUR in USD'),
-  ('CURRFX',     'GBPUSD',        'Value of 1 GBP in USD')
+    ('FRED',       'GDP',           'Gross domistic product, in billions of $'),
+    ('FRED',       'M1',            'M1 money stock is funds that are readily accesible for spending, in billions of $'),
+    ('FRED',       'DFF',           'Effective federal funds rate'),
+    ('FRED',       'UNRATE',        'Civilian unemployment rate'),
+    ('WIKI',       'FB',            'Facebook'),
+    ('WIKI',       'AMZN',          'Amazon'),
+    ('WIKI',       'GOOG',          'Google'),
+    ('WIKI',       'NVDA',          'Nvidia'),
+    ('FED',        'RIFSPFF_N_D',   'Federal funds effective rate, daily'),
+    ('USTREASURY', 'YIELD',         'Treasury yield curve rates'),
+    ('USTREASURY', 'LONGTERMRATES', 'Treasury long term rates, 30-year constant maturity series'),
+    ('ZILL',       'Z94108_A',      'Zillow home value index, all properties (condos, SFR) in zipcode'),
+    ('CURRFX',     'EURUSD',        'Value of 1 EUR in USD'),
+    ('CURRFX',     'GBPUSD',        'Value of 1 GBP in USD')
   ;
 commit;
 
 -- Fact tables
 begin;
-  create table dw.equities (
+
+  drop table if exists dw.equities;
+  create table if not exists dw.equities (
     dataset       text,
     ticker        text,
     date          date,
@@ -49,7 +56,8 @@ begin;
     constraint equities_markets_fk foreign key (dataset, ticker) references dw.markets (dataset, ticker)
   );
 
-  create table dw.real_estate (
+  drop table if exists dw.real_estate;
+  create table if not exists dw.real_estate (
     dataset         text,
     ticker          text,
     date            date,
@@ -62,7 +70,8 @@ begin;
     constraint real_estate_markets_fk foreign key (dataset, ticker) references dw.markets (dataset, ticker)
   );
 
-  create table dw.currency (
+  drop table if exists dw.currency;
+  create table if not exists dw.currency (
     dataset         text,
     ticker          text,
     currency        text,
@@ -75,7 +84,8 @@ begin;
     constraint currency_markets_fk foreign key (dataset, ticker) references dw.markets (dataset, ticker)
   );
 
-  create table dw.economics (
+  drop table if exists dw.economics;
+  create table if not exists dw.economics (
     dataset         text,
     ticker          text,
     date            date,
@@ -85,7 +95,8 @@ begin;
     constraint economics_markets_fk foreign key (dataset, ticker) references dw.markets (dataset, ticker)
   );
 
-  create table dw.interest_rates (
+  drop table if exists dw.interest_rates;
+  create table if not exists dw.interest_rates (
     dataset         text,
     ticker          text,
     date            date,
@@ -95,14 +106,4 @@ begin;
     constraint interest_rates_pk primary key (dataset, ticker, date, key),
     constraint interest_rates_markets_fk foreign key (dataset, ticker) references dw.markets (dataset, ticker)
   );
-commit;
-
--- Destructive
-begin;
-  drop table if exists dw.equities;
-  drop table if exists dw.real_estate;
-  drop table if exists dw.currency;
-  drop table if exists dw.economics;
-  drop table if exists dw.interest_rates;
-  drop table if exists dw.markets;
 commit;
