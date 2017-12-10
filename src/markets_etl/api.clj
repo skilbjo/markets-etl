@@ -28,18 +28,18 @@
   ([dataset ticker]
    (query-quandl! dataset ticker {}))
   ([dataset ticker paramz]
-  {:pre [(every? true? (allowed? paramz))]}
-  (let [url      (str (:protocol quandl-api)
-                      (:url quandl-api)
-                      (str dataset "/")
-                      (str ticker "/")
-                      (:format quandl-api))
-        params   (-> paramz
-                     (assoc :api_key (env :quandl-api-key)))
-        response (http/get url
-                           {:query-params params})
-        {:keys [status body]}  response]
-    (if (= 200 status)
-      (-> body
-          (json/read-str :key-fn keyword))
-      (println "Failed request, exception: " status)))))
+   {:pre [(every? true? (allowed? paramz))]}
+   (let [url      (str (:protocol quandl-api)
+                       (:url quandl-api)
+                       (str dataset "/")
+                       (str ticker "/")
+                       (:format quandl-api))
+         params   (-> paramz
+                      (assoc :api_key (env :quandl-api-key)))
+         response (http/get url
+                            {:query-params params})
+         {:keys [status body]}  response]
+     (if (= 200 status)
+       (-> body
+           (json/read-str :key-fn keyword))
+       (println "Failed request, exception: " status)))))

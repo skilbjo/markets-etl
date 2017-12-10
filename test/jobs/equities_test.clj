@@ -9,9 +9,8 @@
 (use-fixtures :each (fix/with-database))
 
 (deftest integration-test
-    (let [
-          schema            (->> "select now();"
-                                 (jdbc/execute! *cxn*))
+  (let [schema            (->> "select now();"
+                               (jdbc/execute! *cxn*))
           ;setup              (->> "test/setup.sql"
                                   ;io/resource
                                   ;slurp
@@ -27,8 +26,8 @@
           ;teardown          (->> "drop schema dw cascade;"
                                  ;(jdbc/execute! *cxn*))
           ;_ (println setup)
-          ]
+]
 
-        (testing "some stuff"
-          (is (= 1
-                 1)))))
+    (testing "some stuff"
+      (is (= 1
+             1)))))
