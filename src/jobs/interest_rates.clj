@@ -37,7 +37,6 @@
                                (map #(assoc % :dataset dataset :ticker ticker)))
         transform-row     (fn [{:keys [date] :as m}]
                             (-> (->> m
-                                     util/print-it
                                      (map (fn [[k v]]
                                             (case k
                                               :dataset nil
@@ -47,7 +46,6 @@
                                                :value  v})))
                                      (remove nil?)
                                      first)
-                                util/print-it
                                 (assoc :dataset dataset
                                        :ticker  ticker
                                        :date    date)))]
@@ -73,7 +71,6 @@
     (->> data
          (map prepare-row)
          flatten
-         util/print-it
          (map #(update-or-insert! txn %))
          doall)))
 
