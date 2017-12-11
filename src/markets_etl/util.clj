@@ -20,6 +20,10 @@
 
 (def last-week (-> 1 time/weeks time/ago))
 
+(def last-month (-> 1 time/months time/ago))
+
+(def last-quarter (-> 3 time/months time/ago))
+
 (def last-year (-> 1 time/years time/ago))
 
 ; -- data types ----------------------------------------

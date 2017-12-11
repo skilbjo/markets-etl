@@ -14,8 +14,8 @@
      :ticker ["Z94108_ZHVIAH"]}))
 
 (def query-params
-  {:limit 20
-   :start_date util/last-year
+  {:limit 10
+   :start_date util/last-quarter
    :end_date util/now})
 
 (defn prepare-row [{:keys [dataset
@@ -28,30 +28,29 @@
                                (string/replace #"-" "_")
                                json/read-str)
                            (map #(string/replace % #" " "_"))
-                           (map #(keyword %)))]
-
-    ;; fix this ;;
-
-    #_(let [area-category   (re-find #"[a-zA-Z]" ticker)
-            indicator-code  (-> ticker
-                                (string/split #"_")
-                                (nth 1))
-            area            (-> ticker
-                                (string/split #"[a-zA-Z]")
-                                (nth 1)
-                                (string/replace #"_" ""))]
-        {:dataset        dataset
-         :ticker         ticker
-         :date           date
-         :value          value
-         :area-category  area-category
-         :indicator-code indicator-code
-         :area           area})
-
-    (->> data
-         (map #(zipmap columns %))
-         (map #(update % :date coerce/to-sql-date))
-         (map #(assoc % :dataset dataset :ticker ticker)))))
+                           (map #(keyword %)))
+        area_category     (re-find #"[a-zA-Z]" ticker)
+        indicator_code    (-> ticker
+                              (string/split #"_")
+                              (nth 1))
+        area              (-> ticker
+                              (string/split #"[a-zA-Z]")
+                              (nth 1)
+                              (string/replace #"_" ""))
+        data'             (->> data
+                               (map #(zipmap columns %))
+                               (map #(update % :date coerce/to-sql-date))
+                               (map #(assoc % :dataset dataset :ticker ticker)))
+        transform-row     (fn [m]
+                            {:dataset        dataset
+                             :ticker         ticker
+                             :date           (-> m :date)
+                             :value          (-> m :value)
+                             :area_category  area_category
+                             :indicator_code indicator_code
+                             :area           area})]
+    (->> data'
+         (map transform-row))))
 
 (defn update-or-insert! [db {:keys [dataset
                                     ticker
