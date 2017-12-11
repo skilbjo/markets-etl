@@ -14,20 +14,21 @@ begin;
 
   truncate dw.markets cascade;
   insert into dw.markets values
-    ('FRED',       'GDP',           'Gross domistic product, in billions of $'),
-    ('FRED',       'M1',            'M1 money stock is funds that are readily accesible for spending, in billions of $'),
-    ('FRED',       'DFF',           'Effective federal funds rate'),
-    ('FRED',       'UNRATE',        'Civilian unemployment rate'),
-    ('WIKI',       'FB',            'Facebook'),
-    ('WIKI',       'AMZN',          'Amazon'),
-    ('WIKI',       'GOOG',          'Google'),
-    ('WIKI',       'NVDA',          'Nvidia'),
-    ('FED',        'RIFSPFF_N_D',   'Federal funds effective rate, daily'),
-    ('USTREASURY', 'YIELD',         'Treasury yield curve rates'),
-    ('USTREASURY', 'LONGTERMRATES', 'Treasury long term rates, 30-year constant maturity series'),
-    ('ZILL',       'Z94108_A',      'Zillow home value index, all properties (condos, SFR) in zipcode'),
-    ('CURRFX',     'EURUSD',        'Value of 1 EUR in USD'),
-    ('CURRFX',     'GBPUSD',        'Value of 1 GBP in USD')
+    ('FRED',       'GDP',             'Gross domistic product, in billions of $'),
+    ('FRED',       'M1',              'M1 money stock is funds that are readily accesible for spending, in billions of $'),
+    ('FRED',       'DFF',             'Effective federal funds rate'),
+    ('FRED',       'UNRATE',          'Civilian unemployment rate'),
+    ('WIKI',       'FB',              'Facebook'),
+    ('WIKI',       'AMZN',            'Amazon'),
+    ('WIKI',       'GOOG',            'Google'),
+    ('WIKI',       'NVDA',            'Nvidia'),
+    ('FED',        'RIFSPFF_N_D',     'Federal funds effective rate, daily'),
+    ('USTREASURY', 'YIELD',           'Treasury yield curve rates'),
+    ('USTREASURY', 'LONGTERMRATES',   'Treasury long term rates, 30-year constant maturity series'),
+    ('ZILL',       'Z94108_A',        'Zillow home value index, all properties (condos, SFR) in zipcode'),
+    ('ZILLOW',     'Z94108_ZHVIAH',   'Zillow home value index, all homes (condos, SFR) in zipcode'),
+    ('CURRFX',     'EURUSD',          'Value of 1 EUR in USD'),
+    ('CURRFX',     'GBPUSD',          'Value of 1 GBP in USD')
   ;
 commit;
 
