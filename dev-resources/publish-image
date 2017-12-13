@@ -2,20 +2,14 @@
 set -eoux pipefail
 
 dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-app_name=$(basename $(dirname $dir))
-uberjar="target/uberjar/${app_name}.jar"
+app=$(basename $(dirname $dir))
 image_tag='dev'
 
 cd "${dir}/.."
-
 cp "${dir}/../deploy/default/Dockerfile" Dockerfile
 
-cat "${dir}/../deploy/default/Dockerfile" | \
-  sed "s;__UBERJAR__;${uberjar};" \
-  >Dockerfile
-
 lein uberjar
-docker build --rm -t $app_name:$image_tag .
-docker tag $app_name:$image_tag $app_name
+docker build --rm -t $app:$image_tag .
+docker tag $app:$image_tag $app
 
 rm Dockerfile
