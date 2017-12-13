@@ -1,15 +1,16 @@
 FROM resin/armhf-alpine:3.5
 
-ENV JAVA_HOME /usr/lib/jvm/java-1.8-openjdk
-ENV QEMU_EXECVE 1
+ENV JAVA_HOME="/usr/lib/jvm/java-1.8-openjdk8" \
+    JAVA_OPTS="-Duser.timezone=UTC -Xms256m -Xmx512m -XX:MaxMetaspaceSize=128m -Duser.timezone=PST8PDT" \
+    QEMU_EXECVE=1
 
-COPY deploy/qemu/qemu-arm-static    /usr/bin/
+COPY deploy/qemu/qemu-arm-static /usr/bin/
 
-COPY deploy                         /usr/local/deploy
-COPY src                            /usr/local/src
-COPY deploy/default/bashrc          /root/.bashrc
-COPY deploy/default/vimrc           /root/.vimrc
-
-COPY __UBERJAR__                    /app.jar
+COPY target/uberjar/app.jar      /app.jar
+COPY deploy                      /usr/local/deploy
+COPY resources                   /usr/local/resources
+COPY src                         /usr/local/src
+COPY deploy/default/bashrc       /root/.bashrc
+COPY deploy/default/vimrc        /root/.vimrc
 
 RUN ["qemu-arm-static","/sbin/apk","-U","add","openjdk8"]
