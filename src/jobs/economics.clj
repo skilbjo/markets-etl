@@ -57,7 +57,7 @@
          doall)))
 
 (defn -main [& args]
-  (jdbc/with-db-connection [cxn (env :jdbc-db-uri)]
+  (jdbc/with-db-connection [cxn (-> :jdbc-db-uri env)]
     (let [get-data (fn [{:keys [dataset
                                 ticker]}]
                      (->> ticker

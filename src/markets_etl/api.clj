@@ -35,7 +35,7 @@
                        (str ticker "/")
                        (:format quandl-api))
          params   (-> paramz
-                      (assoc :api_key (env :quandl-api-key)))
+                      (assoc :api_key (-> :quandl-api-key env)))
          response (http/get url
                             {:query-params params})
          {:keys [status body]}  response]
