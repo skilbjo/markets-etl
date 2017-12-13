@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+set -euxo pipefail
+
+app=$(basename $(pwd))
+registry='quay.io'
+image="${registry}/skilbjo/${app}"
+email='skilbjo@github.com'
+
+cat './deploy/default/Dockerfile' >Dockerfile
+
+if [[ $CIRCLE_BRANCH == master ]]; then
+  tag='latest'
+else
+  tag="${CIRCLE_BRANCH}_${CIRCLE_BUILD_NUM}"
+fi
+
+echo $(git rev-parse HEAD) >.tag
+
+docker login -u $QUAY_ROBOT_USERNAME -p $QUAY_ROBOT_PASSWORD -e $email $registry
+lein uberjar
+docker build --rm -t $image:$tag .
+docker tag $image:$tag $image:$CIRCLE_SHA1
+docker push $image

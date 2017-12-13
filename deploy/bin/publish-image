@@ -1,41 +1,34 @@
 #!/usr/bin/env bash
-set -euxo pipefail
+set -eou pipefail
 
-app_name=$(basename $(pwd))
-uberjar="target/uberjar/${app_name}.jar"
-consul_prefix="$(echo $app_name | tr '-' '_')/config"
-consul_secret_prefix="$(echo $app_name | tr '-' '_')/secrets"
-docker_registry='quay.io'
-docker_remote="quay.io/skilbjo/$app_name"
-email='skilbjo@github.com'
+publish_x86() {
+  if [[ -f Dockerfile ]]; then rm Dockerfile; fi
+  if [[ -d target     ]]; then rm -rf target; fi
 
-# Use default Dockerfile if one doesn't exist
-if [[ ! -f './Dockerfile' ]]; then
-  cat './deploy/default/Dockerfile' | \
-    sed "s;__CONSUL_PREFIX__;${consul_prefix};" | \
-    sed "s;__CONSUL_SECRET_PREFIX__;${consul_secret_prefix};" | \
-    sed "s;__UBERJAR__;${uberjar};" \
-    >Dockerfile
-fi
+  cat deploy/default/publish-image | \
+    sed "s/tag='latest'/tag='x86'/g" | \
+    sed 's/$image:$CIRCLE_SHA1/$image:$CIRCLE_SHA1-x86/g' | \
+    sed 's/tag="${CIRCLE_BRANCH}_${CIRCLE_BUILD_NUM}"/tag="${CIRCLE_BRANCH}_${CIRCLE_BUILD_NUM}_x86"/g' \
+    >>deploy/bin/publish-x86
 
-if [[ $CIRCLE_BRANCH == master ]]; then
-  image_tag='latest'
-else
-  image_tag="${CIRCLE_BRANCH}_${CIRCLE_BUILD_NUM}"
-fi
+  chmod u+x deploy/bin/publish-x86 && \
+    deploy/bin/publish-x86
+}
 
-# Add git revision
-echo $(git rev-parse HEAD) > .tag
+publish_arm() {
+  if [[ -f Dockerfile ]]; then rm Dockerfile; fi
+  if [[ -d target     ]]; then rm -rf target; fi
 
-# Login
-docker login -u $QUAY_ROBOT_USERNAME -p $QUAY_ROBOT_PASSWORD -e $email $docker_registry
+  cat deploy/default/publish-image | \
+    sed "s/cat '.\/deploy\/default\/Dockerfile'/cat '.\/deploy\/default\/Dockerfile.arm'/g" | \
+    sed "s/tag='latest'/tag='arm'/g" | \
+    sed 's/$image:$CIRCLE_SHA1/$image:$CIRCLE_SHA1-arm/g' | \
+    sed 's/tag="${CIRCLE_BRANCH}_${CIRCLE_BUILD_NUM}"/tag="${CIRCLE_BRANCH}_${CIRCLE_BUILD_NUM}_arm"/g' \
+    >>deploy/bin/publish-arm
 
-# Build
-lein uberjar
-docker build --rm -t $docker_remote:$image_tag .
+  chmod u+x deploy/bin/publish-arm && \
+    deploy/bin/publish-arm
+}
 
-# Tag
-docker tag $docker_remote:$image_tag $docker_remote:$CIRCLE_SHA1
-
-# Push it real good
-docker push $docker_remote
+publish_arm && \
+  publish_x86

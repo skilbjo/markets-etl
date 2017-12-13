@@ -1,5 +1,5 @@
-(defproject markets-etl "0.1.0-SNAPSHOT"
-  :uberjar-name "markets-etl.jar"
+(defproject markets-etl "0.1.0"
+  :uberjar-name "app.jar"
   :dependencies [[org.clojure/clojure "1.8.0"]
                  [clj-http "3.7.0"]
                  [clj-time "0.14.2"]
