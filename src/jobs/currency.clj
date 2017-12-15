@@ -14,9 +14,9 @@
      :ticker ["EURUSD" "GBPUSD"]}))
 
 (def query-params
-  {:limit 200
+  {:limit      20
    :start_date util/last-week
-   :end_date util/now})
+   :end_date   util/now})
 
 (defn prepare-row [{:keys [dataset
                            ticker]
@@ -34,7 +34,9 @@
     (->> data
          (map #(zipmap columns %))
          (map #(update % :date coerce/to-sql-date))
-         (map #(assoc % :dataset dataset :ticker ticker)))))
+         (map #(assoc % :dataset dataset
+                        :ticker ticker
+                        :currency (-> ticker (subs 0 3)))))))
 
 (defn update-or-insert! [db {:keys [dataset
                                     ticker

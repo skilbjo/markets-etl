@@ -13,7 +13,7 @@
   (->> f/source
        (execute! *cxn*))
 
-  (testing "some stuff"
+  (testing "economics integration test"
     (is (= f/result
            (->> "select * from dw.economics"
                 (jdbc/query *cxn*)

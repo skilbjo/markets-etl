@@ -13,7 +13,7 @@
   (->> f/source
        (execute! *cxn*))
 
-  (testing "some stuff"
+  (testing "real_estate integration test"
     (is (= f/result
            (->> "select * from dw.real_estate"
                 (jdbc/query *cxn*)
