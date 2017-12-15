@@ -35,8 +35,8 @@
          (map #(zipmap columns %))
          (map #(update % :date coerce/to-sql-date))
          (map #(assoc % :dataset dataset
-                        :ticker ticker
-                        :currency (-> ticker (subs 0 3)))))))
+                      :ticker ticker
+                      :currency (-> ticker (subs 0 3)))))))
 
 (defn update-or-insert! [db {:keys [dataset
                                     ticker
