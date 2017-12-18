@@ -6,6 +6,7 @@
                  [clj-time "0.14.2"]
                  [environ "1.1.0"]
                  [org.clojure/data.csv "0.1.4"]
+                 [semantic-csv "0.2.1-alpha1"]
                  [org.clojure/data.json "0.2.6"]
                  [org.clojure/java.jdbc "0.7.3"]
                  [org.postgresql/postgresql "42.1.4"]]

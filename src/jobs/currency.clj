@@ -1,6 +1,5 @@
 (ns jobs.currency
   (:require [amazonica.aws.s3 :as s3]
-            ;[amazonica.aws.s3transfer :as s3xfer]
             [clj-time.coerce :as coerce]
             [clojure.data.csv :as csv]
             [clojure.data.json :as json]
@@ -9,6 +8,7 @@
             [clojure.string :as string]
             [environ.core :refer [env]]
             [fixtures.currency :as f]
+            [semantic-csv.core :as sc]
             [markets-etl.api :as api]
             [markets-etl.sql :as sql]
             [markets-etl.util :as util])
@@ -57,33 +57,25 @@
                           date]
                          record))
 
-(defn write-to-csv [coll]
-  (let [columns [:dataset
-                 :currency
-                 :date
-                 :rate
-                 :high_est
-                 :low_est]
-        headers (map name columns)
-        rows    (map #(map % columns) coll)]
-    (with-open [writer (io/writer "/tmp/currency.csv")]
-      (csv/write-csv writer (cons headers rows)))))
+(defn write-to-csv [row]
+  (with-open [writer (io/writer "/tmp/currency.csv")]
+    (csv/write-csv writer row)))
 
 (defn upload-to-s3 [file]
   (s3/put-object :bucket-name "skilbjo-data"
-              :key         (str "datalake/currency/"
-                                "s3uploaddate=" util/now)
-              :metadata    {:server-side-encryption "AES256"}
-              :file        "/tmp/currency.csv"))
+                 :key         (str "datalake/currency/"
+                                   "s3uploaddate=" util/now)
+                 :metadata    {:server-side-encryption "AES256"}
+                 :file        "/tmp/currency.csv"))
 
 (defn execute! [cxn data]
   (jdbc/with-db-transaction [txn cxn]
     (->> data
          (map prepare-row)
          flatten
-         ;util/print-and-die
-         (map #(write-to-csv %))
-         #_(map #(update-or-insert! txn %))
+         sc/vectorize
+         write-to-csv
+         upload-to-s3
          doall)))
 
 (defn -main [& args]
@@ -96,9 +88,8 @@
                                                         tkr
                                                         query-params)
                                      (assoc :dataset dataset :ticker tkr))))))
-          ;data        (->> datasets
-                           ;(map get-data)
-                           ;flatten)
-          data  (-> f/source)]
+          data        (->> datasets
+                           (map get-data)
+                           flatten)]
 
       (execute! cxn data))))
