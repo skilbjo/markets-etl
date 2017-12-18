@@ -58,13 +58,15 @@
                          record))
 
 (defn write-to-csv [row]
+  (io/delete-file "/tmp/currency.csv")
   (with-open [writer (io/writer "/tmp/currency.csv")]
     (csv/write-csv writer row)))
 
 (defn upload-to-s3 [file]
   (s3/put-object :bucket-name "skilbjo-data"
                  :key         (str "datalake/currency/"
-                                   "s3uploaddate=" util/now)
+                                   "s3uploaddate=" util/now
+                                   "/file.csv")
                  :metadata    {:server-side-encryption "AES256"}
                  :file        "/tmp/currency.csv"))
 
