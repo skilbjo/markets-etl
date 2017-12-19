@@ -1,6 +1,7 @@
 (ns markets-etl.util
   (:require [clj-time.core :as time]
             [clj-time.coerce :as coerce]
+            [clj-time.format :as formatter]
             [clojure.pprint :as pprint]
             [clojure.string :as string]))
 
@@ -14,7 +15,8 @@
   (System/exit 0))
 
 ; -- time ----------------------------------------------
-(def now (time/now))
+(def now (formatter/unparse (formatter/formatters :date)
+                            (time/now)))
 
 (def yesterday (time/yesterday))
 
