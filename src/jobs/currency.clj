@@ -1,9 +1,14 @@
 (ns jobs.currency
-  (:require [clj-time.coerce :as coerce]
+  (:require [amazonica.aws.s3 :as s3]
+            [clj-time.coerce :as coerce]
+            [clojure.data.csv :as csv]
             [clojure.data.json :as json]
+            [clojure.java.io :as io]
             [clojure.java.jdbc :as jdbc]
             [clojure.string :as string]
             [environ.core :refer [env]]
+            [fixtures.currency :as f]
+            [semantic-csv.core :as sc]
             [markets-etl.api :as api]
             [markets-etl.sql :as sql]
             [markets-etl.util :as util])
@@ -52,12 +57,27 @@
                           date]
                          record))
 
+(defn write-to-csv [row]
+  (io/delete-file "/tmp/currency.csv")
+  (with-open [writer (io/writer "/tmp/currency.csv")]
+    (csv/write-csv writer row)))
+
+(defn upload-to-s3 [file]
+  (s3/put-object :bucket-name "skilbjo-data"
+                 :key         (str "datalake/currency/"
+                                   "s3uploaddate=" util/now
+                                   "/file.csv")
+                 :metadata    {:server-side-encryption "AES256"}
+                 :file        "/tmp/currency.csv"))
+
 (defn execute! [cxn data]
   (jdbc/with-db-transaction [txn cxn]
     (->> data
          (map prepare-row)
          flatten
-         (map #(update-or-insert! txn %))
+         sc/vectorize
+         write-to-csv
+         upload-to-s3
          doall)))
 
 (defn -main [& args]
