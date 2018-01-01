@@ -30,7 +30,7 @@
                                (string/replace #"-" "_")
                                json/read-str)
                            (map #(string/replace % #" " "_"))
-                           (map #(keyword %)))
+                           (map keyword))
         data'             (->> data
                                (map #(zipmap columns %))
                                (map #(update % :date coerce/to-sql-date))

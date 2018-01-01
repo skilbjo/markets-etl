@@ -30,13 +30,13 @@
                                (string/replace #"\)" "")
                                json/read-str)
                            (map #(string/replace % #" " "_"))
-                           (map #(keyword %)))]
+                           (map keyword))]
     (->> data
          (map #(zipmap columns %))
          (map #(update % :date coerce/to-sql-date))
          (map #(assoc % :dataset dataset
                       :ticker ticker
-                      :currency (-> ticker (subs 0 3)))))))
+                      :currency (subs ticker 0 3))))))
 
 (defn update-or-insert! [db {:keys [dataset
                                     ticker
