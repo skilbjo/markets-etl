@@ -4,6 +4,7 @@
 
 ![CircleCI](https://circleci.com/gh/skilbjo/markets-etl/tree/master.svg?style=shield&circle_token=df58a0027114c540a956e9d1a075d58897ede76d)
 [![quay.io](https://quay.io/repository/skilbjo/markets-etl/status "Docker Repository on Quay")](https://quay.io/repository/skilbjo/markets-etl)
+[![Known Vulnerabilities](https://snyk.io/test/github/skilbjo/markets-etl/badge.svg?targetFile=dev-resources%2Fpom.xml)](https://snyk.io/test/github/skilbjo/markets-etl?targetFile=dev-resources%2Fpom.xml)
 
 ## TODOs
 
@@ -48,9 +49,19 @@ lein cljfmt check ; lein cljfmt fix
 lein kibit >tmp ; vim tmp && rm tmp
 ```
 
-## Git remotes
+## Git
 
+### Git remotes
 ```bash
 git remote add pi-vpn ssh://skilbjo@router.:43/~/deploy/git/markets-etl.git
 git remote add pi-home ssh://skilbjo@pi1/~/deploy/git/markets-etl.git
+```
+
+### Pre-commit hook to update pom.xml
+```bash
+vim .git/hooks/pre-commit
+
+#!/usr/bin/env bash
+
+lein pom 2>&1 dev-resources/pom.xml
 ```
