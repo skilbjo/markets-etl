@@ -54,3 +54,6 @@ lein kibit >tmp ; vim tmp && rm tmp
 git remote add pi-vpn ssh://skilbjo@router.:43/~/deploy/git/markets-etl.git
 git remote add pi-home ssh://skilbjo@pi1/~/deploy/git/markets-etl.git
 ```
+
+
+
