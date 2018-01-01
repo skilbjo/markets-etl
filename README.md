@@ -63,5 +63,5 @@ vim .git/hooks/pre-commit
 
 #!/usr/bin/env bash
 
-lein pom >dev-resources/pom.xml
+lein pom 2>&1 dev-resources/pom.xml
 ```
