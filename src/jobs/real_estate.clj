@@ -28,7 +28,7 @@
                                (string/replace #"-" "_")
                                json/read-str)
                            (map #(string/replace % #" " "_"))
-                           (map #(keyword %)))
+                           (map keyword))
         area_category     (re-find #"[a-zA-Z]" ticker)
         indicator_code    (-> ticker
                               (string/split #"_")

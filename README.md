@@ -33,8 +33,19 @@ llein run -m jobs.equities
 
 ## lein
 
+### Dependencies
 ```bash
 lein deps :tree 2>deps 1>/dev/null && vim deps
+```
+
+### cljfmt
+```bash
+lein cljfmt check ; lein cljfmt fix
+```
+
+### kibits
+```bash
+lein kibit >tmp ; vim tmp && rm tmp
 ```
 
 ## Git remotes
