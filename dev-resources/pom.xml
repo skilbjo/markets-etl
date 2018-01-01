@@ -10,7 +10,7 @@
     <url>https://github.com/skilbjo/markets-etl</url>
     <connection>scm:git:git://github.com/skilbjo/markets-etl.git</connection>
     <developerConnection>scm:git:ssh://git@github.com/skilbjo/markets-etl.git</developerConnection>
-    <tag>fd5f29c22b5791a44fc1441671a2a7a44346a926</tag>
+    <tag>d7ba5ada9da04c14bc8aa2b7b9840579a0b426be</tag>
   </scm>
   <build>
     <sourceDirectory>src</sourceDirectory>

@@ -3,7 +3,7 @@
             [markets-etl.util :as util])
   (:gen-class))
 
-(deftest string->decimal-test
+(deftest ^:parallel string->decimal-test
   (testing "does string->decimal turn a string into a decimal type?"
     (is (= (BigDecimal. "0.01")
            (util/string->decimal "0.01"))))

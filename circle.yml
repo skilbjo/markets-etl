@@ -5,8 +5,8 @@ machine:
 
 test:
   override:
-    - lein cljfmt check
-    - lein test
+    - case $CIRCLE_NODE_INDEX in 0) lein cljfmt check ;; 1) lein parallel-test ;; esac:
+        parallel: true
 
 deployment:
   quay:
