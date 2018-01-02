@@ -7,7 +7,8 @@
                  [org.clojure/data.json "0.2.6"]
                  [org.clojure/java.jdbc "0.7.3"]
                  [org.postgresql/postgresql "42.1.4"]]
-  :profiles {:dev {:plugins [[lein-environ "1.1.0"]
+  :profiles {:dev {:plugins [[com.holychao/parallel-test "0.3.1"]
+                             [lein-environ "1.1.0"]
                              [lein-cljfmt "0.5.7"]]}
              :uberjar {:aot :all}}
   :target-path "target/%s"
