@@ -58,7 +58,7 @@
                          record))
 
 (defn write-to-csv [row]
-  (io/delete-file "/tmp/currency.csv")
+  (io/delete-file "/tmp/currency.csv" true)
   (with-open [writer (io/writer "/tmp/currency.csv")]
     (csv/write-csv writer row)))
 
@@ -70,14 +70,51 @@
                  :metadata    {:server-side-encryption "AES256"}
                  :file        "/tmp/currency.csv"))
 
+; https://github.com/metasoarous/semantic-csv/blob/master/src/semantic_csv/transducers.cljc
+(defn stringify-keyword [x]
+  (cond
+    (string? x)   x
+    (keyword? x)  (->> x str (drop 1) (apply str))
+    :else         (str x)))
+
+(defn vectorize'
+  ([]
+   (vectorize' {}))
+  ([{:keys [header prepend-header format-header]
+     :or {prepend-header true format-header stringify-keyword}}]
+   (fn [rf]
+     (let [hdr (volatile! header)
+           prepend-hdr (volatile! prepend-header)]
+       (fn
+         ([] (rf))
+         ([result] (rf result))
+         ([result input]
+          (when (empty? @hdr)
+            (do (vreset! hdr (into [] (keys input)))))
+          (if @prepend-hdr
+            (do (vreset! prepend-hdr false)
+              (rf
+                 (if format-header
+                   (rf result (mapv format-header @hdr))
+                   (rf result @hdr))
+                 (mapv (partial get input) @hdr)))
+            (rf result (mapv (partial get input) @hdr)))))))))
+
+; https://github.com/metasoarous/semantic-csv/blob/master/src/semantic_csv/core.cljc#L375
+(defn vectorize
+  ([rows]
+   (vectorize {} rows))
+  ([opts rows]
+   (sequence (vectorize' opts) rows)))
+
 (defn execute! [cxn data]
   (jdbc/with-db-transaction [txn cxn]
     (->> data
          (map prepare-row)
          flatten
-         sc/vectorize
+         vectorize
          write-to-csv
-         upload-to-s3
+         ;upload-to-s3
          doall)))
 
 (defn -main [& args]
