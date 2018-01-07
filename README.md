@@ -65,3 +65,9 @@ vim .git/hooks/pre-commit
 
 lein pom 2>&1 dev-resources/pom.xml
 ```
+
+Testing GPG
+
+Testing autosigning commits
+
+One more autosigning commit
