@@ -17,7 +17,8 @@
    :limit        integer?
    :column_index integer?
    :start_date   #(instance? org.joda.time.DateTime %)
-   :end_date     #(instance? org.joda.time.DateTime %)})
+   :end_date     #(or (string? %)
+                      (instance? org.joda.time.DateTime %))})
 
 (defn allowed? [m]
   (->> m
