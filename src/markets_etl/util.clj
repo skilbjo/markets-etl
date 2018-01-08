@@ -20,7 +20,15 @@
 
 (def yesterday (time/yesterday))
 
+(def two-days-ago (-> 2 time/days time/ago))
+
+(def three-days-ago (-> 3 time/days time/ago))
+
+(def four-days-ago (-> 4 time/days time/ago))
+
 (def last-week (-> 1 time/weeks time/ago))
+
+(def two-weeks-ago (-> 2 time/weeks time/ago))
 
 (def last-month (-> 1 time/months time/ago))
 
