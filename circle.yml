@@ -7,6 +7,9 @@ test:
   override:
     - case $CIRCLE_NODE_INDEX in 0) lein cljfmt check ;; 1) lein parallel-test ;; esac:
         parallel: true
+  post:
+    - lein cloverage --codecov
+    - bash <(curl -s https://codecov.io/bash) -f target/coverage/codecov.json
 
 deployment:
   quay:
