@@ -5,6 +5,7 @@
 ![CircleCI](https://circleci.com/gh/skilbjo/markets-etl/tree/master.svg?style=shield&circle_token=df58a0027114c540a956e9d1a075d58897ede76d)
 [![quay.io](https://quay.io/repository/skilbjo/markets-etl/status "Docker Repository on Quay")](https://quay.io/repository/skilbjo/markets-etl)
 [![Known Vulnerabilities](https://snyk.io/test/github/skilbjo/markets-etl/badge.svg?targetFile=dev-resources%2Fpom.xml)](https://snyk.io/test/github/skilbjo/markets-etl?targetFile=dev-resources%2Fpom.xml)
+[![codecov](https://codecov.io/gh/skilbjo/markets-etl/branch/master/graph/badge.svg)](https://codecov.io/gh/skilbjo/markets-etl)
 
 ## TODOs
 
