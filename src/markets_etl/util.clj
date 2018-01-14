@@ -1,6 +1,7 @@
 (ns markets-etl.util
-  (:require [clj-time.core :as time]
+  (:require [clj-http.client :as http]
             [clj-time.coerce :as coerce]
+            [clj-time.core :as time]
             [clj-time.format :as formatter]
             [clojure.pprint :as pprint]
             [clojure.string :as string]))
@@ -55,3 +56,8 @@
   (->> (map sequentialize lines)
        (map string/join)
        (string/join "\n")))
+
+; -- alerts --------------------------------------------
+(defn notify-healthchecks.io [api-key]
+  (http/get (str "https://hchk.io/"
+                 api-key)))
