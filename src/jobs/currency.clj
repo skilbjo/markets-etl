@@ -74,4 +74,6 @@
                            (map get-data)
                            flatten)]
 
-      (execute! cxn data))))
+      (execute! cxn data)))
+
+  (util/notify-healthchecks.io (env :healthchecks-io-api-key)))
