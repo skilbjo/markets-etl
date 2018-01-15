@@ -18,7 +18,7 @@ img="quay.io/skilbjo/$app_name:$arch"
 job_cmd="usr/local/deploy/bin/run-job"
 
 docker run --rm \
-  -e db_jdbc_uri="$(echo $db_jdbc_uri)" \
+  -e db_jdbc_uri="$(echo $jdbc_db_uri)" \
   -e quandl_api_key="$(echo $quandl_api_key)" \
   -e healthchecks_io_api_key="$(echo $healthchecks_io_api_key)" \
   "$img" \
