@@ -1,11 +1,12 @@
-# markets
+# markets-etl
 
 [CircleCI Builds](https://circleci.com/gh/skilbjo/markets-etl)
 
 ![CircleCI](https://circleci.com/gh/skilbjo/markets-etl/tree/master.svg?style=shield&circle_token=df58a0027114c540a956e9d1a075d58897ede76d)
 [![quay.io](https://quay.io/repository/skilbjo/markets-etl/status "Docker Repository on Quay")](https://quay.io/repository/skilbjo/markets-etl)
-[![Known Vulnerabilities](https://snyk.io/test/github/skilbjo/markets-etl/badge.svg?targetFile=dev-resources%2Fpom.xml)](https://snyk.io/test/github/skilbjo/markets-etl?targetFile=dev-resources%2Fpom.xml)
 [![codecov](https://codecov.io/gh/skilbjo/markets-etl/branch/master/graph/badge.svg)](https://codecov.io/gh/skilbjo/markets-etl)
+
+[![markets-etl_sfo](https://healthchecks.io/badge/80da65e9-ff8f-45f1-b75e-109790/ZBYwWgw3/markets-etl_sfo.svg)](https://healthchecks.io/badge/80da65e9-ff8f-45f1-b75e-109790/ZBYwWgw3/markets-etl_sfo.svg)
 
 ## TODOs
 
