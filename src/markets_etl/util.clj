@@ -58,6 +58,6 @@
        (string/join "\n")))
 
 ; -- alerts --------------------------------------------
-(defn notify-healthchecks.io [api-key]
+(defn notify-healthchecks-io [api-key]
   (http/get (str "https://hchk.io/"
                  api-key)))
