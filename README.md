@@ -8,6 +8,19 @@
 
 [![markets-etl_sfo](https://healthchecks.io/badge/80da65e9-ff8f-45f1-b75e-109790/ZBYwWgw3/markets-etl_sfo.svg)](https://healthchecks.io/badge/80da65e9-ff8f-45f1-b75e-109790/ZBYwWgw3/markets-etl_sfo.svg)
 
+## What
+
+ETL project of financial data: equity prices, bond yields, risk free rate of return,
+GDP data, currency prices, and real estate indecies by zip code.
+
+[Quandl](https://www.quandl.com/) has this data available in an API, so this
+project wraps for insertion to a target postgresql database.
+
+See my talk from the February 2017 Clojure PDX meetup for more about the project
+<https://github.com/skilbjo/articles/blob/master/talks/bare_metal_to_aws_lambda.md>
+
+<img src='dev-resources/img/ns-hierarchy.png' width=600>
+
 ## TODOs
 
 - [X] Generic key mapper (xform into postgres column names)
