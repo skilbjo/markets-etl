@@ -19,7 +19,7 @@ project wraps for insertion to a target postgresql database.
 See my talk from the February 2017 Clojure PDX meetup for more about the project
 <https://github.com/skilbjo/articles/blob/master/talks/bare_metal_to_aws_lambda.md>
 
-<img src='dev-resources/img/ns-hierarchy.png' width=600>
+<img src='dev-resources/img/ns-hierarchy.png' width=900>
 
 ## TODOs
 
