@@ -1,6 +1,7 @@
 (ns markets-etl.api
   (:require [clj-http.client :as http]
             [clojure.data.json :as json]
+            [clojure.tools.logging :as log]
             [environ.core :refer [env]]
             [markets-etl.util :as util]))
 
@@ -43,4 +44,4 @@
      (if (= 200 status)
        (-> body
            (json/read-str :key-fn keyword))
-       (println "Failed request, exception: " status)))))
+       (log/error "Failed request, exception: " status)))))

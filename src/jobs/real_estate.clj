@@ -5,6 +5,7 @@
             [clojure.string :as string]
             [environ.core :refer [env]]
             [markets-etl.api :as api]
+            [markets-etl.error :as error]
             [markets-etl.sql :as sql]
             [markets-etl.util :as util])
   (:gen-class))
@@ -67,6 +68,7 @@
                          record))
 
 (defn execute! [cxn data]
+  (error/set-default-error-handler)
   (jdbc/with-db-transaction [txn cxn]
     (->> data
          (map prepare-row)
