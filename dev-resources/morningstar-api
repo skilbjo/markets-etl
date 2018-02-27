@@ -5,4 +5,38 @@ ticker='VEMAX'
 date_range='2018-02-22|2018-02-25'
 params='showVol=true&dtype=his'
 
-curl "http://globalquote.morningstar.com/globalcomponent/RealtimeHistoricalStockData.ashx?ticker=${ticker}&range=${date_range}&${params}"
+curl "http://globalquote.morningstar.com/
+globalcomponent/RealtimeHistoricalStockData.ashx?ticker=${ticker}&range=${date_range}&${params}"
+
+result='{
+  "DividendData": null,
+  "FairValueList": null,
+  "Max": 40.599999848753214,
+  "Min": 39.799999851733446,
+  "PriceDataList": [
+    {
+      "DailyMaxNumPoint": -1,
+      "Datapoints": [
+        [
+          39.88
+        ],
+        [
+          40.47
+        ]
+      ],
+      "DateIndexs": [
+        43151,
+        43152
+      ],
+      "Description": "",
+      "Max": 40.47,
+      "Min": 39.88,
+      "Slot": 3,
+      "StartPos": 39.88,
+      "Symbol": "XNAS:VEMAX",
+      "chartType": 0
+    }
+  ],
+  "PriceType": "",
+  "VolumeList": null
+}'

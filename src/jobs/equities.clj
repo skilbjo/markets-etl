@@ -12,7 +12,11 @@
 
 (def datasets
   '({:dataset "WIKI"
-     :ticker ["FB" "AMZN" "GOOG" "NVDA"]}))
+     :ticker ["FB" "AMZN" "GOOG" "NVDA" "BRK.B" "CY" "INTC" "TSM" "TXN" "V"]}))
+
+(def morningstar
+  '({:dataset "MSTAR"
+     :ticker ["VEMAX" "VEURX" "VEXPX" "VGWAX" "VITAX" "VIMAX" "VMRAX" "VPACX" "VGSLX" "VTIAX" "VTSAX" "VWINX" "VWENX" "VWNDX" "VFH" "VEA" "VWO" "VHT" "VGT"]}))
 
 (def query-params
   {:limit      10

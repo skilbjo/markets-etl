@@ -10,6 +10,33 @@
    :url       "www.quandl.com/api/v3/datasets/"
    :format    "data.json"})
 
+(def ^:private morningstar-api
+  {:protocol  "http://"
+   :url       "http://globalquote.morningstar.com/globalcomponent/RealtimeHistoricalStockData.ashx?"
+   :required_params "showVol=true&dtype=his"})
+
+(defn query-morning-star!
+  ([ticker]
+   (query-morning-star! ticker {}))
+  ([ticker paramz]
+   (let [params (dissoc paramz :limit)
+         url    (str (:protocol morningstar-api)
+                     (:url morningstar-api)
+                     (str "ticker=" ticker)
+                     (str "&range="
+                          (:start_date params)
+                          "|"
+                          (:end_date params))
+                     (:required_params morningstar-api))
+         response (http/get url
+                            {:query-params params})
+         {:keys [status body]}  response]
+     (if (= 200 status)
+       (-> body
+           (json/read-str :key-fn keyword)
+           util/print-it)
+       (log/error "Failed request, exception: " status)))))
+
 (def ^:private allowed
   {:collapse     #{"none" "daily" "weekly" "monthly" "quarterly" "annual"}
    :transform    #{"none" "rdiff" "diff" "cumul" "normalize"}
@@ -45,9 +72,3 @@
        (-> body
            (json/read-str :key-fn keyword))
        (log/error "Failed request, exception: " status)))))
-
-(defn query-morning-star!
-  ([ticker]
-   (query-morning-star! ticker {}))
-  ([ticker paramz]
-   nil))

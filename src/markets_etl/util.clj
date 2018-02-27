@@ -46,6 +46,12 @@
     (catch NullPointerException e
       n)))
 
+(defn excel-date-epoch->joda-date [n]
+  (let [_excel_epoch_start  (time/date-time 1899 12 30)]
+    (->> n
+         time/days
+         (time/plus _excel_epoch_start))))
+
 ; -- collections ---------------------------------------
 (defn sequentialize [x]
   (if (sequential? x)
