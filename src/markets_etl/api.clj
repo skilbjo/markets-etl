@@ -45,3 +45,9 @@
        (-> body
            (json/read-str :key-fn keyword))
        (log/error "Failed request, exception: " status)))))
+
+(defn query-morning-star!
+  ([ticker]
+   (query-morning-star! ticker {}))
+  ([ticker paramz]
+   nil))
