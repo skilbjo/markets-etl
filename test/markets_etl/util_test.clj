@@ -7,11 +7,7 @@
 (deftest ^:parallel string->decimal-test
   (testing "does string->decimal turn a string into a decimal type?"
     (is (= (BigDecimal. "0.01")
-           (util/string->decimal "0.01"))))
-
-  (testing "passing it nil"
-    (is (= nil
-           (util/string->decimal nil)))))
+           (util/string->decimal "0.01")))))
 
 (deftest ^:parallel excel-date-epoc->joda-date-test
   (testing "does excel-date-series->joda-date turn an excel epoch into a date?"

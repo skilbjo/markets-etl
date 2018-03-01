@@ -10,10 +10,10 @@
 (use-fixtures :each (fix/with-database))
 
 (deftest integration-test
-  (->> f/source
+  (->> (concat f/quandl f/morningstar)
        (execute! *cxn*))
 
-  (testing "equities integration test"
+  (testing "Quandl API equities integration test"
     (is (= f/result
            (->> "select * from dw.equities"
                 (jdbc/query *cxn*)

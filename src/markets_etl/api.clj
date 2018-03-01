@@ -1,5 +1,6 @@
 (ns markets-etl.api
   (:require [clj-http.client :as http]
+            [clojure.string :as string]
             [clojure.data.json :as json]
             [clojure.tools.logging :as log]
             [environ.core :refer [env]]
@@ -12,30 +13,8 @@
 
 (def ^:private morningstar-api
   {:protocol  "http://"
-   :url       "http://globalquote.morningstar.com/globalcomponent/RealtimeHistoricalStockData.ashx?"
-   :required_params "showVol=true&dtype=his"})
-
-(defn query-morning-star!
-  ([ticker]
-   (query-morning-star! ticker {}))
-  ([ticker paramz]
-   (let [params (dissoc paramz :limit)
-         url    (str (:protocol morningstar-api)
-                     (:url morningstar-api)
-                     (str "ticker=" ticker)
-                     (str "&range="
-                          (:start_date params)
-                          "|"
-                          (:end_date params))
-                     (:required_params morningstar-api))
-         response (http/get url
-                            {:query-params params})
-         {:keys [status body]}  response]
-     (if (= 200 status)
-       (-> body
-           (json/read-str :key-fn keyword)
-           util/print-it)
-       (log/error "Failed request, exception: " status)))))
+   :url       "globalquote.morningstar.com/globalcomponent/RealtimeHistoricalStockData.ashx?"
+   :required_params "&showVol=true&dtype=his"})
 
 (def ^:private allowed
   {:collapse     #{"none" "daily" "weekly" "monthly" "quarterly" "annual"}
@@ -44,7 +23,8 @@
    :rows         integer?
    :limit        integer?
    :column_index integer?
-   :start_date   #(instance? org.joda.time.DateTime %)
+   :start_date   #(or (string? %)
+                      (instance? org.joda.time.DateTime %))
    :end_date     #(or (string? %)
                       (instance? org.joda.time.DateTime %))})
 
@@ -52,6 +32,30 @@
   (->> m
        (map (fn [[k v]]
               ((allowed k) v)))))
+
+(defn query-morningstar!
+  ([ticker]
+   (query-morningstar! ticker {}))
+  ([ticker paramz]
+   {:pre [(every? true? (allowed? paramz))]}
+   (let [params (dissoc paramz :limit)
+         _ (log/debug ticker)
+         url    (str (:protocol morningstar-api)
+                     (:url morningstar-api)
+                     (str "ticker=" ticker)
+                     (str "&range="
+                          (:start_date params)
+                          "|"
+                          (:end_date params))
+                     (:required_params morningstar-api))
+         _ (log/debug url)
+         response (http/get url
+                            {:query-params params})
+         {:keys [status body]}  response]
+     (if (and (= 200 status) ((comp not empty?) body))
+       (-> body
+           (json/read-str :key-fn (comp keyword string/lower-case)))
+       (log/error "Failed request, exception: " status)))))
 
 (defn query-quandl!
   ([dataset ticker]
