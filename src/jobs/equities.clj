@@ -13,11 +13,11 @@
 
 (def datasets
   '({:dataset "WIKI"
-     :ticker ["FB" "AMZN" "GOOG" "NVDA" "BRK.B" "CY" "INTC" "TSM" "TXN" "V"]}))
+     :ticker ["FB" "AMZN" "GOOG" "NVDA" "CY" "INTC" "TXN" "V"]}))
 
 (def morningstar
   '({:dataset "MSTAR"
-     :ticker ["VEMAX" "VEURX" "VEXPX" "VGWAX" "VITAX" "VIMAX" "VMRAX" "VPACX" "VGSLX" "VTIAX" "VTSAX" "VWINX" "VWENX" "VWNDX" "VFH" "VEA" "VWO" "VHT" "VGT"]}))
+     :ticker ["BRK.B" "TSM" "VEMAX" "VEURX" "VEXPX" "VGWAX" "VITAX" "VIMAX" "VMRAX" "VPACX" "VGSLX" "VTIAX" "VTSAX" "VWINX" "VWENX" "VWNDX" "VFH" "VEA" "VWO" "VHT" "VGT"]}))
 
 (def query-params
   {:limit      10
@@ -118,7 +118,6 @@
   (error/set-default-error-handler)
   (jdbc/with-db-connection [cxn (-> :jdbc-db-uri env)]
     (let [data        (->> (concat morningstar datasets)
-                           morningstar
                            (map get-data)
                            flatten)]
       (execute! cxn data))))

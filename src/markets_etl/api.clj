@@ -38,22 +38,25 @@
    (query-morningstar! ticker {}))
   ([ticker paramz]
    {:pre [(every? true? (allowed? paramz))]}
-   (let [params (dissoc paramz :limit)
-         _ (log/debug ticker)
-         url    (str (:protocol morningstar-api)
-                     (:url morningstar-api)
-                     (str "ticker=" ticker)
-                     (str "&range="
-                          (:start_date params)
-                          "|"
-                          (:end_date params))
-                     (:required_params morningstar-api))
-         _ (log/debug url)
+   (let [params   (dissoc paramz :limit)
+         url      (str (:protocol morningstar-api)
+                       (:url morningstar-api)
+                       (str "ticker=" ticker)
+                       (str "&range="
+                            (:start_date params)
+                            "|"
+                            (:end_date params))
+                       (:required_params morningstar-api))
          response (http/get url
                             {:query-params params})
-         {:keys [status body]}  response]
-     (if (and (= 200 status) ((comp not empty?) body))
-       (-> body
+         {:keys [status body]}  response
+         body'    (-> body
+                      (string/replace #"NaN" "null"))
+         _        (log/debug ticker)
+         _        (log/debug url)
+         #__      #_(log/debug body')]
+     (if (and (= 200 status) ((comp not empty?) body'))
+       (-> body'
            (json/read-str :key-fn (comp keyword string/lower-case)))
        (log/error "Failed request, exception: " status)))))
 
@@ -71,7 +74,9 @@
                       (assoc :api_key (-> :quandl-api-key env)))
          response (http/get url
                             {:query-params params})
-         {:keys [status body]}  response]
+         {:keys [status body]}  response
+         _        (log/debug ticker)
+         #__      #_(log/debug body)]
      (if (= 200 status)
        (-> body
            (json/read-str :key-fn keyword))

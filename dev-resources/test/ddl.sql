@@ -48,10 +48,10 @@ begin;
     (     'MSTAR',           'VWO', 'VANGUARD FTSE EMERGING MARKETS ETF'),
     (     'MSTAR',           'VHT', 'VANGUARD HEALTH CARE ETF'),
     (     'MSTAR',           'VGT', 'VANGUARD INFORMATION TECHNOLOGY ETF'),
-    (      'WIKI',         'BRK.B', 'BERKSHIRE HATHAWAY INC DE CL B NEW'),
+    (     'MSTAR',         'BRK.B', 'BERKSHIRE HATHAWAY INC DE CL B NEW'),
     (      'WIKI',            'CY', 'CYPRESS SEMICONDUCTOR CORP'),
     (      'WIKI',          'INTC', 'INTEL CORP'),
-    (      'WIKI',           'TSM', 'TAIWAN SEMICONDUCTOR MANUFACTURING COMPANY LTD SPONS ADR'),
+    (     'MSTAR',           'TSM', 'TAIWAN SEMICONDUCTOR MANUFACTURING COMPANY LTD SPONS ADR'),
     (      'WIKI',           'TXN', 'TEXAS INSTRUMENTS INC'),
     (      'WIKI',             'V', 'VISA INC CLASS A')
   ;
