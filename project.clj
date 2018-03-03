@@ -5,10 +5,10 @@
                  [clj-time "0.14.2"]
                  [environ "1.1.0"]
                  [org.clojure/data.json "0.2.6"]
-                 [org.clojure/java.jdbc "0.7.3"]
+                 [org.clojure/java.jdbc "0.7.5"]
                  [org.clojure/tools.logging "0.4.0"]
-                 [org.slf4j/slf4j-log4j12 "1.6.4"]
-                 [org.postgresql/postgresql "42.1.4"]]
+                 [org.slf4j/slf4j-log4j12 "1.7.25"]
+                 [org.postgresql/postgresql "42.2.1"]]
   :plugins [[lein-cloverage "1.0.10"]]
   :profiles {:dev {:plugins [[lein-environ "1.1.0"]
                              [lein-cljfmt "0.5.7"]]}
