@@ -87,14 +87,6 @@
                           date]
                          record))
 
-(defn execute! [cxn data]
-  (jdbc/with-db-transaction [txn cxn]
-    (->> data
-         (map prepare-row)
-         flatten
-         (map #(update-or-insert! txn %))
-         doall)))
-
 (defmulti get-data :dataset)
 
 (defmethod get-data "MSTAR" [{:keys [dataset
@@ -113,6 +105,14 @@
                                      tkr
                                      query-params)
                   (assoc :dataset dataset :ticker tkr))))))
+
+(defn execute! [cxn data]
+  (jdbc/with-db-transaction [txn cxn]
+    (->> data
+         (map prepare-row)
+         flatten
+         (map #(update-or-insert! txn %))
+         doall)))
 
 (defn -main [& args]
   (error/set-default-error-handler)
