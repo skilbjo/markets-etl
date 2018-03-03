@@ -1,6 +1,7 @@
 (ns jobs.equities
   (:require [clj-time.coerce :as coerce]
             [clojure.data.json :as json]
+            [clojure.tools.logging :as log]
             [clojure.java.jdbc :as jdbc]
             [clojure.string :as string]
             [environ.core :refer [env]]
@@ -12,17 +13,54 @@
 
 (def datasets
   '({:dataset "WIKI"
-     :ticker ["FB" "AMZN" "GOOG" "NVDA"]}))
+     :ticker ["FB" "AMZN" "GOOG" "NVDA" "BRK.B" "CY" "INTC" "TSM" "TXN" "V"]}))
+
+(def morningstar
+  '({:dataset "MSTAR"
+     :ticker ["VEMAX" "VEURX" "VEXPX" "VGWAX" "VITAX" "VIMAX" "VMRAX" "VPACX" "VGSLX" "VTIAX" "VTSAX" "VWINX" "VWENX" "VWNDX" "VFH" "VEA" "VWO" "VHT" "VGT"]}))
 
 (def query-params
   {:limit      10
    :start_date util/last-week
    :end_date   util/now})
 
-(defn prepare-row [{:keys [dataset
-                           ticker]
-                    {:keys [column_names
-                            data]} :dataset_data}]
+(defmulti prepare-row :dataset)
+
+(defmethod prepare-row "MSTAR" [{:keys [dataset
+                                        ticker
+                                        pricedatalist]}]
+  (let [pricedatalist' (first pricedatalist)
+        dates          (->> pricedatalist'
+                            :dateindexs
+                            (map util/excel-date-epoch->joda-date)
+                            (map #(assoc {} :date %)))
+        prices         (->> pricedatalist'
+                            :datapoints
+                            (map first)
+                            (map util/string->decimal))]
+    (->> prices
+         (map #(assoc {} :close %))
+         (map list dates)
+         (map #(merge (first %) (second %)))
+         (map #(update % :date coerce/to-sql-date))
+         (map #(assoc %
+                      :dataset     dataset
+                      :ticker      ticker
+                      :open        nil
+                      :high        nil
+                      :volume      nil
+                      :split_ratio nil
+                      :adj_open    nil
+                      :adj_close   nil
+                      :adj_low     nil
+                      :adj_high    nil
+                      :adj_volume  nil
+                      :ex_dividend nil)))))
+
+(defmethod prepare-row :default [{:keys [dataset
+                                         ticker]
+                                  {:keys [column_names
+                                          data]} :dataset_data}]
   (let [columns       (->> (-> column_names
                                string/lower-case
                                (string/replace #"\." "")
@@ -57,19 +95,30 @@
          (map #(update-or-insert! txn %))
          doall)))
 
+(defmulti get-data :dataset)
+
+(defmethod get-data "MSTAR" [{:keys [dataset
+                                     ticker]}]
+  (->> ticker
+       (map (fn [tkr]
+              (-> (api/query-morningstar! tkr
+                                          query-params)
+                  (assoc :dataset dataset :ticker tkr))))))
+
+(defmethod get-data :default [{:keys [dataset
+                                      ticker]}]
+  (->> ticker
+       (map (fn [tkr]
+              (-> (api/query-quandl! dataset
+                                     tkr
+                                     query-params)
+                  (assoc :dataset dataset :ticker tkr))))))
+
 (defn -main [& args]
   (error/set-default-error-handler)
   (jdbc/with-db-connection [cxn (-> :jdbc-db-uri env)]
-    (let [get-data (fn [{:keys [dataset
-                                ticker]}]
-                     (->> ticker
-                          (map (fn [tkr]
-                                 (-> (api/query-quandl! dataset
-                                                        tkr
-                                                        query-params)
-                                     (assoc :dataset dataset :ticker tkr))))))
-          data        (->> datasets
+    (let [data        (->> (concat morningstar datasets)
+                           morningstar
                            (map get-data)
                            flatten)]
-
       (execute! cxn data))))
