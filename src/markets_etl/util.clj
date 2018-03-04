@@ -20,9 +20,11 @@
   (formatter/unparse (formatter/formatters :date)
                      d))
 
-(def now (-> (time/now) joda-date->date-str))
+(def now (-> (time/now)
+             joda-date->date-str))
 
-(def yesterday (-> (time/yesterday) joda-date->date-str))
+(def yesterday (-> (time/yesterday)
+                   joda-date->date-str))
 
 (def two-days-ago (-> 2 time/days time/ago joda-date->date-str))
 
