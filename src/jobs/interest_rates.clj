@@ -78,16 +78,8 @@
 (defn -main [& args]
   (error/set-default-error-handler)
   (jdbc/with-db-connection [cxn (-> :jdbc-db-uri env)]
-    (let [get-data (fn [{:keys [dataset
-                                ticker]}]
-                     (->> ticker
-                          (map (fn [tkr]
-                                 (-> (api/query-quandl! dataset
-                                                        tkr
-                                                        query-params)
-                                     (assoc :dataset dataset :ticker tkr))))))
-          data        (->> datasets
-                           (map get-data)
+    (let [data        (->> datasets
+                           (map #(api/get-data % query-params))
                            flatten)]
 
       (execute! cxn data))))

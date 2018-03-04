@@ -81,3 +81,24 @@
        (-> body
            (json/read-str :key-fn keyword))
        (log/error "Failed request, exception: " status)))))
+
+(defmulti get-data :dataset)
+
+(defmethod get-data "MSTAR" [{:keys [dataset
+                                     ticker]}
+                             query-params]
+  (->> ticker
+       (map (fn [tkr]
+              (-> (query-morningstar! tkr
+                                      query-params)
+                  (assoc :dataset dataset :ticker tkr))))))
+
+(defmethod get-data :default [{:keys [dataset
+                                      ticker]}
+                              query-params]
+  (->> ticker
+       (map (fn [tkr]
+              (-> (query-quandl! dataset
+                                     tkr
+                                     query-params)
+                  (assoc :dataset dataset :ticker tkr))))))

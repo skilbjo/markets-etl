@@ -87,25 +87,6 @@
                           date]
                          record))
 
-(defmulti get-data :dataset)
-
-(defmethod get-data "MSTAR" [{:keys [dataset
-                                     ticker]}]
-  (->> ticker
-       (map (fn [tkr]
-              (-> (api/query-morningstar! tkr
-                                          query-params)
-                  (assoc :dataset dataset :ticker tkr))))))
-
-(defmethod get-data :default [{:keys [dataset
-                                      ticker]}]
-  (->> ticker
-       (map (fn [tkr]
-              (-> (api/query-quandl! dataset
-                                     tkr
-                                     query-params)
-                  (assoc :dataset dataset :ticker tkr))))))
-
 (defn execute! [cxn data]
   (jdbc/with-db-transaction [txn cxn]
     (->> data
@@ -118,6 +99,6 @@
   (error/set-default-error-handler)
   (jdbc/with-db-connection [cxn (-> :jdbc-db-uri env)]
     (let [data        (->> (concat morningstar datasets)
-                           (map get-data)
+                           (map #(api/get-data % query-params))
                            flatten)]
       (execute! cxn data))))
