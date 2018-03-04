@@ -1,8 +1,9 @@
 FROM gliderlabs/alpine:latest
 
 ENV JAVA_HOME="/usr/lib/jvm/java-1.8-openjdk8" \
-    JAVA_OPTS="-Duser.timezone=PST8PDT -Xms256m -Xmx512m -XX:MaxMetaspaceSize=128m " \
-    PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/bin:/usr/lib/jvm/java-1.8-openjdk/bin"
+    JAVA_OPTS="-Duser.timezone=UTC -Xms256m -Xmx512m -XX:MaxMetaspaceSize=128m " \
+    PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/bin:/usr/lib/jvm/java-1.8-openjdk/bin" \
+    CMD="usr/local/deploy/bin/run-job"
 
 
 

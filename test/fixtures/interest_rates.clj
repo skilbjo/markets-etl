@@ -123,57 +123,57 @@
 
 (def result
   '({:dataset "FED",
-     :date #inst "2017-12-03T08:00:00.000-00:00",
+     :date #inst "2017-12-04T00:00:00.000-00:00",
      :key "value",
      :ticker "RIFSPFF_N_D",
      :value 1.16M}
     {:dataset "FED",
-     :date #inst "2017-12-02T08:00:00.000-00:00",
+     :date #inst "2017-12-03T00:00:00.000-00:00",
      :key "value",
      :ticker "RIFSPFF_N_D",
      :value 1.16M}
     {:dataset "USTREASURY",
-     :date #inst "2017-12-07T08:00:00.000-00:00",
+     :date #inst "2017-12-08T00:00:00.000-00:00",
      :key "1_mo",
      :ticker "YIELD",
      :value 1.14M}
     {:dataset "USTREASURY",
-     :date #inst "2017-12-06T08:00:00.000-00:00",
+     :date #inst "2017-12-07T00:00:00.000-00:00",
      :key "1_mo",
      :ticker "YIELD",
      :value 1.16M}
     {:dataset "USTREASURY",
-     :date #inst "2017-12-05T08:00:00.000-00:00",
+     :date #inst "2017-12-06T00:00:00.000-00:00",
      :key "1_mo",
      :ticker "YIELD",
      :value 1.18M}
     {:dataset "USTREASURY",
-     :date #inst "2017-12-04T08:00:00.000-00:00",
+     :date #inst "2017-12-05T00:00:00.000-00:00",
      :key "1_mo",
      :ticker "YIELD",
      :value 1.21M}
     {:dataset "USTREASURY",
-     :date #inst "2017-12-03T08:00:00.000-00:00",
+     :date #inst "2017-12-04T00:00:00.000-00:00",
      :key "1_mo",
      :ticker "YIELD",
      :value 1.16M}
     {:dataset "USTREASURY",
-     :date #inst "2017-12-06T08:00:00.000-00:00",
+     :date #inst "2017-12-07T00:00:00.000-00:00",
      :key "lt_composite_>_10_yrs",
      :ticker "LONGTERMRATES",
      :value 2.66M}
     {:dataset "USTREASURY",
-     :date #inst "2017-12-05T08:00:00.000-00:00",
+     :date #inst "2017-12-06T00:00:00.000-00:00",
      :key "lt_composite_>_10_yrs",
      :ticker "LONGTERMRATES",
      :value 2.61M}
     {:dataset "USTREASURY",
-     :date #inst "2017-12-04T08:00:00.000-00:00",
+     :date #inst "2017-12-05T00:00:00.000-00:00",
      :key "lt_composite_>_10_yrs",
      :ticker "LONGTERMRATES",
      :value 2.63M}
     {:dataset "USTREASURY",
-     :date #inst "2017-12-03T08:00:00.000-00:00",
+     :date #inst "2017-12-04T00:00:00.000-00:00",
      :key "lt_composite_>_10_yrs",
      :ticker "LONGTERMRATES",
      :value 2.66M}))

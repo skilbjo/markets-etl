@@ -61,22 +61,22 @@
 
 (def result
   '({:dataset "FRED",
-     :date #inst "2017-12-06T08:00:00.000-00:00",
+     :date #inst "2017-12-07T00:00:00.000-00:00",
      :ticker "DFF",
      :value 1.16M}
     {:dataset "FRED",
-     :date #inst "2017-12-05T08:00:00.000-00:00",
+     :date #inst "2017-12-06T00:00:00.000-00:00",
      :ticker "DFF",
      :value 1.16M}
     {:dataset "FRED",
-     :date #inst "2017-12-04T08:00:00.000-00:00",
+     :date #inst "2017-12-05T00:00:00.000-00:00",
      :ticker "DFF",
      :value 1.16M}
     {:dataset "FRED",
-     :date #inst "2017-12-03T08:00:00.000-00:00",
+     :date #inst "2017-12-04T00:00:00.000-00:00",
      :ticker "DFF",
      :value 1.16M}
     {:dataset "FRED",
-     :date #inst "2017-12-02T08:00:00.000-00:00",
+     :date #inst "2017-12-03T00:00:00.000-00:00",
      :ticker "DFF",
      :value 1.16M}))

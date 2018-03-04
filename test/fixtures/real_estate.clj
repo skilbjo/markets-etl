@@ -19,14 +19,14 @@
   '({:area "94108",
      :area_category "Z",
      :dataset "ZILLOW",
-     :date #inst "2017-10-30T07:00:00.000-00:00",
+     :date #inst "2017-10-31T00:00:00.000-00:00",
      :indicator_code "ZHVIAH",
      :ticker "Z94108_ZHVIAH",
      :value 1015800.00M}
     {:area "94108",
      :area_category "Z",
      :dataset "ZILLOW",
-     :date #inst "2017-09-29T07:00:00.000-00:00",
+     :date #inst "2017-09-30T00:00:00.000-00:00",
      :indicator_code "ZHVIAH",
      :ticker "Z94108_ZHVIAH",
      :value 1012600.00M}))
