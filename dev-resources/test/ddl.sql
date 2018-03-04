@@ -55,6 +55,18 @@ begin;
     (      'WIKI',           'TXN', 'TEXAS INSTRUMENTS INC'),
     (      'WIKI',             'V', 'VISA INC CLASS A')
   ;
+
+  drop table if exists dw.portfolio cascade;
+  create table if not exists dw.portfolio (
+    dataset           text          not null,
+    ticker            text          not null,
+    quantity          decimal(10,4) not null,
+    cost_per_share    decimal(6,2)  not null,
+
+    constraint portfolio_pk primary key (dataset, ticker),
+    constraint portfolio_markets_dim_fk foreign key (dataset, ticker) references dw.markets (dataset, ticker)
+  );
+
 commit;
 
 -- Fact tables
