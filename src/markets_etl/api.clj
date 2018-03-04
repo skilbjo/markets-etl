@@ -99,6 +99,6 @@
   (->> ticker
        (map (fn [tkr]
               (-> (query-quandl! dataset
-                                     tkr
-                                     query-params)
+                                 tkr
+                                 query-params)
                   (assoc :dataset dataset :ticker tkr))))))
