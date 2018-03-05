@@ -1,7 +1,10 @@
+<img src='dev-resources/img/cover.jpg' width='900' />
+
 ## m a r k e t s - e t l
-: all the financial data
+: (etl '(all the financial data))
 
 [CircleCI Builds](https://circleci.com/gh/skilbjo/markets-etl)
+
 ![CircleCI](https://circleci.com/gh/skilbjo/markets-etl/tree/master.svg?style=shield&circle_token=df58a0027114c540a956e9d1a075d58897ede76d)
 [![quay.io](https://quay.io/repository/skilbjo/markets-etl/status "Docker Repository on Quay")](https://quay.io/repository/skilbjo/markets-etl)
 [![codecov](https://codecov.io/gh/skilbjo/markets-etl/branch/master/graph/badge.svg)](https://codecov.io/gh/skilbjo/markets-etl)
@@ -19,7 +22,7 @@ project wraps for insertion to a target postgresql database.
 See my talk from the February 2017 Clojure PDX meetup for more about the project
 <https://github.com/skilbjo/articles/blob/master/talks/bare_metal_to_aws_lambda.md>
 
-<img src='dev-resources/img/ns-hierarchy.png' width=900>
+<img src='dev-resources/img/lisp_warning.png' width='250' />
 
 ### TODOs
 
@@ -31,6 +34,8 @@ See my talk from the February 2017 Clojure PDX meetup for more about the project
 - [X] Model economics / interest_rates appropriately
 - [X] For currency, parse out usd currency and put in column (ie, EUR)
 - [ ] Better naming, any ideas for refactoring
+
+<img src='dev-resources/img/ns-hierarchy.png' width=900 />
 
 ### environment variables
 ```bash

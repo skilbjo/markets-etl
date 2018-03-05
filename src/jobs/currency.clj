@@ -15,7 +15,7 @@
      :ticker ["EURUSD" "GBPUSD"]}))
 
 (def query-params
-  {:limit      20
+  {:limit      500
    :start_date util/last-week
    :end_date   util/now})
 

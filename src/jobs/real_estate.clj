@@ -15,9 +15,9 @@
      :ticker ["Z94108_ZHVIAH"]}))
 
 (def query-params
-  {:limit 10
+  {:limit      500
    :start_date util/last-quarter
-   :end_date util/now})
+   :end_date   util/now})
 
 (defn prepare-row [{:keys [dataset
                            ticker]

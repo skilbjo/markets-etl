@@ -23,6 +23,10 @@
 (def now (-> (time/now)
              joda-date->date-str))
 
+(def tomorrow (-> (time/now)
+                  (time/plus (-> 1 time/days))
+                  joda-date->date-str))
+
 (def yesterday (-> (time/yesterday)
                    joda-date->date-str))
 

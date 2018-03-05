@@ -20,7 +20,7 @@
      :ticker ["BRK.B" "TSM" "VEMAX" "VEURX" "VEXPX" "VGWAX" "VITAX" "VIMAX" "VMRAX" "VPACX" "VGSLX" "VTIAX" "VTSAX" "VWINX" "VWENX" "VWNDX" "VFH" "VEA" "VWO" "VHT" "VGT"]}))
 
 (def query-params
-  {:limit      10
+  {:limit      500
    :start_date util/last-week
    :end_date   util/now})
 

@@ -15,9 +15,9 @@
      :ticker ["GDP" "M1" "DFF" "UNRATE"]}))
 
 (def query-params
-  {:limit 20
+  {:limit      500
    :start_date util/last-week
-   :end_date util/now})
+   :end_date   util/now})
 
 (defn prepare-row [{:keys [dataset
                            ticker]
