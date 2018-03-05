@@ -55,9 +55,9 @@
 (defn excel-date-epoch->joda-date [n]
   (let [_excel_epoch_start  (time/date-time 1899 12 30)]
     (-> (->> n
-         time/days
-         (time/plus _excel_epoch_start))  ; this is how excel date conversions work
-         (time/plus (-> 2 time/days))))) ; morningstar's api is not exactly perfect though
+             time/days
+             (time/plus _excel_epoch_start))  ; this is how excel date conversions work
+        (time/plus (-> 2 time/days))))) ; morningstar's api is not exactly perfect though
 
 ; -- collections ---------------------------------------
 (defn sequentialize [x]
