@@ -53,6 +53,7 @@
          body'    (-> body
                       (string/replace #"NaN" "null"))
          _        (log/debug ticker)
+         _        (log/debug params)
          _        (log/debug url)
          #__      #_(log/debug body')]
      (if (and (= 200 status) ((comp not empty?) body'))
@@ -76,6 +77,7 @@
                             {:query-params params})
          {:keys [status body]}  response
          _        (log/debug ticker)
+         _        (log/debug params)
          #__      #_(log/debug body)]
      (if (= 200 status)
        (-> body

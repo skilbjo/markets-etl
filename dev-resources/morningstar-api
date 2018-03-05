@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 set -eou pipefail
 
-ticker='VEMAX'
-date_range='2018-02-28|2018-03-31'
+ticker='VWENX'
+date_range='2018-03-01|2018-03-31'
 params='showVol=true&dtype=his'
 
 curl "http://globalquote.morningstar.com/globalcomponent/RealtimeHistoricalStockData.ashx?ticker=${ticker}&range=${date_range}&${params}"
