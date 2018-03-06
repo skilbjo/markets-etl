@@ -17,7 +17,10 @@
 
 (def morningstar
   '({:dataset "MSTAR"
-     :ticker ["BRK.B" "TSM" "VEMAX" "VEURX" "VEXPX" "VGWAX" "VITAX" "VIMAX" "VMRAX" "VPACX" "VGSLX" "VTIAX" "VTSAX" "VWINX" "VWENX" "VWNDX" "VFH" "VEA" "VWO" "VHT" "VGT"]}))
+     :ticker ["BRK.B" "TSM" "VEMAX" "VEURX" "VEXPX" "VGWAX" "VITAX" "VIMAX"
+              "VMRAX" "VPACX" "VGSLX" "VTIAX" "VTSAX" "VWINX" "VWENX" "VWNDX"
+              "VFH" "VEA" "VWO" "VHT" "VGT"
+              "FB" "AMZN" "GOOG" "NVDA" "CY" "INTC" "TXN" "V"]}))
 
 (def query-params
   {:limit      500
@@ -76,16 +79,31 @@
 (defn update-or-insert! [db {:keys [dataset
                                     ticker
                                     date] :as record}]
-  (sql/update-or-insert! db
-                         :dw.equities
-                         [(util/multi-line-string
-                           "dataset = ? and "
-                           "ticker  = ? and "
-                           "date    = ?     ")
-                          dataset
-                          ticker
-                          date]
-                         record))
+  ; morningstar data is available real time; although quandl data is much
+  ; richer in attributes (volume, opening balance, min, max). write morningstar
+  ; data first, but then go update it with quandl data
+  (condp = dataset
+    "MSTAR" (sql/update-or-insert! db
+                                   :dw.equities
+                                   [(util/multi-line-string
+                                     "dataset = ? and "
+                                     "ticker  = ? and "
+                                     "date    = ? and "
+                                     "volume is null  ") ; if richer attributes have not
+                                    dataset              ; been set by quandl
+                                    ticker
+                                    date]
+                                   record)
+    "WIKI" (sql/update-or-insert! db
+                                  :dw.equities
+                                  [(util/multi-line-string
+                                    "(dataset = ? or dataset = 'MSTAR') and "
+                                    "ticker   = ?                       and "
+                                    "date     = ? ")
+                                   dataset
+                                   ticker
+                                   date]
+                                  record)))
 
 (defn execute! [cxn data]
   (jdbc/with-db-transaction [txn cxn]

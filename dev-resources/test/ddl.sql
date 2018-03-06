@@ -53,7 +53,18 @@ begin;
     (      'WIKI',          'INTC', 'INTEL CORP'),
     (     'MSTAR',           'TSM', 'TAIWAN SEMICONDUCTOR MANUFACTURING COMPANY LTD SPONS ADR'),
     (      'WIKI',           'TXN', 'TEXAS INSTRUMENTS INC'),
-    (      'WIKI',             'V', 'VISA INC CLASS A')
+    (      'WIKI',             'V', 'VISA INC CLASS A'),
+    (     'MSTAR',            'FB', 'Facebook'),
+    (     'MSTAR',          'AMZN', 'Amazon'),
+    (     'MSTAR',          'GOOG', 'Google'),
+    (     'MSTAR',          'NVDA', 'Nvidia'),
+    (     'MSTAR',            'CY', 'CYPRESS SEMICONDUCTOR CORP'),
+    (     'MSTAR',          'INTC', 'INTEL CORP'),
+    (     'MSTAR',           'TXN', 'TEXAS INSTRUMENTS INC'),
+    (     'MSTAR',             'V', 'VISA INC CLASS A')
+  on conflict (dataset,ticker) do update
+  set
+    description = excluded.description
   ;
 
   drop table if exists dw.portfolio cascade;
