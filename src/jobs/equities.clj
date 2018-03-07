@@ -78,7 +78,17 @@
 
 (defn update-or-insert! [db {:keys [dataset
                                     ticker
-                                    date] :as record}]
+                                    date
+                                    open
+                                    high
+                                    volume
+                                    split_ratio
+                                    adj_open
+                                    adj_close
+                                    adj_low
+                                    adj_high
+                                    adj_volume
+                                    ex_dividend ] :as record}]
   ; morningstar data is available real time; although quandl data is much
   ; richer in attributes (volume, opening balance, min, max). write morningstar
   ; data first, but then go update it with quandl data
@@ -94,16 +104,52 @@
                                     ticker
                                     date]
                                    record)
-    "WIKI" (sql/update-or-insert! db
-                                  :dw.equities
-                                  [(util/multi-line-string
-                                    "(dataset = ? or dataset = 'MSTAR') and "
-                                    "ticker   = ?                       and "
-                                    "date     = ? ")
-                                   dataset
-                                   ticker
-                                   date]
-                                  record)))
+    "WIKI" (sql/update-or-insert!' db
+                                   :dw.equities
+                                   [(util/multi-line-string
+                                      "ticker   = ? and "
+                                      "date     = ? and "
+                                      "(open = ? or open is null )  and "
+                                      "(high = ? or high is null)   and "
+                                      "(volume = ? or volume is null) and "
+                                      "(split_ratio = ? or split_ratio is null)           and "
+                                      "(adj_open = ? or adj_open is null)            and "
+                                      "(adj_close = ? or adj_close is null)          and "
+                                      "(adj_low = ? or adj_low is null)              and "
+                                      "(adj_high = ? or adj_high is null)            and "
+                                      "(adj_volume = ? or adj_volume is null)        and "
+                                      "(ex_dividend = ? or ex_dividend is null)   ")
+                                    ticker
+                                    date
+                                    open
+                                    high
+                                    volume
+                                    split_ratio
+                                    adj_open
+                                    adj_close
+                                    adj_low
+                                    adj_high
+                                    adj_volume
+                                   ex_dividend ]
+                                   (-> record
+                                       (dissoc :dataset))
+                                   record))
+    (condp = dataset
+      "WIKI" (sql/update-or-insert! db
+                                   :dw.equities
+                                   [(util/multi-line-string
+                                      "dataset  = ? and "
+                                      "ticker   = ? and "
+                                      "date     = ? ")
+                                    dataset
+                                    ticker
+                                    date]
+                                   record)
+      "MSTAR" nil))
+
+; update MSTAR record
+; but don't overwrite
+; it's dataset to WIKI
 
 (defn execute! [cxn data]
   (jdbc/with-db-transaction [txn cxn]

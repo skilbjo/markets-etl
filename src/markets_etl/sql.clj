@@ -13,6 +13,15 @@
       (jdbc/insert! db table data)
       result)))
 
+(defn update-or-insert!' [db table where-clause update-data data]
+  (when (= (:ticker update-data) "FB")
+    (println update-data)
+    (println (jdbc/update! db table update-data where-clause)))
+  (let [result (jdbc/update! db table update-data where-clause)]
+    (if (zero? (first result))
+      (jdbc/insert! db table data)
+      result)))
+
 (defn- prepare-statement
   [sql params]
   (loop [sql sql

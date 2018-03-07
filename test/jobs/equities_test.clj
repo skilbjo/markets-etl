@@ -10,7 +10,7 @@
 (use-fixtures :each (fix/with-database))
 
 (deftest integration-test
-  (->> (concat f/quandl f/morningstar)
+  (->> (concat f/morningstar f/quandl)
        (execute! *cxn*))
 
   (testing "Quandl API equities integration test"
