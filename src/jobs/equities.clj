@@ -93,14 +93,14 @@
   ; richer in attributes (volume, opening balance, min, max). write morningstar
   ; data first, but then go update it with quandl data
   (condp = dataset
-    "MSTAR" (sql/update-or-insert! db
-                                   :dw.equities
+    "MSTAR" (sql/query-or-insert! db
+                                  :dw.equities
                                    [(util/multi-line-string
-                                     "dataset = ? and "
+                                     "select * from dw.equities where "
                                      "ticker  = ? and "
-                                     "date    = ? and "
-                                     "volume is null  ") ; if richer attributes have not
-                                    dataset              ; been set by quandl
+                                     "date    = ?  "
+                                     ) ; if richer attributes have not
+                                                     ; been set by quandl
                                     ticker
                                     date]
                                    record)
