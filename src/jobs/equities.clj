@@ -98,17 +98,17 @@
   (condp = dataset
     "MSTAR" (sql/query-or-insert! db
                                   :dw.equities
-                                   [(util/multi-line-string
-                                     "select          " ; if richer attributes
-                                     "  *             " ; have not been set by
-                                     "from            " ; quandl
-                                     "  dw.equities   "
-                                     "where           "
-                                     "ticker  = ? and "
-                                     "date    = ?     ")
-                                    ticker
-                                    date]
-                                   record)
+                                  [(util/multi-line-string
+                                    "select          " ; if richer attributes
+                                    "  *             " ; have not been set by
+                                    "from            " ; quandl
+                                    "  dw.equities   "
+                                    "where           "
+                                    "ticker  = ? and "
+                                    "date    = ?     ")
+                                   ticker
+                                   date]
+                                  record)
     "WIKI" (sql/update-or-insert!' db
                                    :dw.equities
                                    [(util/multi-line-string  ; update MSTAR record
