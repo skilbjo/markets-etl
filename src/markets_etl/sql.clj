@@ -19,6 +19,12 @@
       (jdbc/insert! db table data)
       result)))
 
+(defn query-or-insert! [db table where-clause data]
+  (let [result (jdbc/query db where-clause)]
+    (if (empty? result)
+      (jdbc/insert! db table data)
+      result)))
+
 (defn- prepare-statement
   [sql params]
   (loop [sql sql

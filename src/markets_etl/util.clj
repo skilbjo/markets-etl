@@ -46,6 +46,10 @@
 
 (def last-year (-> 1 time/years time/ago joda-date->date-str))
 
+(def two-years-ago (-> 2 time/years time/ago joda-date->date-str))
+
+(def five-years-ago (-> 5 time/years time/ago joda-date->date-str))
+
 ; -- data types ----------------------------------------
 (defn string->decimal [n]
   (-> n
