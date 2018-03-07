@@ -73,7 +73,10 @@
                            (map keyword))]
     (->> data
          (map #(zipmap columns %))
-         (map #(update % :date coerce/to-sql-date))
+         (map #(update % :date coerce/to-sql-date)) ; needed as Quandl returns
+         (map #(update % :open (fn [v] (-> v        ; prices more than 3 decimal
+                                           java.math.BigDecimal. ; places out
+                                           (.setScale 2 BigDecimal/ROUND_HALF_UP)))))
          (map #(assoc % :dataset dataset :ticker ticker)))))
 
 (defn update-or-insert! [db {:keys [dataset
@@ -96,41 +99,25 @@
     "MSTAR" (sql/query-or-insert! db
                                   :dw.equities
                                    [(util/multi-line-string
-                                     "select * from dw.equities where "
+                                     "select          " ; if richer attributes
+                                     "  *             " ; have not been set by
+                                     "from            " ; quandl
+                                     "  dw.equities   "
+                                     "where           "
                                      "ticker  = ? and "
-                                     "date    = ?  "
-                                     ) ; if richer attributes have not
-                                                     ; been set by quandl
+                                     "date    = ?     ")
                                     ticker
                                     date]
                                    record)
     "WIKI" (sql/update-or-insert!' db
                                    :dw.equities
                                    [(util/multi-line-string  ; update MSTAR record
-                                     "ticker       = ? and " ; but don't overwrite
-                                     "date         = ? and " ; it's dataset to WIKI
-                                     "(open        = ? or open        is null) and "
-                                     "(high        = ? or high        is null) and "
-                                     "(volume      = ? or volume      is null) and "
-                                     "(split_ratio = ? or split_ratio is null) and "
-                                     "(adj_open    = ? or adj_open    is null) and "
-                                     "(adj_close   = ? or adj_close   is null) and "
-                                     "(adj_low     = ? or adj_low     is null) and "
-                                     "(adj_high    = ? or adj_high    is null) and "
-                                     "(adj_volume  = ? or adj_volume  is null) and "
-                                     "(ex_dividend = ? or ex_dividend is null) ")
-                                    ticker
-                                    date
-                                    open
-                                    high
-                                    volume
-                                    split_ratio
-                                    adj_open
-                                    adj_close
-                                    adj_low
-                                    adj_high
-                                    adj_volume
-                                    ex_dividend]
+                                     "ticker = ? and " ; but don't overwrite
+                                     "date   = ? and " ; it's dataset to WIKI
+                                     "(open  = ? or open is null)") ; <- this
+                                    ticker             ; has to be a non-MSTAR
+                                    date               ; field
+                                    open]
                                    (-> record
                                        (dissoc :dataset))
                                    record))

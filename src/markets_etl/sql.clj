@@ -14,7 +14,6 @@
       result)))
 
 (defn update-or-insert!' [db table where-clause update-data data]
-  (println where-clause update-data)
   (let [result (jdbc/update! db table update-data where-clause)]
     (if (zero? (first result))
       (jdbc/insert! db table data)

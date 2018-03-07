@@ -17,7 +17,6 @@
 (defn -main [& args]
   (error/set-default-error-handler)
   (jdbc/with-db-connection [cxn (-> :jdbc-db-uri env)]
-    (println (-> :jdbc-db-uri env))
     (let [month (first args)
           data  (->> (concat morningstar datasets)
                      (map #(api/get-data % query-params))
