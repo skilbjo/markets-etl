@@ -6,7 +6,7 @@
   app_dir="/home/skilbjo/deploy/app/markets-etl"
 
 ## -- jobs ----------------------------------------
-20 18 * * * skilbjo . /home/skilbjo/.profilelocal; cd "$app_dir" ; $cmd -m jobs.equities >/dev/null 2>&1
+30 15 * * * skilbjo . /home/skilbjo/.profilelocal; cd "$app_dir" ; $cmd -m jobs.equities >/dev/null 2>&1
 0 6 * * * skilbjo . /home/skilbjo/.profilelocal; cd "$app_dir" ; $cmd -m jobs.currency >/dev/null 2>&1
 0 6 */4 * * skilbjo . /home/skilbjo/.profilelocal; cd "$app_dir" ; $cmd -m jobs.economics >/dev/null 2>&1
 0 6 */4 * * skilbjo . /home/skilbjo/.profilelocal; cd "$app_dir" ; $cmd -m jobs.interest-rates >/dev/null 2>&1

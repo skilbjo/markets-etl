@@ -17,6 +17,21 @@ esac
 img="quay.io/skilbjo/$app_name:$arch"
 job_cmd="usr/local/deploy/bin/run-job"
 
+get_current_artifacts(){
+  # any scripts need updating?
+  git pull -f
+
+  # remove all app containers
+  set +e
+  docker ps -a | grep "$app_name" | awk '{print $1}' | uniq | xargs docker rm -f
+
+  # remove all app images
+  docker images | grep "$app_name" | awk '{print $3}' | uniq | xargs docker rmi -f
+  set -e
+}
+
+get_current_artifacts
+
 docker run --rm \
   --name="$(echo $app_name $@ | tr ' ' '_')" \
   -e jdbc_db_uri="$(echo $jdbc_db_uri)" \
