@@ -1,8 +1,8 @@
-(ns backfill.equities
+(ns backfill.currency
   (:require [clojure.java.jdbc :as jdbc]
             [clojure.tools.logging :as log]
             [environ.core :refer [env]]
-            [jobs.equities :refer :all :rename {-main _
+            [jobs.currency :refer :all :rename {-main _
                                                 query-params __}]
             [markets-etl.api :as api]
             [markets-etl.error :as error]
@@ -18,7 +18,7 @@
   (error/set-default-error-handler)
   (jdbc/with-db-connection [cxn (-> :jdbc-db-uri env)]
     (let [month (first args)
-          data  (->> (concat morningstar datasets)
+          data  (->> (concat datasets)
                      (map #(api/get-data % query-params))
                      flatten)]
 

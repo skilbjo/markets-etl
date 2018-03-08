@@ -13,7 +13,7 @@
   (->> (concat f/morningstar f/quandl)
        (execute! *cxn*))
 
-  (testing "Quandl API equities integration test"
+  (testing "Quandl & Morningstar API equities integration test"
     (is (= f/result
            (->> "select * from dw.equities"
                 (jdbc/query *cxn*)
