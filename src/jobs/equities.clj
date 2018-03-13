@@ -50,6 +50,7 @@
                       :dataset     dataset
                       :ticker      ticker
                       :open        nil
+                      :low         nil
                       :high        nil
                       :volume      nil
                       :split_ratio nil
@@ -83,6 +84,7 @@
                                     ticker
                                     date
                                     open
+                                    low
                                     high
                                     volume
                                     split_ratio
