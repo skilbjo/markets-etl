@@ -9,6 +9,8 @@ begin;
     ticker          text,
     description     text,
 
+    dw_created_at   timestamp default now(),
+
     constraint markets_pk primary key (dataset, ticker)
   );
 
@@ -69,10 +71,12 @@ begin;
 
   drop table if exists dw.portfolio cascade;
   create table if not exists dw.portfolio (
-    dataset           text          not null,
-    ticker            text          not null,
-    quantity          decimal(10,4) not null,
-    cost_per_share    decimal(6,2)  not null,
+    dataset            text          not null,
+    ticker             text          not null,
+    quantity           decimal(10,4) not null,
+    cost_per_share     decimal(6,2)  not null,
+
+    dw_created_at      timestamp default now(),
 
     constraint portfolio_pk primary key (dataset, ticker),
     constraint portfolio_markets_dim_fk foreign key (dataset, ticker) references dw.markets (dataset, ticker)
@@ -101,6 +105,8 @@ begin;
     adj_volume    decimal(20,2),
     ex_dividend   decimal(10,2),
 
+    dw_created_at timestamp default now(),
+
     constraint equities_pk primary key (dataset, ticker, date),
     constraint equities_markets_fk foreign key (dataset, ticker) references dw.markets (dataset, ticker)
   );
@@ -114,6 +120,8 @@ begin;
     area_category   text,
     indicator_code  text,
     area            text,  -- usually a zip(int), but could be city(text)
+
+    dw_created_at   timestamp default now(),
 
     constraint real_estate_pk primary key (dataset, ticker, date),
     constraint real_estate_markets_fk foreign key (dataset, ticker) references dw.markets (dataset, ticker)
@@ -129,16 +137,20 @@ begin;
     high_est        decimal(24,14),
     low_est         decimal(24,14),
 
+    dw_created_at   timestamp default now(),
+
     constraint currency_pk primary key (dataset, ticker, date),
     constraint currency_markets_fk foreign key (dataset, ticker) references dw.markets (dataset, ticker)
   );
 
   drop table if exists dw.economics;
   create table if not exists dw.economics (
-    dataset         text,
-    ticker          text,
-    date            date,
-    value           decimal(10,2),
+    dataset       text,
+    ticker        text,
+    date          date,
+    value         decimal(10,2),
+
+    dw_created_at timestamp default now(),
 
     constraint economics_pk primary key (dataset, ticker, date),
     constraint economics_markets_fk foreign key (dataset, ticker) references dw.markets (dataset, ticker)
@@ -151,6 +163,8 @@ begin;
     date            date,
     key             text,
     value           decimal(10,2),
+
+    dw_created_at   timestamp default now(),
 
     constraint interest_rates_pk primary key (dataset, ticker, date, key),
     constraint interest_rates_markets_fk foreign key (dataset, ticker) references dw.markets (dataset, ticker)

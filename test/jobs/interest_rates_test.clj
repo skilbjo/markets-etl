@@ -14,7 +14,15 @@
        (execute! *cxn*))
 
   (testing "interest_rates integration test"
-    (is (= f/result
-           (->> "select * from dw.interest_rates"
-                (jdbc/query *cxn*)
-                flatten)))))
+    (let [actual  (->> "select * from dw.interest_rates"
+                       (jdbc/query *cxn*)
+                       flatten)]
+      (is (= f/result
+             (->> actual
+                  (map #(dissoc %
+                                :dw_created_at)))))
+      (is (every? true?
+                  (->> actual
+                       (map #(contains? %
+                                        :dw_created_at)))))
+      (is (not (empty? actual))))))
