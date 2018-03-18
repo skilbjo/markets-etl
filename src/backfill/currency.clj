@@ -1,5 +1,8 @@
 (ns backfill.currency
   (:require [clojure.java.jdbc :as jdbc]
+            [clj-time.core :as t]
+            [clj-time.format :as f]
+            [clojure.tools.cli :as cli]
             [clojure.tools.logging :as log]
             [environ.core :refer [env]]
             [jobs.currency :refer :all :rename {-main _
@@ -9,17 +12,22 @@
             [markets-etl.util :as util])
   (:gen-class))
 
-(def query-params
-  {:limit      2600
-   :start_date util/two-years-ago
-   :end_date   util/now})
+(def cli-options
+  [["-d" "--date yyyy-mm-dd" "Date (month) to start processing"
+    :default util/two-years-ago
+    :parse-fn #(f/parse %)]
+   ["-h" "--help"]])
 
 (defn -main [& args]
   (error/set-default-error-handler)
-  (jdbc/with-db-connection [cxn (-> :jdbc-db-uri env)]
-    (let [month (first args)
-          data  (->> (concat datasets)
-                     (map #(api/get-data % query-params))
-                     flatten)]
+  (let [{:keys [options summary errors]} (cli/parse-opts args cli-options)]
+    (jdbc/with-db-connection [cxn (-> :jdbc-db-uri env)]
+      (let [month        (:date options)
+            query-params {:limit      2600
+                          :start_date (-> month t/first-day-of-the-month)
+                          :end_date   month}
+            data         (->> (concat datasets)
+                              (map #(api/get-data % query-params))
+                              flatten)]
 
-      (execute! cxn data))))
+        (execute! cxn data)))))
