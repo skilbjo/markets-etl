@@ -8,4 +8,14 @@ set +e
 apk fix || echo 'Unable to reach apk... continuing...'
 set -e
 
-exec $cmd $@
+case "$@" in
+  backfill-* )
+    # call like /usr/local/deploy/bin/run-job backfill-equities
+    _job=$(echo "$@" | sed 's/backfill-//')
+
+    eval "/usr/local/backfill/job ${_job}"
+    ;;
+  * )
+    exec $cmd $@
+    ;;
+esac

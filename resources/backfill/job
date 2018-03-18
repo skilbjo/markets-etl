@@ -1,0 +1,39 @@
+#!/usr/bin/env bash
+set -eou pipefail
+
+run_backfill(){
+  _job="$1"
+  # normal year
+  for year in "2015" "2017" "2018"; do
+    java $JAVA_OPTS -jar /app.jar -m "backfill.${_job}" -d "$year-01-31"
+    java $JAVA_OPTS -jar /app.jar -m "backfill.${_job}" -d "$year-02-28"
+    java $JAVA_OPTS -jar /app.jar -m "backfill.${_job}" -d "$year-03-31"
+    java $JAVA_OPTS -jar /app.jar -m "backfill.${_job}" -d "$year-04-30"
+    java $JAVA_OPTS -jar /app.jar -m "backfill.${_job}" -d "$year-05-31"
+    java $JAVA_OPTS -jar /app.jar -m "backfill.${_job}" -d "$year-06-30"
+    java $JAVA_OPTS -jar /app.jar -m "backfill.${_job}" -d "$year-07-31"
+    java $JAVA_OPTS -jar /app.jar -m "backfill.${_job}" -d "$year-08-31"
+    java $JAVA_OPTS -jar /app.jar -m "backfill.${_job}" -d "$year-09-30"
+    java $JAVA_OPTS -jar /app.jar -m "backfill.${_job}" -d "$year-10-31"
+    java $JAVA_OPTS -jar /app.jar -m "backfill.${_job}" -d "$year-11-30"
+    java $JAVA_OPTS -jar /app.jar -m "backfill.${_job}" -d "$year-12-31"
+  done
+
+  # leap year
+  for year in "2016"; do
+    java $JAVA_OPTS -jar /app.jar -m "backfill.${_job}" -d "$year-01-31"
+    java $JAVA_OPTS -jar /app.jar -m "backfill.${_job}" -d "$year-02-29"
+    java $JAVA_OPTS -jar /app.jar -m "backfill.${_job}" -d "$year-03-31"
+    java $JAVA_OPTS -jar /app.jar -m "backfill.${_job}" -d "$year-04-30"
+    java $JAVA_OPTS -jar /app.jar -m "backfill.${_job}" -d "$year-05-31"
+    java $JAVA_OPTS -jar /app.jar -m "backfill.${_job}" -d "$year-06-30"
+    java $JAVA_OPTS -jar /app.jar -m "backfill.${_job}" -d "$year-07-31"
+    java $JAVA_OPTS -jar /app.jar -m "backfill.${_job}" -d "$year-08-31"
+    java $JAVA_OPTS -jar /app.jar -m "backfill.${_job}" -d "$year-09-30"
+    java $JAVA_OPTS -jar /app.jar -m "backfill.${_job}" -d "$year-10-31"
+    java $JAVA_OPTS -jar /app.jar -m "backfill.${_job}" -d "$year-11-30"
+    java $JAVA_OPTS -jar /app.jar -m "backfill.${_job}" -d "$year-12-31"
+  done
+}
+
+run_backfill $@

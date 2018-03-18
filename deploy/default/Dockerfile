@@ -11,6 +11,8 @@ ENV JAVA_HOME="/usr/lib/jvm/java-1.8-openjdk8" \
 COPY target/uberjar/app.jar      /app.jar
 COPY deploy                      /usr/local/deploy
 COPY src                         /usr/local/src
+COPY resources                   /usr/local/resources
+COPY resources/backfill          /usr/local/backfill
 COPY deploy/default/bashrc       /root/.bashrc
 COPY deploy/default/vimrc        /root/.vimrc
 
