@@ -14,8 +14,8 @@
 
 (def cli-options
   [["-d" "--date yyyy-mm-dd" "Date (month) to start processing"
-    :default util/two-years-ago
-    :parse-fn #(f/parse %)]
+    :parse-fn #(f/parse %)
+    :default util/five-years-ago]
    ["-h" "--help"]])
 
 (defn -main [& args]
