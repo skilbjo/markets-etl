@@ -23,7 +23,6 @@ jobs:
     - image: circleci/clojure:lein-2.7.1
     steps:
       - checkout
-      - setup_remote_docker
       - restore_cache:
           key: << checksum "project.clj" >>
       - run: lein deps
@@ -32,6 +31,7 @@ jobs:
             - ~/.m2
             - ~/.lein
           key: << checksum "project.clj" >>
+      - setup_remote_docker
       - run: deploy/bin/publish-image
 
 workflows:

@@ -16,7 +16,7 @@ set -eou pipefail
 
 
 
-apk add -U bash bash-completion coreutils vim git \
+apk add -U bash bash-completion coreutils tzdata vim git \
     && mkdir -p /root/.vim  && git clone https://github.com/Shougo/neobundle.vim ~/.vim/bundle && ~/.vim/bundle/bin/install.sh \
     && cp /usr/share/zoneinfo/America/Los_Angeles /etc/localtime \
     && echo "America/Los_Angeles" >/etc/timezone \
