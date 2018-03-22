@@ -16,4 +16,4 @@ COPY resources/backfill          /usr/local/backfill
 COPY deploy/default/bashrc       /root/.bashrc
 COPY deploy/default/vimrc        /root/.vimrc
 
-RUN ["qemu-arm-static","/sbin/apk","-U","add","openjdk8"]
+RUN ["qemu-arm-static","/sbin/apk","add","--no-cache","openjdk8"]

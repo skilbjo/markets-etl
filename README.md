@@ -85,3 +85,24 @@ vim .git/hooks/pre-commit
 
 lein pom 2>&1 dev-resources/pom.xml
 ```
+
+#### Quirks with Alpine + Vim + Jars
+In order to edit a jar with vim in alpine linux, install a non-busybox unzip
+binary. The busybox binary:
+
+```
+BusyBox v1.25.1 (2017-11-23 08:48:46 GMT) multi-call binary.
+
+Usage: unzip [-lnopq] FILE[.zip] [FILE]... [-x FILE...] [-d DIR]
+```
+
+is not the fully featured version. This is:
+
+```
+UnZip 6.00 of 20 April 2009, by Info-ZIP.  Maintained by C. Spieler.  Send
+bug reports using http://www.info-zip.org/zip-bug.html; see README for details.
+
+Usage: unzip [-Z] [-opts[modifiers]] file[.zip] [list] [-x xlist] [-d exdir]
+```
+
+install with: ```apk add --no-cache unzip```
