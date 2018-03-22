@@ -1,18 +1,44 @@
-machine:
-  services:
-    - docker
-    - postgresql
+version: 2
+jobs:
+  test:
+    working_directory: ~/markets-etl
+    docker:
+    - image: circleci/clojure:lein-2.7.1
+    - image: circleci/postgres:9.5.12-alpine # for integration test
+    steps:
+      - checkout
+      - restore_cache:
+          key: << checksum "project.clj" >>
+      - run: lein do deps, cloverage --codecov
+      - save_cache:
+          paths:
+            - ~/.m2
+            - ~/.lein
+          key: << checksum "project.clj" >>
+      - run: lein do test, cljfmt check
+      - run: bash <(curl -s https://codecov.io/bash) -f target/coverage/codecov.json
+  build:
+    working_directory: ~/markets-etl
+    docker:
+    - image: circleci/clojure:lein-2.7.1
+    steps:
+      - checkout
+      - setup_remote_docker
+      - restore_cache:
+          key: << checksum "project.clj" >>
+      - run: lein deps
+      - save_cache:
+          paths:
+            - ~/.m2
+            - ~/.lein
+          key: << checksum "project.clj" >>
+      - run: deploy/bin/publish-image
 
-test:
-  override:
-    - case $CIRCLE_NODE_INDEX in 0) lein cljfmt check ;; 1) lein test ;; esac:
-        parallel: true
-  post:
-    - lein cloverage --codecov
-    - bash <(curl -s https://codecov.io/bash) -f target/coverage/codecov.json
-
-deployment:
-  quay:
-    branch: /.*/
-    commands:
-      - deploy/bin/publish-image
+workflows:
+  version: 2
+  build_and_test:
+    jobs:
+      - test
+      - build:
+          requires:
+            - test
