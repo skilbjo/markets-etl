@@ -1,4 +1,4 @@
-FROM gliderlabs/alpine:latest
+FROM gliderlabs/alpine:3.5
 
 ENV JAVA_HOME="/usr/lib/jvm/java-1.8-openjdk8" \
     JAVA_OPTS="-Duser.timezone=UTC -Xms256m -Xmx512m -XX:MaxMetaspaceSize=128m " \
