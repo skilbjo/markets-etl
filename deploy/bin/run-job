@@ -2,6 +2,7 @@
 set -eou pipefail
 
 cmd="java $JAVA_OPTS -jar app.jar"
+deploy_dir="usr/local/deploy/bin"
 
 # Prereqs
 case $(uname -a) in
