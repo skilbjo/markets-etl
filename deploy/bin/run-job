@@ -4,9 +4,10 @@ set -eou pipefail
 cmd="java $JAVA_OPTS -jar app.jar"
 
 # Prereqs
-set +e
-apk fix || echo 'Unable to reach apk... continuing...'
-set -e
+case $(uname -a) in
+  *arm* )
+    set +e; eval "${deploy_dir}/apk"; set -e; ;; # set +e when apk not available
+esac
 
 case "$@" in
   backfill-* )

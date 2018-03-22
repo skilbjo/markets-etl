@@ -16,8 +16,8 @@ COPY resources/backfill          /usr/local/backfill
 COPY deploy/default/bashrc       /root/.bashrc
 COPY deploy/default/vimrc        /root/.vimrc
 
-RUN apk add -U openjdk8 \
-    bash bash-completion vim coreutils \
-    tzdata && \
-    cp /usr/share/zoneinfo/America/Los_Angeles /etc/localtime && \
-    echo "America/Los_Angeles" >/etc/timezone
+RUN apk add -U openjdk8 bash bash-completion coreutils vim git \
+    && mkdir -p /root/.vim  && git clone https://github.com/Shougo/neobundle.vim ~/.vim/bundle && ~/.vim/bundle/bin/install.sh \
+    && cp /usr/share/zoneinfo/America/Los_Angeles /etc/localtime \
+    && echo "America/Los_Angeles" >/etc/timezone \
+    && rm -rf /var/cache/apk/*
