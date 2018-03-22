@@ -4,7 +4,6 @@ set -euo pipefail
 app=$(basename $(pwd))
 registry='quay.io'
 image="${registry}/skilbjo/${app}"
-email='skilbjo@github.com'
 
 cat './deploy/default/Dockerfile' >Dockerfile
 
@@ -16,7 +15,7 @@ fi
 
 echo $(git rev-parse HEAD) >.tag
 
-docker login -u $QUAY_ROBOT_USERNAME -p $QUAY_ROBOT_PASSWORD -e $email $registry
+docker login -u $QUAY_ROBOT_USERNAME -p $QUAY_ROBOT_PASSWORD $registry
 lein uberjar
 docker build --rm -t $image:$tag .
 docker tag $image:$tag $image:$CIRCLE_SHA1
