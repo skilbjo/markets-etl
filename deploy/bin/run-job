@@ -7,7 +7,7 @@ deploy_dir="usr/local/deploy/bin"
 # Prereqs
 case $(uname -a) in
   *arm* )
-    set +e; eval "${deploy_dir}/apk"; set -e; ;; # set +e when apk not available
+    set +e; eval "${deploy_dir}/apk"; apk fix || echo 'Unable to reach apk...'; set -e; ;; # set +e when apk not available
 esac
 
 case "$@" in

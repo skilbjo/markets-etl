@@ -16,7 +16,7 @@ set -eou pipefail
 
 
 
-apk add --no-cache openjdk8 bash bash-completion coreutils vim unzip git tzdata \
+apk add --no-cache bash bash-completion coreutils vim zip unzip git tzdata \
     && mkdir -p /root/.vim  && git clone https://github.com/Shougo/neobundle.vim ~/.vim/bundle && ~/.vim/bundle/bin/install.sh \
     && cp /usr/share/zoneinfo/America/Los_Angeles /etc/localtime \
     && echo "America/Los_Angeles" >/etc/timezone
