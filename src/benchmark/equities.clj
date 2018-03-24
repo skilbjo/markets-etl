@@ -50,16 +50,16 @@
             data'        (->> (concat f/morningstar f/quandl)
                               flatten)]
 
-          (log/info "Benchmarking the traditional pipeline...")
-          (-> (->> data'
-                   (execute! *cxn*))
-              (criterium/bench)
-              #_criterium/with-progress-reporting)
-          (log/info "Now on to reducers...")
-          (-> (->> data'
-                   (execute!' *cxn*))
-              (criterium/bench)
-              #_criterium/with-progress-reporting)
+        (log/info "Benchmarking the traditional pipeline...")
+        (-> (->> data'
+                 (execute! *cxn*))
+            (criterium/bench)
+            #_criterium/with-progress-reporting)
+        (log/info "Now on to reducers...")
+        (-> (->> data'
+                 (execute!' *cxn*))
+            (criterium/bench)
+            #_criterium/with-progress-reporting)
 
-      (->> "drop schema dw cascade;"
-           (jdbc/execute! *cxn*))))))
+        (->> "drop schema dw cascade;"
+             (jdbc/execute! *cxn*))))))

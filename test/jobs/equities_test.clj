@@ -12,22 +12,22 @@
 (use-fixtures :each (fix/with-database))
 
 (deftest integration-test
-    (->> (concat f/morningstar f/quandl)
-         (execute! *cxn*))
+  (->> (concat f/morningstar f/quandl)
+       (execute! *cxn*))
 
-    (testing "Quandl & Morningstar API equities integration test"
-      (let [actual  (->> "select * from dw.equities"
-                         (jdbc/query *cxn*)
-                         flatten)]
-        (is (= f/result
-               (->> actual
-                    (map #(dissoc %
-                                  :dw_created_at)))))
-        (is (every? true?
-                    (->> actual
-                         (map #(contains? %
-                                          :dw_created_at)))))
-        (is (not (empty? actual))))))
+  (testing "Quandl & Morningstar API equities integration test"
+    (let [actual  (->> "select * from dw.equities"
+                       (jdbc/query *cxn*)
+                       flatten)]
+      (is (= f/result
+             (->> actual
+                  (map #(dissoc %
+                                :dw_created_at)))))
+      (is (every? true?
+                  (->> actual
+                       (map #(contains? %
+                                        :dw_created_at)))))
+      (is (not (empty? actual))))))
 
 (deftest integration-test'
   (->> (concat f/morningstar f/quandl)
