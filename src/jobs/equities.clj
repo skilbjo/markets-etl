@@ -138,7 +138,17 @@
                                    ticker
                                    date]
                                   record)
-    "MSTAR" nil))
+    "MSTAR" (sql/update-or-insert! db
+                                  :dw.equities
+                                  [(util/multi-line-string
+                                    "dataset  = ? and "
+                                    "ticker   = ? and "
+                                    "date   = ? and "
+                                    "(open is null)")
+                                   dataset
+                                   ticker
+                                   date]
+                                  record)))
 
 (defn execute! [cxn data]
   (jdbc/with-db-transaction [txn cxn]
