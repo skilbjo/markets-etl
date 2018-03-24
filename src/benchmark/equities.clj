@@ -7,7 +7,7 @@
             [clojure.java.shell :as shell]
             [clojure.tools.cli :as cli]
             [clojure.tools.logging :as log]
-            [criterium.core :as criterium]
+            #_[criterium.core :as criterium] ; only used for testing locally
             [environ.core :refer [env]]
             [fixtures.equities :as f]
             [jobs.equities :refer :all :rename {-main _
@@ -53,12 +53,12 @@
         (log/info "Benchmarking the traditional pipeline...")
         (-> (->> data'
                  (execute! *cxn*))
-            (criterium/bench)
+            #_(criterium/bench)
             #_criterium/with-progress-reporting)
         (log/info "Now on to reducers...")
         (-> (->> data'
                  (execute!' *cxn*))
-            (criterium/bench)
+            #_(criterium/bench)
             #_criterium/with-progress-reporting)
 
         (->> "drop schema dw cascade;"
