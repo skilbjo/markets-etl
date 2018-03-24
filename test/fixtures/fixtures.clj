@@ -14,5 +14,5 @@
            slurp
            (jdbc/execute! *cxn*))
       (f)
-      #_(->> "drop schema dw cascade;"
+      (->> "drop schema dw cascade;"
              (jdbc/execute! *cxn*)))))

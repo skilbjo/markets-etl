@@ -5,14 +5,13 @@
             [clojure.test :refer :all]
             [environ.core :refer [env]]
             [jobs.equities :refer :all :rename {-main _}]
+            [benchmark.equities :refer :all :rename {-main __}]
             [fixtures.equities :as f]
             [fixtures.fixtures :refer [*cxn*] :as fix]))
 
 (use-fixtures :each (fix/with-database))
 
-#_(deftest integration-test
-    #_(criterium/bench (->> (concat f/morningstar f/quandl)
-                            (execute! *cxn*)))
+(deftest integration-test
     (->> (concat f/morningstar f/quandl)
          (execute! *cxn*))
 
@@ -31,12 +30,10 @@
         (is (not (empty? actual))))))
 
 (deftest integration-test'
-  #_(criterium/bench (->> (concat f/morningstar f/quandl)
-                          (execute!' *cxn*)))
   (->> (concat f/morningstar f/quandl)
        (execute!' *cxn*))
 
-  (testing "Quandl & Morningstar API equities integration test"
+  (testing "Equities integration test, using reducers"
     (let [actual  (->> "select * from dw.equities"
                        (jdbc/query *cxn*)
                        flatten)]

@@ -1,6 +1,5 @@
 (ns jobs.equities
   (:require [clj-time.coerce :as coerce]
-            [clojure.core.reducers :as r]
             [clojure.data.json :as json]
             [clojure.tools.logging :as log]
             [clojure.java.jdbc :as jdbc]
@@ -154,15 +153,6 @@
   (jdbc/with-db-transaction [txn cxn]
     (->> data
          (map prepare-row)
-         flatten
-         (map #(update-or-insert! txn %))
-         doall)))
-
-(defn execute!' [cxn data]
-  (jdbc/with-db-transaction [txn cxn]
-    (->> data
-         (r/map prepare-row)
-         (into '())
          flatten
          (map #(update-or-insert! txn %))
          doall)))
