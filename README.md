@@ -105,4 +105,61 @@ bug reports using http://www.info-zip.org/zip-bug.html; see README for details.
 Usage: unzip [-Z] [-opts[modifiers]] file[.zip] [list] [-x xlist] [-d exdir]
 ```
 
-install with: ```apk add --no-cache unzip```
+install with:
+
+```
+apk add --no-cache unzip
+```
+
+#### Benchmarks
+Clojure core functions (map, reduce) vs reducers (r/map, r/reduce):
+
+```clojure
+(defn execute! [cxn data]
+  (jdbc/with-db-transaction [txn cxn]
+    (->> data
+         (map prepare-row)
+         flatten
+         (map #(update-or-insert! txn %))
+         doall)))
+```
+
+```clojure
+(defn execute!' [cxn data]
+  (jdbc/with-db-transaction [txn cxn]
+    (->> data
+         (r/map prepare-row)
+         (into '())
+         flatten
+         (map #(update-or-insert! txn %))
+         doall)))
+```
+
+```bash
+@mbp:markets-etl $ lein run -m benchmark.equities
+
+### Traditional Clojure core functions
+Evaluation count : 540 in 60 samples of 9 calls.
+             Execution time mean : 131.794661 ms
+    Execution time std-deviation : 20.667398 ms
+   Execution time lower quantile : 108.522897 ms ( 2.5%)
+   Execution time upper quantile : 190.814936 ms (97.5%)
+                   Overhead used : 2.252589 ns
+
+Found 5 outliers in 60 samples (8.3333 %)
+        low-severe       3 (5.0000 %)
+        low-mild         2 (3.3333 %)
+ Variance from outliers : 85.8712 % Variance is severely inflated by outliers
+
+### Clojure reducer functions
+Evaluation count : 360 in 60 samples of 6 calls.
+             Execution time mean : 172.229434 ms
+    Execution time std-deviation : 24.243476 ms
+   Execution time lower quantile : 146.725239 ms ( 2.5%)
+   Execution time upper quantile : 235.378479 ms (97.5%)
+                   Overhead used : 2.252589 ns
+
+Found 3 outliers in 60 samples (5.0000 %)
+        low-severe       3 (5.0000 %)
+ Variance from outliers : 82.4206 % Variance is severely inflated by outliers
+```
