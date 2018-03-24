@@ -15,4 +15,4 @@
            (jdbc/execute! *cxn*))
       (f)
       #_(->> "drop schema dw cascade;"
-           (jdbc/execute! *cxn*)))))
+             (jdbc/execute! *cxn*)))))
