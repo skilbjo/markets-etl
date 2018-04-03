@@ -15,8 +15,8 @@
   '({:dataset "WIKI"
      :ticker ["FB" "AMZN" "GOOG" "NVDA" "CY" "INTC" "TXN" "V"]}))
 
-(def morningstar
-  '({:dataset "MSTAR"
+(def morningstar          ; VGWAX unavailable via MSTAR API most likely because
+  '({:dataset "MSTAR"     ; it is a "new" ticker. Hoping it appears eventually
      :ticker ["BRK.B" "TSM" "VEMAX" "VEURX" "VEXPX" "VGWAX" "VITAX" "VIMAX"
               "VMRAX" "VPACX" "VGSLX" "VTIAX" "VTSAX" "VWINX" "VWENX" "VWNDX"
               "VFH" "VEA" "VWO" "VHT" "VGT"
@@ -137,7 +137,7 @@
                                    ticker
                                    date]
                                   record)
-    "MSTAR" (sql/update-or-insert! db
+    "MSTAR" (sql/update-or-ignore! db
                                    :dw.equities
                                    [(util/multi-line-string
                                      "dataset  = ? and "

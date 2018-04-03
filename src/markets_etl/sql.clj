@@ -8,15 +8,24 @@
 (clojure.lang.RT/loadClassForName "org.postgresql.Driver")
 
 (defn update-or-insert! [db table where-clause data]
-  (let [result (jdbc/update! db table data where-clause)]
-    (if (zero? (first result))
+  (let [result (-> (jdbc/update! db table data where-clause)
+                   first)]
+    (if (zero? result)
       (jdbc/insert! db table data)
       result)))
 
 (defn update-or-insert!' [db table where-clause update-data data]
-  (let [result (jdbc/update! db table update-data where-clause)]
-    (if (zero? (first result))
+  (let [result (-> (jdbc/update! db table update-data where-clause)
+                   first)]
+    (if (zero? result)
       (jdbc/insert! db table data)
+      result)))
+
+(defn update-or-ignore!  [db table where-clause data]
+  (let [result (-> (jdbc/update! db table data where-clause)
+                   first)]
+    (if (zero? result)
+      data
       result)))
 
 (defn query-or-insert! [db table where-clause data]
