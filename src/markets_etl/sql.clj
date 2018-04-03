@@ -43,17 +43,3 @@
       (let [[[k v] & others] kvs]
         (recur (string/replace sql (str k) (str (jdbc/sql-value v)))
                others)))))
-
-(defn query'
-  ([sql]
-   (query' sql {}))
-  ([sql params]
-   (with-open [conn (-> :jdbc-db-uri env DriverManager/getConnection)]
-     (let [sql     (-> sql
-                       (string/replace #";" "")
-                       (string/replace #"--" "")
-                       (prepare-statement params))
-           results (-> conn
-                       (.createStatement)
-                       (.executeQuery sql))]
-       (jdbc/metadata-result results)))))
