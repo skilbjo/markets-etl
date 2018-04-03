@@ -37,7 +37,7 @@
     (let [actual  (->> "select * from dw.equities"
                        (jdbc/query *cxn*)
                        flatten)]
-      (is (= f/result
+      (is (= f/result'
              (->> actual
                   (map #(dissoc %
                                 :dw_created_at)))))
