@@ -19,7 +19,8 @@
   '({:dataset "MSTAR"     ; it is a "new" ticker. Hoping it appears eventually
      :ticker ["BRK.B" "TSM" "VEMAX" "VEURX" "VEXPX" "VGWAX" "VITAX" "VIMAX"
               "VMRAX" "VPACX" "VGSLX" "VTIAX" "VTSAX" "VWINX" "VWENX" "VWNDX"
-              "VFH" "VEA" "VWO" "VHT" "VGT"
+              "VFH" "VEA" "VWO" "VHT" "VGT" "VMMXX"
+              "VWIGX" "VINEX" "VMMSX"
               "FB" "AMZN" "GOOG" "NVDA" "CY" "INTC" "TXN" "V"]}))
 
 (def query-params

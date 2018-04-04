@@ -39,6 +39,7 @@ begin;
     (     'MSTAR',         'VIMAX', 'Vanguard Mid-Cap Index Fund Admiral Shares'),
     (     'MSTAR',         'VMRAX', 'Vanguard Morgan Growth Fund Admiral Shares'),
     (     'MSTAR',         'VPACX', 'Vanguard Pacific Stock Index Fund Investor Shares'),
+    (     'MSTAR',         'VMMXX', 'Vanguard Prime Money Market Fund'),
     (     'MSTAR',         'VGSLX', 'Vanguard Real Estate Index Fund Admiral Shares'),
     (     'MSTAR',         'VTIAX', 'Vanguard Total International Stock Index Fund Admiral Shares'),
     (     'MSTAR',         'VTSAX', 'Vanguard Total Stock Market Index Fund Admiral Shares'),
@@ -63,7 +64,10 @@ begin;
     (     'MSTAR',            'CY', 'CYPRESS SEMICONDUCTOR CORP'),
     (     'MSTAR',          'INTC', 'INTEL CORP'),
     (     'MSTAR',           'TXN', 'TEXAS INSTRUMENTS INC'),
-    (     'MSTAR',             'V', 'VISA INC CLASS A')
+    (     'MSTAR',             'V', 'VISA INC CLASS A'),
+    (     'MSTAR',         'VWIGX', 'Vanguard International Growth Fund Investor Shares'),
+    (     'MSTAR',         'VINEX', 'Vanguard International Explorer Fund'),
+    (     'MSTAR',         'VMMSX', 'Vanguard Emerging Markets Select Stock Fund')
   on conflict (dataset,ticker) do update
   set
     description = excluded.description
