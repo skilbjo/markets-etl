@@ -67,7 +67,10 @@ begin;
     (     'MSTAR',             'V', 'VISA INC CLASS A'),
     (     'MSTAR',         'VWIGX', 'Vanguard International Growth Fund Investor Shares'),
     (     'MSTAR',         'VINEX', 'Vanguard International Explorer Fund'),
-    (     'MSTAR',         'VMMSX', 'Vanguard Emerging Markets Select Stock Fund')
+    (     'MSTAR',         'VMMSX', 'Vanguard Emerging Markets Select Stock Fund'),
+    (     'MSTAR',           'SAP', 'SAP SE ADR'),
+    (     'MSTAR',            'SQ', 'Square Inc A'),
+    (     'MSTAR',          'PYPL', 'PayPal Holdings Inc')
   on conflict (dataset,ticker) do update
   set
     description = excluded.description
