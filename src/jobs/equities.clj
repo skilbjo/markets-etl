@@ -21,7 +21,8 @@
               "VMRAX" "VPACX" "VGSLX" "VTIAX" "VTSAX" "VWINX" "VWENX" "VWNDX"
               "VFH" "VEA" "VWO" "VHT" "VGT" "VMMXX"
               "VWIGX" "VINEX" "VMMSX"
-              "FB" "AMZN" "GOOG" "NVDA" "CY" "INTC" "TXN" "V"]}))
+              "FB" "AMZN" "GOOG" "NVDA" "CY" "INTC" "TXN" "V"
+              "SAP" "SQ" "PYPL"]}))
 
 (def query-params
   {:limit      500
