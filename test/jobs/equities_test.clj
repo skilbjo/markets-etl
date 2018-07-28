@@ -16,7 +16,7 @@
        (execute! *cxn*))
 
   (testing "Quandl & Morningstar API equities integration test"
-    (let [actual  (->> "select * from dw.equities"
+    (let [actual  (->> "select * from dw.equities_fact"
                        (jdbc/query *cxn*)
                        flatten)]
       (is (= f/result
@@ -34,7 +34,7 @@
        (execute!' *cxn*))
 
   (testing "Equities integration test, using reducers"
-    (let [actual  (->> "select * from dw.equities"
+    (let [actual  (->> "select * from dw.equities_fact"
                        (jdbc/query *cxn*)
                        flatten)]
       (is (= f/result'

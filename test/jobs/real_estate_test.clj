@@ -18,7 +18,7 @@
        (execute! *cxn*))
 
   (testing "real_estate integration test"
-    (let [actual  (->> "select * from dw.real_estate"
+    (let [actual  (->> "select * from dw.real_estate_fact"
                        (jdbc/query *cxn*)
                        flatten)]
       (is (= f/result

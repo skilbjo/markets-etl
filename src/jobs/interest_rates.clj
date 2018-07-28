@@ -57,7 +57,7 @@
                                     ticker
                                     date] :as record}]
   (sql/update-or-insert! db
-                         :dw.interest_rates
+                         :dw.interest_rates_fact
                          [(util/multi-line-string
                            "dataset = ? and "
                            "ticker  = ? and "

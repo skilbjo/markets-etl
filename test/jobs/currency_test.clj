@@ -14,7 +14,7 @@
        (execute! *cxn*))
 
   (testing "currency integration test"
-    (let [actual  (->> "select * from dw.currency"
+    (let [actual  (->> "select * from dw.currency_fact"
                        (jdbc/query *cxn*)
                        flatten)]
       (is (= f/result

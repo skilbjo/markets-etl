@@ -14,7 +14,7 @@
        (execute! *cxn*))
 
   (testing "interest_rates integration test"
-    (let [actual  (->> "select * from dw.interest_rates"
+    (let [actual  (->> "select * from dw.interest_rates_fact"
                        (jdbc/query *cxn*)
                        flatten)]
       (is (= f/result

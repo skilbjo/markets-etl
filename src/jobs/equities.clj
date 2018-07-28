@@ -101,12 +101,12 @@
   ; data first, but then go update it with quandl data
   (condp = dataset
     "MSTAR" (sql/query-or-insert! db
-                                  :dw.equities
+                                  :dw.equities_fact
                                   [(util/multi-line-string
                                     "select          " ; if richer attributes
                                     "  *             " ; have not been set by
                                     "from            " ; quandl
-                                    "  dw.equities   "
+                                    "  dw.equities_fact "
                                     "where           "
                                     "ticker  = ? and "
                                     "date    = ?     ")
@@ -114,7 +114,7 @@
                                    date]
                                   record)
     "WIKI" (sql/update-or-insert!' db
-                                   :dw.equities
+                                   :dw.equities_fact
                                    [(util/multi-line-string  ; update MSTAR record
                                      "ticker = ? and " ; but don't overwrite
                                      "date   = ? and " ; it's dataset to WIKI
@@ -130,7 +130,7 @@
   ; TODO refactor this and the above so tests pass but with less code here
   (condp = dataset
     "WIKI" (sql/update-or-insert! db
-                                  :dw.equities
+                                  :dw.equities_fact
                                   [(util/multi-line-string
                                     "dataset  = ? and "
                                     "ticker   = ? and "
@@ -140,7 +140,7 @@
                                    date]
                                   record)
     "MSTAR" (sql/update-or-ignore! db
-                                   :dw.equities
+                                   :dw.equities_fact
                                    [(util/multi-line-string
                                      "dataset  = ? and "
                                      "ticker   = ? and "

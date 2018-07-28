@@ -57,7 +57,7 @@
                                     ticker
                                     date] :as record}]
   (sql/update-or-insert! db
-                         :dw.real_estate
+                         :dw.real_estate_fact
                          [(util/multi-line-string
                            "dataset = ? and "
                            "ticker  = ? and "

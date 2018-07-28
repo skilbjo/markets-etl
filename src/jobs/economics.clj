@@ -39,7 +39,7 @@
                                     ticker
                                     date] :as record}]
   (sql/update-or-insert! db
-                         :dw.economics
+                         :dw.economics_fact
                          [(util/multi-line-string
                            "dataset = ? and "
                            "ticker  = ? and "
