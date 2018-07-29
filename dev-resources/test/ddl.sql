@@ -3,19 +3,19 @@ begin;
 
   create schema if not exists dw;
 
-  drop table if exists dw.markets cascade;
-  create table if not exists dw.markets (
+  drop table if exists dw.markets_dim cascade;
+  create table if not exists dw.markets_dim (
     dataset         text,
     ticker          text,
     description     text,
 
     dw_created_at   timestamp default now(),
 
-    constraint markets_pk primary key (dataset, ticker)
+    constraint markets_dim_pk primary key (dataset, ticker)
   );
 
-  truncate dw.markets cascade;
-  insert into dw.markets values
+  truncate dw.markets_dim cascade;
+  insert into dw.markets_dim values
     (      'FRED',           'GDP', 'Gross domistic product, in billions of $'),
     (      'FRED',            'M1', 'M1 money stock is funds that are readily accesible for spending, in billions of $'),
     (      'FRED',           'DFF', 'Effective federal funds rate'),
@@ -76,8 +76,8 @@ begin;
     description = excluded.description
   ;
 
-  drop table if exists dw.portfolio cascade;
-  create table if not exists dw.portfolio (
+  drop table if exists dw.portfolio_dim cascade;
+  create table if not exists dw.portfolio_dim (
     dataset            text          not null,
     ticker             text          not null,
     quantity           decimal(10,4) not null,
@@ -85,8 +85,8 @@ begin;
 
     dw_created_at      timestamp default now(),
 
-    constraint portfolio_pk primary key (dataset, ticker),
-    constraint portfolio_markets_dim_fk foreign key (dataset, ticker) references dw.markets (dataset, ticker)
+    constraint portfolio_dim_pk primary key (dataset, ticker),
+    constraint portfolio_dim_markets_dim_fk foreign key (dataset, ticker) references dw.markets_dim (dataset, ticker)
   );
 
 commit;
@@ -94,8 +94,8 @@ commit;
 -- Fact tables
 begin;
 
-  drop table if exists dw.equities;
-  create table if not exists dw.equities (
+  drop table if exists dw.equities_fact;
+  create table if not exists dw.equities_fact (
     dataset       text,
     ticker        text,
     date          date,
@@ -114,12 +114,12 @@ begin;
 
     dw_created_at timestamp default now(),
 
-    constraint equities_pk primary key (dataset, ticker, date),
-    constraint equities_markets_fk foreign key (dataset, ticker) references dw.markets (dataset, ticker)
+    constraint equities_fact_pk primary key (dataset, ticker, date),
+    constraint equities_fact_markets_dim_fk foreign key (dataset, ticker) references dw.markets_dim (dataset, ticker)
   );
 
-  drop table if exists dw.real_estate;
-  create table if not exists dw.real_estate (
+  drop table if exists dw.real_estate_fact;
+  create table if not exists dw.real_estate_fact (
     dataset         text,
     ticker          text,
     date            date,
@@ -130,12 +130,12 @@ begin;
 
     dw_created_at   timestamp default now(),
 
-    constraint real_estate_pk primary key (dataset, ticker, date),
-    constraint real_estate_markets_fk foreign key (dataset, ticker) references dw.markets (dataset, ticker)
+    constraint real_estate_fact_pk primary key (dataset, ticker, date),
+    constraint real_estate_fact_markets_dim_fk foreign key (dataset, ticker) references dw.markets_dim (dataset, ticker)
   );
 
-  drop table if exists dw.currency;
-  create table if not exists dw.currency (
+  drop table if exists dw.currency_fact;
+  create table if not exists dw.currency_fact (
     dataset         text,
     ticker          text,
     currency        text,
@@ -146,12 +146,12 @@ begin;
 
     dw_created_at   timestamp default now(),
 
-    constraint currency_pk primary key (dataset, ticker, date),
-    constraint currency_markets_fk foreign key (dataset, ticker) references dw.markets (dataset, ticker)
+    constraint currency_fact_pk primary key (dataset, ticker, date),
+    constraint currency_fact_markets_dim_fk foreign key (dataset, ticker) references dw.markets_dim (dataset, ticker)
   );
 
-  drop table if exists dw.economics;
-  create table if not exists dw.economics (
+  drop table if exists dw.economics_fact;
+  create table if not exists dw.economics_fact (
     dataset       text,
     ticker        text,
     date          date,
@@ -159,12 +159,12 @@ begin;
 
     dw_created_at timestamp default now(),
 
-    constraint economics_pk primary key (dataset, ticker, date),
-    constraint economics_markets_fk foreign key (dataset, ticker) references dw.markets (dataset, ticker)
+    constraint economics_fact_pk primary key (dataset, ticker, date),
+    constraint economics_fact_markets_dim_fk foreign key (dataset, ticker) references dw.markets_dim (dataset, ticker)
   );
 
-  drop table if exists dw.interest_rates;
-  create table if not exists dw.interest_rates (
+  drop table if exists dw.interest_rates_fact;
+  create table if not exists dw.interest_rates_fact (
     dataset         text,
     ticker          text,
     date            date,
@@ -173,7 +173,8 @@ begin;
 
     dw_created_at   timestamp default now(),
 
-    constraint interest_rates_pk primary key (dataset, ticker, date, key),
-    constraint interest_rates_markets_fk foreign key (dataset, ticker) references dw.markets (dataset, ticker)
+    constraint interest_rates_fact_pk primary key (dataset, ticker, date, key),
+    constraint interest_rates_fact_markets_dim_fk foreign key (dataset, ticker) references dw.markets_dim (dataset, ticker)
   );
+
 commit;

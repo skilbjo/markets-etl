@@ -1,0 +1,64 @@
+#!/usr/bin/env bash
+set -eou pipefail
+
+get_status() {
+  local query_id=$1
+
+  aws athena \
+    --profile personal \
+    --region us-east-1 \
+    get-query-execution \
+    --query-execution-id "$query_id" | \
+    jq '.QueryExecution.Status.State'
+}
+
+get_query () {
+  local query_id=$1
+
+  local results=$(aws athena \
+    --profile personal \
+    --region us-east-1 \
+    get-query-execution \
+    --query-execution-id "$query_id" | \
+    jq '.QueryExecution.ResultConfiguration.OutputLocation'
+  )
+
+  local cmd="aws s3 cp --profile personal --region us-east-1 $results /tmp/athena/query >/dev/null"
+
+  eval $cmd && \
+    cat /tmp/athena/query
+}
+
+wait_til_finished() {
+  local query_id=$1
+  local status="in flux"
+  local number_of_tries=5
+
+  while [[ $status != done ]]; do
+    set +e
+    get_status $query_id | grep "SUCCEEDED" >/dev/null
+    if [[ $? -eq 0 ]]; then
+      status="done"
+      get_query "$query_id"
+    else
+      sleep 3
+      ((number_of_tries = number_of_tries -1))
+    fi
+    set -e
+  done
+}
+
+query() {
+  local sql="$1"
+
+  athena_query=$(aws athena \
+    --profile personal \
+    --region us-east-1 \
+    start-query-execution \
+    --result-configuration 'OutputLocation=s3://aws-athena-query-results-470340682667-us-east-1/' \
+    --output text \
+    --query-string "$sql"
+  )
+
+  wait_til_finished $athena_query
+}

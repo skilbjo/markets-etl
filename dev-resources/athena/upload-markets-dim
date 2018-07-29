@@ -1,0 +1,30 @@
+#!/usr/bin/env bash
+set -eou pipefail
+
+dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )" && cd "$dir"
+
+source athena
+
+get_dw_markets_dim(){
+  psql $aws_db_uri -AF',' -c 'select * from dw.markets_dim' | \
+    ghead -n -1 >~/Downloads/file.csv
+}
+
+upload_markets_dim_to_s3(){
+  aws s3 cp \
+    --profile personal \
+    ~/Downloads/file.csv s3://skilbjo-data/datalake/markets-etl/markets_dim/file.csv
+}
+
+verify_results(){
+  query 'select * from dw.markets_dim'
+}
+
+delete_artifacts(){
+  rm ~/Downloads/file.csv
+}
+
+get_dw_markets_dim \
+  && upload_markets_dim_to_s3 \
+  && verify_results \
+  && delete_artifacts
