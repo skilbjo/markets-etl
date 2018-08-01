@@ -1,0 +1,45 @@
+#!/usr/bin/env bash
+set -eou pipefail
+
+ticker='AAPL'
+start_date='2018-07-25'
+end_date='2018-08-31'
+params="start_date=${start_date}&end_date=${end_date}"
+
+# docs: http://docs.intrinio.com/#historical-data
+curl \
+  -u ":" \
+  "https://api.intrinio.com/prices?identifier=${ticker}&${params}"
+
+result='{
+  "DividendData": null,
+  "FairValueList": null,
+  "Max": 40.599999848753214,
+  "Min": 39.799999851733446,
+  "PriceDataList": [
+    {
+      "DailyMaxNumPoint": -1,
+      "Datapoints": [
+        [
+          39.88
+        ],
+        [
+          40.47
+        ]
+      ],
+      "DateIndexs": [
+        43151,
+        43152
+      ],
+      "Description": "",
+      "Max": 40.47,
+      "Min": 39.88,
+      "Slot": 3,
+      "StartPos": 39.88,
+      "Symbol": "XNAS:VEMAX",
+      "chartType": 0
+    }
+  ],
+  "PriceType": "",
+  "VolumeList": null
+}'
