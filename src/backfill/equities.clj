@@ -26,7 +26,7 @@
             query-params {:limit      2600
                           :start_date (-> month t/first-day-of-the-month)
                           :end_date   month}
-            data         (->> (concat morningstar datasets)
+            data         (->> (concat morningstar quandl)
                               (map #(api/get-data % query-params))
                               flatten)]
 

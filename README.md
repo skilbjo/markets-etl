@@ -69,6 +69,21 @@ lein cljfmt check ; lein cljfmt fix
 lein kibit >tmp ; vim tmp && rm tmp
 ```
 
+#### testing in the repl
+```clojure
+(refresh)
+(use '[clojure.tools.namespace.repl :only (refresh)])
+(require '[markets-etl.api :as api])
+
+(def ticker "FB")
+(def query-params
+  {:limit      500
+   :start_date "2018-07-25"
+   :end_date   "2018-07-28"})
+
+(api/query-tiingo! ticker query-params)
+```
+
 ### Git
 
 #### Git remotes

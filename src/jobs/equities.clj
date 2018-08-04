@@ -11,23 +11,34 @@
             [markets-etl.util :as util])
   (:gen-class))
 
-(def datasets
+(def stocks
+  ["FB" "AMZN" "GOOG" "NVDA" "CY" "INTC" "TXN" "V" "SAP" "SQ" "PYPL" "BRK.B"
+   "TSM"])
+
+(def etfs
+  ["VFH" "VEA" "VWO" "VHT" "VGT"])
+
+(def mutual-funds
+  ["VEMAX" "VEURX" "VEXPX" "VGWAX" "VITAX" "VIMAX" "VMRAX" "VPACX" "VGSLX"
+   "VTIAX" "VTSAX" "VWINX" "VWENX" "VWNDX" "VMMXX" "VWIGX" "VINEX" "VMMSX"])
+
+(def quandl
   '({:dataset "WIKI"
      :ticker ["FB" "AMZN" "GOOG" "NVDA" "CY" "INTC" "TXN" "V"]}))
 
 (def tiingo
-  '({:dataset "prices"
-     :ticker ["FB" "AMZN" "GOOG" "NVDA" "CY" "INTC" "TXN" "V"
-              "SAP" "SQ" "PYPL"]}))
+  '({:dataset "TIINGO"
+     :ticker (->> (conj stocks etfs mutual-funds)
+                  (remove #{"BRK.B"})
+                  (conj ["BRK-B"])
+                  flatten
+                  (into []))}))
 
-(def morningstar          ; VGWAX unavailable via MSTAR API most likely because
-  '({:dataset "MSTAR"     ; it is a "new" ticker. Hoping it appears eventually
-     :ticker ["BRK.B" "TSM" "VEMAX" "VEURX" "VEXPX" "VGWAX" "VITAX" "VIMAX"
-              "VMRAX" "VPACX" "VGSLX" "VTIAX" "VTSAX" "VWINX" "VWENX" "VWNDX"
-              "VFH" "VEA" "VWO" "VHT" "VGT" "VMMXX"
-              "VWIGX" "VINEX" "VMMSX"
-              "FB" "AMZN" "GOOG" "NVDA" "CY" "INTC" "TXN" "V"
-              "SAP" "SQ" "PYPL"]}))
+(def morningstar
+  '({:dataset "MSTAR"
+     :ticker (->> (conj stocks etfs mutual-funds)
+                  flatten
+                  (into []))}))
 
 (def query-params
   {:limit      500
@@ -35,6 +46,10 @@
    :end_date   util/now})
 
 (defmulti prepare-row :dataset)
+
+(defmethod prepare-row "TIINGO" [{:keys [dataset
+                                         ticker] :as m}]
+  (let [_ (util/print-it m)]))
 
 (defmethod prepare-row "MSTAR" [{:keys [dataset
                                         ticker
@@ -159,6 +174,7 @@
 (defn execute! [cxn data]
   (jdbc/with-db-transaction [txn cxn]
     (->> data
+         util/print-it
          (map prepare-row)
          flatten
          (map #(update-or-insert! txn %))
@@ -167,7 +183,8 @@
 (defn -main [& args]
   (error/set-default-error-handler)
   (jdbc/with-db-connection [cxn (-> :jdbc-db-uri env)]
-    (let [data        (->> (concat morningstar datasets)
+    (let [data        (->> (concat tiingo) ;; morningstar quandl)
+                           util/print-it
                            (map #(api/get-data % query-params))
                            flatten)]
       (execute! cxn data))))

@@ -1,0 +1,163 @@
+#!/usr/bin/env bash
+set -eou pipefail
+
+ticker='VMRAX'
+start_date='2018-07-25'
+end_date='2018-08-31'
+params="startDate=${start_date}&endDate=${end_date}"
+
+# docs: https://api.tiingo.com/docs/tiingo/daily
+date_range(){
+  curl \
+    -H "Authorization: Token $tiingo_api_key" \
+    "https://api.tiingo.com/tiingo/daily/${ticker}/prices?${params}"
+
+  result='[
+    {
+      "date": "2018-07-25T00:00:00.000Z",
+      "close": 104.15,
+      "high": 104.15,
+      "low": 104.15,
+      "open": 104.15,
+      "volume": 0,
+      "adjClose": 104.15,
+      "adjHigh": 104.15,
+      "adjLow": 104.15,
+      "adjOpen": 104.15,
+      "adjVolume": 0,
+      "divCash": 0,
+      "splitFactor": 1
+    },
+    {
+      "date": "2018-07-26T00:00:00.000Z",
+      "close": 103.08,
+      "high": 103.08,
+      "low": 103.08,
+      "open": 103.08,
+      "volume": 0,
+      "adjClose": 103.08,
+      "adjHigh": 103.08,
+      "adjLow": 103.08,
+      "adjOpen": 103.08,
+      "adjVolume": 0,
+      "divCash": 0,
+      "splitFactor": 1
+    },
+    {
+      "date": "2018-07-27T00:00:00.000Z",
+      "close": 101.72,
+      "high": 101.72,
+      "low": 101.72,
+      "open": 101.72,
+      "volume": 0,
+      "adjClose": 101.72,
+      "adjHigh": 101.72,
+      "adjLow": 101.72,
+      "adjOpen": 101.72,
+      "adjVolume": 0,
+      "divCash": 0,
+      "splitFactor": 1
+    },
+    {
+      "date": "2018-07-30T00:00:00.000Z",
+      "close": 100.16,
+      "high": 100.16,
+      "low": 100.16,
+      "open": 100.16,
+      "volume": 0,
+      "adjClose": 100.16,
+      "adjHigh": 100.16,
+      "adjLow": 100.16,
+      "adjOpen": 100.16,
+      "adjVolume": 0,
+      "divCash": 0,
+      "splitFactor": 1
+    },
+    {
+      "date": "2018-07-31T00:00:00.000Z",
+      "close": 100.73,
+      "high": 100.73,
+      "low": 100.73,
+      "open": 100.73,
+      "volume": 0,
+      "adjClose": 100.73,
+      "adjHigh": 100.73,
+      "adjLow": 100.73,
+      "adjOpen": 100.73,
+      "adjVolume": 0,
+      "divCash": 0,
+      "splitFactor": 1
+    },
+    {
+      "date": "2018-08-01T00:00:00.000Z",
+      "close": 100.89,
+      "high": 100.89,
+      "low": 100.89,
+      "open": 100.89,
+      "volume": 0,
+      "adjClose": 100.89,
+      "adjHigh": 100.89,
+      "adjLow": 100.89,
+      "adjOpen": 100.89,
+      "adjVolume": 0,
+      "divCash": 0,
+      "splitFactor": 1
+    },
+    {
+      "date": "2018-08-02T00:00:00.000Z",
+      "close": 101.91,
+      "high": 101.91,
+      "low": 101.91,
+      "open": 101.91,
+      "volume": 0,
+      "adjClose": 101.91,
+      "adjHigh": 101.91,
+      "adjLow": 101.91,
+      "adjOpen": 101.91,
+      "adjVolume": 0,
+      "divCash": 0,
+      "splitFactor": 1
+    },
+    {
+      "date": "2018-08-03T00:00:00.000Z",
+      "close": 101.96,
+      "high": 101.96,
+      "low": 101.96,
+      "open": 101.96,
+      "volume": 0,
+      "adjClose": 101.96,
+      "adjHigh": 101.96,
+      "adjLow": 101.96,
+      "adjOpen": 101.96,
+      "adjVolume": 0,
+      "divCash": 0,
+      "splitFactor": 1
+    }
+  ]'
+}
+
+latest(){
+  curl \
+    -H "Authorization: Token $tiingo_api_key" \
+    "https://api.tiingo.com/tiingo/daily/${ticker}/prices"
+
+  result='[
+    {
+      "adjClose": 101.96,
+      "adjHigh": 101.96,
+      "adjLow": 101.96,
+      "adjOpen": 101.96,
+      "adjVolume": 0,
+      "close": 101.96,
+      "date": "2018-08-03T00:00:00+00:00",
+      "divCash": 0,
+      "high": 101.96,
+      "low": 101.96,
+      "open": 101.96,
+      "splitFactor": 1,
+      "volume": 0
+    }
+  ]'
+}
+
+date_range

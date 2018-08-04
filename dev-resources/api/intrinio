@@ -12,34 +12,139 @@ curl \
   "https://api.intrinio.com/prices?identifier=${ticker}&${params}"
 
 result='{
-  "DividendData": null,
-  "FairValueList": null,
-  "Max": 40.599999848753214,
-  "Min": 39.799999851733446,
-  "PriceDataList": [
+  "data": [
     {
-      "DailyMaxNumPoint": -1,
-      "Datapoints": [
-        [
-          39.88
-        ],
-        [
-          40.47
-        ]
-      ],
-      "DateIndexs": [
-        43151,
-        43152
-      ],
-      "Description": "",
-      "Max": 40.47,
-      "Min": 39.88,
-      "Slot": 3,
-      "StartPos": 39.88,
-      "Symbol": "XNAS:VEMAX",
-      "chartType": 0
+      "date": "2018-08-03",
+      "open": 207.03,
+      "high": 208.74,
+      "low": 205.4803,
+      "close": 207.99,
+      "volume": 33447396,
+      "ex_dividend": 0,
+      "split_ratio": 1,
+      "adj_factor": 1,
+      "adj_open": 207.03,
+      "adj_high": 208.74,
+      "adj_low": 205.4803,
+      "adj_close": 207.99,
+      "adj_volume": 33447396
+    },
+    {
+      "date": "2018-08-02",
+      "open": 200.58,
+      "high": 208.38,
+      "low": 200.35,
+      "close": 207.39,
+      "volume": 62404012,
+      "ex_dividend": 0,
+      "split_ratio": 1,
+      "adj_factor": 1,
+      "adj_open": 200.58,
+      "adj_high": 208.38,
+      "adj_low": 200.35,
+      "adj_close": 207.39,
+      "adj_volume": 62404012
+    },
+    {
+      "date": "2018-08-01",
+      "open": 199.13,
+      "high": 201.76,
+      "low": 197.31,
+      "close": 201.5,
+      "volume": 67935716,
+      "ex_dividend": 0,
+      "split_ratio": 1,
+      "adj_factor": 1,
+      "adj_open": 199.13,
+      "adj_high": 201.76,
+      "adj_low": 197.31,
+      "adj_close": 201.5,
+      "adj_volume": 67935716
+    },
+    {
+      "date": "2018-07-31",
+      "open": 190.3,
+      "high": 192.14,
+      "low": 189.34,
+      "close": 190.29,
+      "volume": 39373038,
+      "ex_dividend": 0,
+      "split_ratio": 1,
+      "adj_factor": 1,
+      "adj_open": 190.3,
+      "adj_high": 192.14,
+      "adj_low": 189.34,
+      "adj_close": 190.29,
+      "adj_volume": 39373038
+    },
+    {
+      "date": "2018-07-30",
+      "open": 191.9,
+      "high": 192.2,
+      "low": 189.07,
+      "close": 189.91,
+      "volume": 21029535,
+      "ex_dividend": 0,
+      "split_ratio": 1,
+      "adj_factor": 1,
+      "adj_open": 191.9,
+      "adj_high": 192.2,
+      "adj_low": 189.07,
+      "adj_close": 189.91,
+      "adj_volume": 21029535
+    },
+    {
+      "date": "2018-07-27",
+      "open": 194.99,
+      "high": 195.19,
+      "low": 190.1,
+      "close": 190.98,
+      "volume": 24023972,
+      "ex_dividend": 0,
+      "split_ratio": 1,
+      "adj_factor": 1,
+      "adj_open": 194.99,
+      "adj_high": 195.19,
+      "adj_low": 190.1,
+      "adj_close": 190.98,
+      "adj_volume": 24023972
+    },
+    {
+      "date": "2018-07-26",
+      "open": 194.61,
+      "high": 195.96,
+      "low": 193.61,
+      "close": 194.21,
+      "volume": 19075964,
+      "ex_dividend": 0,
+      "split_ratio": 1,
+      "adj_factor": 1,
+      "adj_open": 194.61,
+      "adj_high": 195.96,
+      "adj_low": 193.61,
+      "adj_close": 194.21,
+      "adj_volume": 19075964
+    },
+    {
+      "date": "2018-07-25",
+      "open": 193.0602,
+      "high": 194.85,
+      "low": 192.43,
+      "close": 194.82,
+      "volume": 16826483,
+      "ex_dividend": 0,
+      "split_ratio": 1,
+      "adj_factor": 1,
+      "adj_open": 193.0602,
+      "adj_high": 194.85,
+      "adj_low": 192.43,
+      "adj_close": 194.82,
+      "adj_volume": 16826483
     }
   ],
-  "PriceType": "",
-  "VolumeList": null
+  "result_count": 8,
+  "page_size": 100,
+  "current_page": 1,
+  "total_pages": 1,
+  "api_call_credits": 1
 }'

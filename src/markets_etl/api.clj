@@ -20,6 +20,11 @@
   {:protocol  "https://"
    :url       "api.intrinio.com/"})
 
+(def ^:private tiingo-api
+  {:protocol  "https://"
+   :url       "api.tiingo.com/tiingo/daily/"
+   :suffix    "prices"})
+
 (def ^:private allowed
   {:collapse     #{"none" "daily" "weekly" "monthly" "quarterly" "annual"}
    :transform    #{"none" "rdiff" "diff" "cumul" "normalize"}
@@ -43,23 +48,26 @@
   ([ticker paramz]
    {:pre [(every? true? (allowed? paramz))]}
    (let [params   (dissoc paramz :limit)
-         url      (str (:protocol intrinio-api)
-                       (:url intrinio-api)
-                       (str "ticker=" ticker)
-                       (str "&range="
+         url      (str (:protocol tiingo-api)
+                       (:url tiingo-api)
+                       (str ticker "/")
+                       (:suffix tiingo-api)
+                       (str "?startDate="
                             (:start_date params)
-                            "|"
-                            (:end_date params))
-                       )
+                            "&endDate="
+                            (:end_date params)))
          response (http/get url
-                            {:query-params params})
+                            {:headers {:authorization (str "Token "
+                                                           (-> :tiingo-api-key
+                                                               env))}})
          {:keys [status body]}  response
          _        (log/debug ticker)
          _        (log/debug params)
-         #__      #_(log/debug body)]
+         #__      #_(log/info body)]
      (if (= 200 status)
        (-> body
-           (json/read-str :key-fn keyword))
+           (json/read-str :key-fn keyword)
+           util/print-it)
        (log/error "Failed request, exception: " status)))))
 
 (defn query-intrinio!
@@ -74,8 +82,7 @@
                        (str "&range="
                             (:start_date params)
                             "|"
-                            (:end_date params))
-                       )
+                            (:end_date params)))
          response (http/get url
                             {:query-params params})
          {:keys [status body]}  response
@@ -135,10 +142,21 @@
          #__      #_(log/debug body)]
      (if (= 200 status)
        (-> body
-           (json/read-str :key-fn keyword))
+           (json/read-str :key-fn keyword)
+           first)
        (log/error "Failed request, exception: " status)))))
 
 (defmulti get-data :dataset)
+
+(defmethod get-data "TIINGO" [{:keys [dataset
+                                      ticker]}
+                              query-params]
+  (log/info "in api/get-data 'TIINGO'")
+  (->> ticker
+       (map (fn [tkr]
+              (-> (query-tiingo! tkr
+                                 query-params)
+                  (assoc :dataset dataset :ticker tkr))))))
 
 (defmethod get-data "MSTAR" [{:keys [dataset
                                      ticker]}

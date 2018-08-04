@@ -11,7 +11,8 @@
                  [org.slf4j/slf4j-log4j12 "1.7.25"]
                  [org.postgresql/postgresql "42.2.4"]]
   :plugins [[lein-cloverage "1.0.10"]]
-  :profiles {:dev {:dependencies [[criterium "0.4.4"]]
+  :profiles {:dev {:dependencies [[criterium "0.4.4"]
+                                  [org.clojure/tools.namespace "0.2.11"]]
                    :plugins [[lein-environ "1.1.0"]
                              [lein-cljfmt "0.5.7"]]}
              :uberjar {:aot :all}}
