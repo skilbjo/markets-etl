@@ -15,6 +15,11 @@
   '({:dataset "WIKI"
      :ticker ["FB" "AMZN" "GOOG" "NVDA" "CY" "INTC" "TXN" "V"]}))
 
+(def tiingo
+  '({:dataset "prices"
+     :ticker ["FB" "AMZN" "GOOG" "NVDA" "CY" "INTC" "TXN" "V"
+              "SAP" "SQ" "PYPL"]}))
+
 (def morningstar          ; VGWAX unavailable via MSTAR API most likely because
   '({:dataset "MSTAR"     ; it is a "new" ticker. Hoping it appears eventually
      :ticker ["BRK.B" "TSM" "VEMAX" "VEURX" "VEXPX" "VGWAX" "VITAX" "VIMAX"

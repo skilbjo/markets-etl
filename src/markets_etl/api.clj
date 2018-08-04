@@ -16,6 +16,10 @@
    :url       "globalquote.morningstar.com/globalcomponent/RealtimeHistoricalStockData.ashx?"
    :required_params "&showVol=true&dtype=his"})
 
+(def ^:private intrinio-api
+  {:protocol  "https://"
+   :url       "api.intrinio.com/"})
+
 (def ^:private allowed
   {:collapse     #{"none" "daily" "weekly" "monthly" "quarterly" "annual"}
    :transform    #{"none" "rdiff" "diff" "cumul" "normalize"}
@@ -32,6 +36,56 @@
   (->> m
        (map (fn [[k v]]
               ((allowed k) v)))))
+
+(defn query-tiingo!
+  ([ticker]
+   (query-tiingo! ticker {}))
+  ([ticker paramz]
+   {:pre [(every? true? (allowed? paramz))]}
+   (let [params   (dissoc paramz :limit)
+         url      (str (:protocol intrinio-api)
+                       (:url intrinio-api)
+                       (str "ticker=" ticker)
+                       (str "&range="
+                            (:start_date params)
+                            "|"
+                            (:end_date params))
+                       )
+         response (http/get url
+                            {:query-params params})
+         {:keys [status body]}  response
+         _        (log/debug ticker)
+         _        (log/debug params)
+         #__      #_(log/debug body)]
+     (if (= 200 status)
+       (-> body
+           (json/read-str :key-fn keyword))
+       (log/error "Failed request, exception: " status)))))
+
+(defn query-intrinio!
+  ([ticker]
+   (query-intrinio! ticker {}))
+  ([ticker paramz]
+   {:pre [(every? true? (allowed? paramz))]}
+   (let [params   (dissoc paramz :limit)
+         url      (str (:protocol intrinio-api)
+                       (:url intrinio-api)
+                       (str "ticker=" ticker)
+                       (str "&range="
+                            (:start_date params)
+                            "|"
+                            (:end_date params))
+                       )
+         response (http/get url
+                            {:query-params params})
+         {:keys [status body]}  response
+         _        (log/debug ticker)
+         _        (log/debug params)
+         #__      #_(log/debug body)]
+     (if (= 200 status)
+       (-> body
+           (json/read-str :key-fn keyword))
+       (log/error "Failed request, exception: " status)))))
 
 (defn query-morningstar!
   ([ticker]
