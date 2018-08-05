@@ -24,8 +24,11 @@
     (jdbc/with-db-connection [cxn (-> :jdbc-db-uri env)]
       (let [month        (:date options)
             query-params {:limit      2600
-                          :start_date (-> month t/first-day-of-the-month)
-                          :end_date   month}
+                          :start_date (-> month
+                                          t/first-day-of-the-month
+                                          util/joda-date->date-str)
+                          :end_date   (-> month
+                                          util/joda-date->date-str)}
             data         (->> (concat tiingo morningstar quandl)
                               (map #(api/get-data % query-params))
                               flatten)]

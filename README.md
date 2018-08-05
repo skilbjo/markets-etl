@@ -53,6 +53,11 @@ LEIN_FAST_TRAMPOLINE=true lein trampoline run -m jobs.equities
 llein run -m jobs.equities
 ```
 
+#### Run backfill
+```bash
+lein run -m backfill.equities -d 2018-06-30
+```
+
 ### lein
 
 #### Dependencies
