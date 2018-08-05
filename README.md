@@ -53,6 +53,11 @@ LEIN_FAST_TRAMPOLINE=true lein trampoline run -m jobs.equities
 llein run -m jobs.equities
 ```
 
+#### Run backfill
+```bash
+lein run -m backfill.equities -d 2018-06-30
+```
+
 ### lein
 
 #### Dependencies
@@ -179,3 +184,9 @@ Found 3 outliers in 60 samples (5.0000 %)
         low-severe       3 (5.0000 %)
  Variance from outliers : 82.4206 % Variance is severely inflated by outliers
 ```
+
+### API docs
+- <https://docs.quandl.com/docs/in-depth-usage>
+- <https://gist.github.com/hahnicity/45323026693cdde6a116>
+- <https://api.tiingo.com/docs/tiingo/daily>
+- <https://intrinio.com/documentation/api#historical_data>

@@ -106,7 +106,15 @@ begin;
     (    'TIINGO',         'VMMSX', 'Vanguard Emerging Markets Select Stock Fund'),
     (    'TIINGO',           'SAP', 'SAP SE ADR'),
     (    'TIINGO',            'SQ', 'Square Inc A'),
-    (    'TIINGO',          'PYPL', 'PayPal Holdings Inc')
+    (    'TIINGO',          'PYPL', 'PayPal Holdings Inc'),
+    (  'INTRINIO',            'FB', 'Facebook'),
+    (  'INTRINIO',          'AMZN', 'Amazon'),
+    (  'INTRINIO',          'GOOG', 'Google'),
+    (  'INTRINIO',          'NVDA', 'Nvidia'),
+    (  'INTRINIO',            'CY', 'CYPRESS SEMICONDUCTOR CORP'),
+    (  'INTRINIO',          'INTC', 'INTEL CORP'),
+    (  'INTRINIO',           'TXN', 'TEXAS INSTRUMENTS INC'),
+    (  'INTRINIO',             'V', 'VISA INC CLASS A')
   on conflict (dataset,ticker) do update
   set
     description = excluded.description
@@ -114,6 +122,7 @@ begin;
 
   drop table if exists dw.portfolio_dim cascade;
   create table if not exists dw.portfolio_dim (
+    username           text          not null,
     dataset            text          not null,
     ticker             text          not null,
     quantity           decimal(10,4) not null,

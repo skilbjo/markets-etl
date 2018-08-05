@@ -174,12 +174,18 @@
                                       query-params)
                   (assoc :dataset dataset :ticker tkr))))))
 
+(defmethod get-data "INTRINIO" [{:keys [dataset
+                                        ticker]}
+                                query-params]
+  (->> ticker
+       (map (fn [tkr]
+              (-> (query-intrinio! tkr query-params)
+                  (assoc :dataset dataset :ticker tkr))))))
+
 (defmethod get-data :default [{:keys [dataset
                                       ticker] :as m}
                               query-params]
   (->> ticker
        (map (fn [tkr]
-              ;; TODO replace quandl with intrinio
-              ;; (-> (query-intrinio! tkr query-params)
               (-> (query-quandl! dataset tkr query-params)
                   (assoc :dataset dataset :ticker tkr))))))
