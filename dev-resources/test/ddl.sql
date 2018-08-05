@@ -106,7 +106,15 @@ begin;
     (    'TIINGO',         'VMMSX', 'Vanguard Emerging Markets Select Stock Fund'),
     (    'TIINGO',           'SAP', 'SAP SE ADR'),
     (    'TIINGO',            'SQ', 'Square Inc A'),
-    (    'TIINGO',          'PYPL', 'PayPal Holdings Inc')
+    (    'TIINGO',          'PYPL', 'PayPal Holdings Inc'),
+    (  'INTRINIO',            'FB', 'Facebook'),
+    (  'INTRINIO',          'AMZN', 'Amazon'),
+    (  'INTRINIO',          'GOOG', 'Google'),
+    (  'INTRINIO',          'NVDA', 'Nvidia'),
+    (  'INTRINIO',            'CY', 'CYPRESS SEMICONDUCTOR CORP'),
+    (  'INTRINIO',          'INTC', 'INTEL CORP'),
+    (  'INTRINIO',           'TXN', 'TEXAS INSTRUMENTS INC'),
+    (  'INTRINIO',             'V', 'VISA INC CLASS A')
   on conflict (dataset,ticker) do update
   set
     description = excluded.description

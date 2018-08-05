@@ -26,6 +26,10 @@
   '({:dataset "WIKI"
      :ticker ["FB" "AMZN" "GOOG" "NVDA" "CY" "INTC" "TXN" "V"]}))
 
+(def intrinio
+  (->> quandl
+       (map #(assoc % :dataset "INTRINIO"))))
+
 (def tiingo
   (list {:dataset "TIINGO"
          :ticker (->> (conj stocks etfs mutual-funds)
@@ -77,6 +81,17 @@
    :adj_high    adjhigh
    :adj_volume  adjvolume
    :ex_dividend divcash})
+
+(defmethod prepare-row "INTRINIO" [{:keys [dataset
+                                           ticker
+                                           data]}]
+  (->> data
+       (map #(dissoc % :adj_factor))    ;; no documentation from api on this
+       (map #(update % :date coerce/to-sql-date))
+       (map #(update % :open util/string->decimal))
+       (map #(assoc %                   ;; intrinio and quandl data is the same
+                    :dataset     "WIKI" ;; intrinio is a more reliable vendor
+                    :ticker      ticker))))
 
 (defmethod prepare-row "MSTAR" [{:keys [dataset
                                         ticker
@@ -147,6 +162,7 @@
   ; richer in attributes (volume, opening balance, min, max). write morningstar
   ; data first, but then go update it with quandl data
 
+  ;; this only applies to Morningstar inserts - other d'sets see next cond stmt
   (condp = dataset
     "MSTAR" (sql/query-or-insert! db
                                   :dw.equities_fact
@@ -166,6 +182,7 @@
                                    [(util/multi-line-string  ; update MSTAR record
                                      "ticker = ? and " ; but don't overwrite
                                      "date   = ? and " ; it's dataset to WIKI
+                                     "dataset in ('MSTAR','WIKI') and "
                                      "(open  = ? or open is null)") ; <- this
                                     ticker             ; has to be a non-MSTAR
                                     date               ; field
@@ -226,7 +243,7 @@
   (error/set-default-error-handler)
 
   (jdbc/with-db-connection [cxn (-> :jdbc-db-uri env)]
-    (let [data        (->> (concat tiingo morningstar quandl)
+    (let [data        (->> (concat tiingo morningstar quandl intrinio)
                            (map #(api/get-data % query-params))
                            flatten)]
       (execute! cxn data)))
