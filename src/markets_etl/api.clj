@@ -16,6 +16,16 @@
    :url       "globalquote.morningstar.com/globalcomponent/RealtimeHistoricalStockData.ashx?"
    :required_params "&showVol=true&dtype=his"})
 
+(def ^:private intrinio-api
+  {:protocol  "https://"
+   :url       "api.intrinio.com/"
+   :prefix    "prices"})
+
+(def ^:private tiingo-api
+  {:protocol  "https://"
+   :url       "api.tiingo.com/tiingo/daily/"
+   :suffix    "prices"})
+
 (def ^:private allowed
   {:collapse     #{"none" "daily" "weekly" "monthly" "quarterly" "annual"}
    :transform    #{"none" "rdiff" "diff" "cumul" "normalize"}
@@ -33,6 +43,58 @@
        (map (fn [[k v]]
               ((allowed k) v)))))
 
+(defn query-tiingo!
+  ([ticker]
+   (query-tiingo! ticker {}))
+  ([ticker paramz]
+   {:pre [(every? true? (allowed? paramz))]}
+   (let [params   (dissoc paramz :limit)
+         url      (str (:protocol tiingo-api)
+                       (:url tiingo-api)
+                       (str ticker "/")
+                       (:suffix tiingo-api)
+                       (str "?startDate="
+                            (:start_date params)
+                            "&endDate="
+                            (:end_date params)))
+         response (http/get url
+                            {:headers {:authorization (str "Token "
+                                                           (-> :tiingo-api-key
+                                                               env))}})
+         {:keys [status body]}  response
+         _        (log/debug ticker)
+         _        (log/debug params)
+         #__      #_(log/info body)]
+     (if (= 200 status)
+       (-> body
+           (json/read-str :key-fn (comp keyword string/lower-case)))
+       (log/error "Failed request, exception: " status)))))
+
+(defn query-intrinio!
+  ([ticker]
+   (query-intrinio! ticker {}))
+  ([ticker paramz]
+   {:pre [(every? true? (allowed? paramz))]}
+   (let [params   (dissoc paramz :limit)
+         url      (str (:protocol intrinio-api)
+                       (:url intrinio-api)
+                       (:prefix intrinio-api)
+                       (str "?identifier=" ticker)
+                       (str "&start_date="
+                            (:start_date params)
+                            "&end_date="
+                            (:end_date params)))
+         response (http/get url
+                            {:basic-auth ["" ""]})
+         {:keys [status body]}  response
+         _        (log/debug ticker)
+         _        (log/debug params)
+         #__      #_(log/debug body)]
+     (if (= 200 status)
+       (-> body
+           (json/read-str :key-fn keyword))
+       (log/error "Failed request, exception: " status)))))
+
 (defn query-morningstar!
   ([ticker]
    (query-morningstar! ticker {}))
@@ -47,8 +109,13 @@
                             "|"
                             (:end_date params))
                        (:required_params morningstar-api))
-         response (http/get url
-                            {:query-params params})
+         response (try
+                    (http/get url
+                              {:query-params params})
+                    (catch Exception e
+                      #_(log/error "Error in query-morningstar!: "
+                                   (ex-data e))
+                      (ex-data e)))
          {:keys [status body]}  response
          body'    (-> body
                       (string/replace #"NaN" "null"))
@@ -81,10 +148,22 @@
          #__      #_(log/debug body)]
      (if (= 200 status)
        (-> body
-           (json/read-str :key-fn keyword))
+           (json/read-str :key-fn keyword)
+           ;; This is commented out for quandl workflow to work without data
+           ;; if WIKI dataset is turned back on - uncomment 'first'
+           #_first)
        (log/error "Failed request, exception: " status)))))
 
 (defmulti get-data :dataset)
+
+(defmethod get-data "TIINGO" [{:keys [dataset
+                                      ticker]}
+                              query-params]
+  (->> ticker
+       (map (fn [tkr]
+              (->> (query-tiingo! tkr
+                                  query-params)
+                   (map #(assoc % :dataset dataset :ticker tkr)))))))
 
 (defmethod get-data "MSTAR" [{:keys [dataset
                                      ticker]}
@@ -96,11 +175,11 @@
                   (assoc :dataset dataset :ticker tkr))))))
 
 (defmethod get-data :default [{:keys [dataset
-                                      ticker]}
+                                      ticker] :as m}
                               query-params]
   (->> ticker
        (map (fn [tkr]
-              (-> (query-quandl! dataset
-                                 tkr
-                                 query-params)
+              ;; TODO replace quandl with intrinio
+              ;; (-> (query-intrinio! tkr query-params)
+              (-> (query-quandl! dataset tkr query-params)
                   (assoc :dataset dataset :ticker tkr))))))
