@@ -18,7 +18,8 @@
 
 (def ^:private intrinio-api
   {:protocol  "https://"
-   :url       "api.intrinio.com/"})
+   :url       "api.intrinio.com/"
+   :prefix    "prices"})
 
 (def ^:private tiingo-api
   {:protocol  "https://"
@@ -77,13 +78,14 @@
    (let [params   (dissoc paramz :limit)
          url      (str (:protocol intrinio-api)
                        (:url intrinio-api)
-                       (str "ticker=" ticker)
-                       (str "&range="
+                       (:prefix intrinio-api)
+                       (str "?identifier=" ticker)
+                       (str "&start_date="
                             (:start_date params)
-                            "|"
+                            "&end_date="
                             (:end_date params)))
          response (http/get url
-                            {:query-params params})
+                            {:basic-auth ["" ""]})
          {:keys [status body]}  response
          _        (log/debug ticker)
          _        (log/debug params)
@@ -177,7 +179,7 @@
                               query-params]
   (->> ticker
        (map (fn [tkr]
-              (-> (query-quandl! dataset
-                                 tkr
-                                 query-params)
+              ;; TODO replace quandl with intrinio
+              ;; (-> (query-intrinio! tkr query-params)
+              (-> (query-quandl! dataset tkr query-params)
                   (assoc :dataset dataset :ticker tkr))))))

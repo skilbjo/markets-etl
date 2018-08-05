@@ -91,7 +91,7 @@ begin;
     (    'TIINGO',           'VWO', 'VANGUARD FTSE EMERGING MARKETS ETF'),
     (    'TIINGO',           'VHT', 'VANGUARD HEALTH CARE ETF'),
     (    'TIINGO',           'VGT', 'VANGUARD INFORMATION TECHNOLOGY ETF'),
-    (    'TIINGO',         'BRK.B', 'BERKSHIRE HATHAWAY INC DE CL B NEW'),
+    (    'TIINGO',         'BRK-B', 'BERKSHIRE HATHAWAY INC DE CL B NEW'),
     (    'TIINGO',           'TSM', 'TAIWAN SEMICONDUCTOR MANUFACTURING COMPANY LTD SPONS ADR'),
     (    'TIINGO',            'FB', 'Facebook'),
     (    'TIINGO',          'AMZN', 'Amazon'),
