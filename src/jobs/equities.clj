@@ -42,10 +42,8 @@
 
 (def query-params
   {:limit      500
-   :start_date "2018-07-25"
-   :end_date   "2018-07-27"})
-   ;:start_date util/last-week
-   ;:end_date   util/now})
+   :start_date util/last-week
+   :end_date   util/now})
 
 (defmulti prepare-row :dataset)
 
