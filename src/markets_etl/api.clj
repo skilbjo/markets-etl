@@ -66,8 +66,7 @@
          #__      #_(log/info body)]
      (if (= 200 status)
        (-> body
-           (json/read-str :key-fn (comp keyword string/lower-case))
-           util/print-it)
+           (json/read-str :key-fn (comp keyword string/lower-case)))
        (log/error "Failed request, exception: " status)))))
 
 (defn query-intrinio!
@@ -108,8 +107,13 @@
                             "|"
                             (:end_date params))
                        (:required_params morningstar-api))
-         response (http/get url
-                            {:query-params params})
+         response (try
+                    (http/get url
+                              {:query-params params})
+                    (catch Exception e
+                      #_(log/error "Error in query-morningstar!: "
+                                   (ex-data e))
+                      (ex-data e)))
          {:keys [status body]}  response
          body'    (-> body
                       (string/replace #"NaN" "null"))
@@ -143,7 +147,9 @@
      (if (= 200 status)
        (-> body
            (json/read-str :key-fn keyword)
-           first)
+           ;; This is commented out for quandl workflow to work without data
+           ;; if WIKI dataset is turned back on - uncomment 'first'
+           #_first)
        (log/error "Failed request, exception: " status)))))
 
 (defmulti get-data :dataset)
@@ -155,8 +161,7 @@
        (map (fn [tkr]
               (->> (query-tiingo! tkr
                                   query-params)
-                   (map #(assoc % :dataset dataset :ticker tkr))
-                   util/print-it)))))
+                   (map #(assoc % :dataset dataset :ticker tkr)))))))
 
 (defmethod get-data "MSTAR" [{:keys [dataset
                                      ticker]}
@@ -168,7 +173,7 @@
                   (assoc :dataset dataset :ticker tkr))))))
 
 (defmethod get-data :default [{:keys [dataset
-                                      ticker]}
+                                      ticker] :as m}
                               query-params]
   (->> ticker
        (map (fn [tkr]

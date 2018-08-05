@@ -28,17 +28,17 @@
 
 (def tiingo
   (list {:dataset "TIINGO"
-         :ticker ["FB"] #_(->> (conj stocks etfs mutual-funds)
-                               (remove #{"BRK.B"})
-                               (conj ["BRK-B"])
-                               flatten
-                               (into []))}))
+         :ticker (->> (conj stocks etfs mutual-funds)
+                      (remove #{"BRK.B"})
+                      (conj ["BRK-B"])
+                      flatten
+                      (into []))}))
 
 (def morningstar
-  '({:dataset "MSTAR"
-     :ticker (->> (conj stocks etfs mutual-funds)
-                  flatten
-                  (into []))}))
+  (list {:dataset "MSTAR"
+         :ticker (->> (conj stocks etfs mutual-funds)
+                      flatten
+                      (into []))}))
 
 (def query-params
   {:limit      500
@@ -226,9 +226,11 @@
 
 (defn -main [& args]
   (error/set-default-error-handler)
+
   (jdbc/with-db-connection [cxn (-> :jdbc-db-uri env)]
-    (let [data        (->> (concat tiingo) ;; morningstar quandl)
-                           util/print-it
+    (let [data        (->> (concat tiingo morningstar quandl)
                            (map #(api/get-data % query-params))
                            flatten)]
-      (execute! cxn data))))
+      (execute! cxn data)))
+
+  #_(util/notify-healthchecks-io (env :healthchecks-io-api-key)))

@@ -67,7 +67,4 @@
     (let [data        (->> datasets
                            (map #(api/get-data % query-params))
                            flatten)]
-
-      (execute! cxn data)))
-
-  (util/notify-healthchecks-io (env :healthchecks-io-api-key)))
+      (execute! cxn data))))
