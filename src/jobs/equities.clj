@@ -27,12 +27,12 @@
      :ticker ["FB" "AMZN" "GOOG" "NVDA" "CY" "INTC" "TXN" "V"]}))
 
 (def tiingo
-  '({:dataset "TIINGO"
-     :ticker (->> (conj stocks etfs mutual-funds)
-                  (remove #{"BRK.B"})
-                  (conj ["BRK-B"])
-                  flatten
-                  (into []))}))
+  (list {:dataset "TIINGO"
+         :ticker ["FB"] #_(->> (conj stocks etfs mutual-funds)
+                               (remove #{"BRK.B"})
+                               (conj ["BRK-B"])
+                               flatten
+                               (into []))}))
 
 (def morningstar
   '({:dataset "MSTAR"
@@ -42,14 +42,43 @@
 
 (def query-params
   {:limit      500
-   :start_date util/last-week
-   :end_date   util/now})
+   :start_date "2018-07-25"
+   :end_date   "2018-07-27"})
+   ;:start_date util/last-week
+   ;:end_date   util/now})
 
 (defmulti prepare-row :dataset)
 
 (defmethod prepare-row "TIINGO" [{:keys [dataset
-                                         ticker] :as m}]
-  (let [_ (util/print-it m)]))
+                                         ticker
+                                         date
+                                         open
+                                         close
+                                         low
+                                         high
+                                         volume
+                                         splitfactor
+                                         adjopen
+                                         adjclose
+                                         adjlow
+                                         adjhigh
+                                         adjvolume
+                                         divcash]}]
+  {:dataset     dataset
+   :ticker      ticker
+   :date        (coerce/to-sql-date date)
+   :open        open
+   :close       close
+   :low         low
+   :high        high
+   :volume      volume
+   :split_ratio splitfactor
+   :adj_open    adjopen
+   :adj_close   adjclose
+   :adj_low     adjlow
+   :adj_high    adjhigh
+   :adj_volume  adjvolume
+   :ex_dividend divcash})
 
 (defmethod prepare-row "MSTAR" [{:keys [dataset
                                         ticker
@@ -119,6 +148,7 @@
   ; morningstar data is available real time; although quandl data is much
   ; richer in attributes (volume, opening balance, min, max). write morningstar
   ; data first, but then go update it with quandl data
+
   (condp = dataset
     "MSTAR" (sql/query-or-insert! db
                                   :dw.equities_fact
@@ -144,11 +174,26 @@
                                     open]
                                    (-> record
                                        (dissoc :dataset))
-                                   record))
+                                   record)
+    nil)
   ; the above command will correctly update the MSTAR record, but it will
   ; also unfortunately delete the WIKI record. Force the WIKI record.
   ; TODO refactor this and the above so tests pass but with less code here
+
+  ; 2018-08-01 update: both Quandl *and* Morningstar API have gone down.
+  ; Quandl WIKI dataset not likely to return, and Morningstar API is uncertain.
+  ; TIINGO has EOD prices, and Intrinio has the same signature as Quandl
   (condp = dataset
+    "TIINGO" (sql/update-or-insert! db
+                                    :dw.equities_fact
+                                    [(util/multi-line-string
+                                      "dataset  = ? and "
+                                      "ticker   = ? and "
+                                      "date     = ? ")
+                                     dataset
+                                     ticker
+                                     date]
+                                    record)
     "WIKI" (sql/update-or-insert! db
                                   :dw.equities_fact
                                   [(util/multi-line-string
@@ -174,7 +219,6 @@
 (defn execute! [cxn data]
   (jdbc/with-db-transaction [txn cxn]
     (->> data
-         util/print-it
          (map prepare-row)
          flatten
          (map #(update-or-insert! txn %))

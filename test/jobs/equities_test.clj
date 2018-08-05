@@ -7,7 +7,8 @@
             [jobs.equities :refer :all :rename {-main _}]
             [benchmark.equities :refer :all :rename {-main __}]
             [fixtures.equities :as f]
-            [fixtures.fixtures :refer [*cxn*] :as fix]))
+            [fixtures.fixtures :refer [*cxn*] :as fix]
+            [markets-etl.util :as util]))
 
 (use-fixtures :each (fix/with-database))
 

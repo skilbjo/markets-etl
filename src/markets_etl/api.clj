@@ -66,7 +66,7 @@
          #__      #_(log/info body)]
      (if (= 200 status)
        (-> body
-           (json/read-str :key-fn keyword)
+           (json/read-str :key-fn (comp keyword string/lower-case))
            util/print-it)
        (log/error "Failed request, exception: " status)))))
 
@@ -151,12 +151,12 @@
 (defmethod get-data "TIINGO" [{:keys [dataset
                                       ticker]}
                               query-params]
-  (log/info "in api/get-data 'TIINGO'")
   (->> ticker
        (map (fn [tkr]
-              (-> (query-tiingo! tkr
-                                 query-params)
-                  (assoc :dataset dataset :ticker tkr))))))
+              (->> (query-tiingo! tkr
+                                  query-params)
+                   (map #(assoc % :dataset dataset :ticker tkr))
+                   util/print-it)))))
 
 (defmethod get-data "MSTAR" [{:keys [dataset
                                      ticker]}

@@ -10,6 +10,7 @@
 [![codecov](https://codecov.io/gh/skilbjo/markets-etl/branch/master/graph/badge.svg)](https://codecov.io/gh/skilbjo/markets-etl)
 
 [![markets-etl_sfo](https://healthchecks.io/badge/80da65e9-ff8f-45f1-b75e-109790/ZBYwWgw3/markets-etl_sfo.svg)](https://healthchecks.io/badge/80da65e9-ff8f-45f1-b75e-109790/ZBYwWgw3/markets-etl_sfo.svg)
+[![markets-etl_aws]((https://healthchecks.io/badge/80da65e9-ff8f-45f1-b75e-109790/yfJXsnyi/markets-etl_aws.svg)](https://healthchecks.io/badge/80da65e9-ff8f-45f1-b75e-109790/yfJXsnyi/markets-etl_aws.svg)
 
 ### What
 
