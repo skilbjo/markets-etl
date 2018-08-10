@@ -243,7 +243,7 @@
   (error/set-default-error-handler)
 
   (jdbc/with-db-connection [cxn (-> :jdbc-db-uri env)]
-    (let [data        (->> (concat tiingo morningstar quandl intrinio)
+    (let [data        (->> (concat tiingo morningstar quandl #_intrinio)
                            (map #(api/get-data % query-params))
                            flatten)]
       (execute! cxn data)))
