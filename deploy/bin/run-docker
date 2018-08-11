@@ -7,7 +7,7 @@ arch=""
 
 cd "${dir}/../.."
 
-case $(uname -a) in
+case "$(uname -a)" in
   *amd64* | *x_86* | *x86_64* )
     arch="x86" ;;
   *arm* )
@@ -23,14 +23,23 @@ get_current_artifacts(){
 
   # remove all app containers
   set +e
-  docker ps -a | grep "$app_name" | awk '{print $1}' | uniq | xargs docker rm -f
+  ## below not needed as the docker run cmd has the --rm flag
+  #docker ps -a | grep "$app_name" | awk '{print $1}' | uniq | xargs docker rm -f
 
   # remove all app images
   docker images | grep "$app_name" | awk '{print $3}' | uniq | xargs docker rmi -f
   set -e
 }
 
-get_current_artifacts
+update_crond(){
+  case "$(uname)" in
+    ('Linux')   sudo cp "${dir}/../tasks/crontab" "/etc/cron.d/${app_name}" ;;
+    ('FreeBSD') sudo cp "${dir}/../tasks/crontab" "/var/cron/tabs/${app_name}" ;;
+  esac
+}
+
+get_current_artifacts && \
+  update_crond
 
 docker run --rm \
   --name="$(echo $app_name $@ | tr ' ' '_')" \
