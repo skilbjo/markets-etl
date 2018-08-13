@@ -122,7 +122,7 @@ begin;
 
   drop table if exists dw.portfolio_dim cascade;
   create table if not exists dw.portfolio_dim (
-    username           text          not null,
+    _user              text          not null,
     dataset            text          not null,
     ticker             text          not null,
     quantity           decimal(10,4) not null,
