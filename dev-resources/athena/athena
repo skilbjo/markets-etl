@@ -2,7 +2,7 @@
 set -eou pipefail
 
 get_status() {
-  local query_id=$1
+  local query_id="$1"
 
   aws athena \
     --profile personal \
@@ -13,7 +13,7 @@ get_status() {
 }
 
 get_query () {
-  local query_id=$1
+  local query_id="$1"
 
   local results=$(aws athena \
     --profile personal \
@@ -30,7 +30,7 @@ get_query () {
 }
 
 wait_til_finished() {
-  local query_id=$1
+  local query_id="$1"
   local status="in flux"
   local number_of_tries=5
 
@@ -55,10 +55,10 @@ query() {
     --profile personal \
     --region us-east-1 \
     start-query-execution \
-    --result-configuration 'OutputLocation=s3://aws-athena-query-results-470340682667-us-east-1/' \
+    --result-configuration 'OutputLocation=s3://aws-athena-query-results-470340682667-us-east-1/,EncryptionConfiguration={EncryptionOption=SSE_S3}' \
     --output text \
     --query-string "$sql"
   )
 
-  wait_til_finished $athena_query
+  wait_til_finished "$athena_query"
 }
