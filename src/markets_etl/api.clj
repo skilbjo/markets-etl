@@ -57,10 +57,16 @@
                             (:start_date params)
                             "&endDate="
                             (:end_date params)))
-         response (http/get url
+
+         response (try
+                    (http/get url
                             {:headers {:authorization (str "Token "
                                                            (-> :tiingo-api-key
                                                                env))}})
+                    (catch Exception e
+                      #_(log/error "Error in query-morningstar!: "
+                                   (ex-data e))
+                      (ex-data e)))
          {:keys [status body]}  response
          _        (log/debug ticker)
          _        (log/debug params)
@@ -68,7 +74,7 @@
      (if (= 200 status)
        (-> body
            (json/read-str :key-fn (comp keyword string/lower-case)))
-       (log/error "Failed request, exception: " status)))))
+       (log/error "Tiingo request, status:" status "Ticker:" ticker)))))
 
 (defn query-intrinio!
   ([ticker]
@@ -84,8 +90,13 @@
                             (:start_date params)
                             "&end_date="
                             (:end_date params)))
-         response (http/get url
+         response (try
+                    (http/get url
                             {:basic-auth ["" ""]})
+                    (catch Exception e
+                      #_(log/error "Error in query-morningstar!: "
+                                   (ex-data e))
+                      (ex-data e)))
          {:keys [status body]}  response
          _        (log/debug ticker)
          _        (log/debug params)
@@ -93,7 +104,7 @@
      (if (= 200 status)
        (-> body
            (json/read-str :key-fn keyword))
-       (log/error "Failed request, exception: " status)))))
+       (log/error "Intrinio request, exception:" status "Ticker:" ticker)))))
 
 (defn query-morningstar!
   ([ticker]
@@ -126,7 +137,8 @@
      (if (and (= 200 status) ((comp not empty?) body'))
        (-> body'
            (json/read-str :key-fn (comp keyword string/lower-case)))
-       (log/error "Failed request, exception: " status)))))
+       (log/error "Morningstar-api request, exception:" status
+                  "Ticker:" ticker)))))
 
 (defn query-quandl!
   ([dataset ticker]
@@ -140,8 +152,13 @@
                        (:format quandl-api))
          params   (-> paramz
                       (assoc :api_key (-> :quandl-api-key env)))
-         response (http/get url
+         response (try
+                    (http/get url
                             {:query-params params})
+                    (catch Exception e
+                      #_(log/error "Error in query-morningstar!: "
+                                   (ex-data e))
+                      (ex-data e)))
          {:keys [status body]}  response
          _        (log/debug ticker)
          _        (log/debug params)
@@ -152,7 +169,7 @@
            ;; This is commented out for quandl workflow to work without data
            ;; if WIKI dataset is turned back on - uncomment 'first'
            #_first)
-       (log/error "Failed request, exception: " status)))))
+       (log/error "Quandl request, exception:" status "Ticker:" ticker)))))
 
 (defmulti get-data :dataset)
 
