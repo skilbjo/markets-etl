@@ -60,9 +60,9 @@
 
          response (try
                     (http/get url
-                            {:headers {:authorization (str "Token "
-                                                           (-> :tiingo-api-key
-                                                               env))}})
+                              {:headers {:authorization (str "Token "
+                                                             (-> :tiingo-api-key
+                                                                 env))}})
                     (catch Exception e
                       #_(log/error "Error in query-morningstar!: "
                                    (ex-data e))
@@ -92,7 +92,7 @@
                             (:end_date params)))
          response (try
                     (http/get url
-                            {:basic-auth ["" ""]})
+                              {:basic-auth ["" ""]})
                     (catch Exception e
                       #_(log/error "Error in query-morningstar!: "
                                    (ex-data e))
@@ -154,7 +154,7 @@
                       (assoc :api_key (-> :quandl-api-key env)))
          response (try
                     (http/get url
-                            {:query-params params})
+                              {:query-params params})
                     (catch Exception e
                       #_(log/error "Error in query-morningstar!: "
                                    (ex-data e))
