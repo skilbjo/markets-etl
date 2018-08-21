@@ -2,7 +2,8 @@
 set -eou pipefail
 
 ticker='VMRAX'
-start_date='2018-08-08'
+#ticker='FB'
+start_date='2018-08-20'
 end_date='2018-08-31'
 params="startDate=${start_date}&endDate=${end_date}"
 

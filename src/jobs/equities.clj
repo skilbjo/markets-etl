@@ -183,10 +183,10 @@
                                      "ticker = ? and " ; but don't overwrite
                                      "date   = ? and " ; it's dataset to WIKI
                                      "dataset in ('MSTAR','WIKI') and "
-                                     "(open  = ? or open is null)") ; <- this
+                                     "(split_ratio = ? or split_ratio is null)") ; <- this
                                     ticker             ; has to be a non-MSTAR
                                     date               ; field
-                                    open]
+                                    split_ratio]
                                    (-> record
                                        (dissoc :dataset))
                                    record)
@@ -243,7 +243,7 @@
   (error/set-default-error-handler)
 
   (jdbc/with-db-connection [cxn (-> :jdbc-db-uri env)]
-    (let [data        (->> (concat tiingo morningstar quandl #_intrinio)
+    (let [data        (->> (concat tiingo morningstar quandl intrinio)
                            (map #(api/get-data % query-params))
                            flatten)]
       (execute! cxn data)))
