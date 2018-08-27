@@ -13,14 +13,18 @@
 (use-fixtures :each (fix/with-database))
 
 (deftest integration-test
-  (->> (concat f/tiingo f/morningstar f/quandl)
+  ;; Simulate the job running many times throughout the day
+  (->> (concat f/tiingo f/morningstar f/quandl f/intrinio-during-the-day)
+       (execute! *cxn*))
+
+  (->> (concat f/tiingo f/morningstar f/quandl f/intrinio-at-end-of-day)
        (execute! *cxn*))
 
   (testing "Quandl & Morningstar API equities integration test"
     (let [actual  (->> "select * from dw.equities_fact"
                        (jdbc/query *cxn*)
                        flatten)]
-      (is (= f/result
+      (is (= f/result*
              (->> actual
                   (map #(dissoc %
                                 :dw_created_at)))))
@@ -31,6 +35,10 @@
       (is (not (empty? actual))))))
 
 (deftest integration-test'
+  ;; Simulate the job running many times throughout the day
+  (->> (concat f/tiingo f/morningstar f/quandl)
+       (execute!' *cxn*))
+
   (->> (concat f/tiingo f/morningstar f/quandl)
        (execute!' *cxn*))
 
@@ -49,10 +57,11 @@
       (is (not (empty? actual))))))
 
 (deftest intrinio-test
-  (->> (concat f/intrinio-data-during-the-day)
+  ;; Simulate the job running many times throughout the day
+  (->> (concat f/intrinio-during-the-day)
        (execute! *cxn*))
 
-  (->> (concat f/intrinio-data-at-end-of-day)
+  (->> (concat f/intrinio-at-end-of-day)
        (execute! *cxn*))
 
   (testing "Intrinio updates their end-of-day dataset throughout the day with
