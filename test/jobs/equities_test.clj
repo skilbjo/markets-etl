@@ -36,17 +36,17 @@
 
 (deftest integration-test'
   ;; Simulate the job running many times throughout the day
-  (->> (concat f/tiingo f/morningstar f/quandl)
+  (->> (concat f/tiingo f/morningstar f/quandl f/intrinio-during-the-day)
        (execute!' *cxn*))
 
-  (->> (concat f/tiingo f/morningstar f/quandl)
+  (->> (concat f/tiingo f/morningstar f/quandl f/intrinio-at-end-of-day)
        (execute!' *cxn*))
 
   (testing "Equities integration test, using reducers"
     (let [actual  (->> "select * from dw.equities_fact"
                        (jdbc/query *cxn*)
                        flatten)]
-      (is (= (-> f/result')
+      (is (= (-> f/result**)
              (->> actual
                   (map #(dissoc %
                                 :dw_created_at)))))
