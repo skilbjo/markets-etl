@@ -24,7 +24,7 @@
     (let [actual  (->> "select * from dw.equities_fact"
                        (jdbc/query *cxn*)
                        flatten)]
-      (is (= f/result*
+      (is (= f/result
              (->> actual
                   (map #(dissoc %
                                 :dw_created_at)))))
@@ -46,32 +46,7 @@
     (let [actual  (->> "select * from dw.equities_fact"
                        (jdbc/query *cxn*)
                        flatten)]
-      (is (= (-> f/result**)
-             (->> actual
-                  (map #(dissoc %
-                                :dw_created_at)))))
-      (is (every? true?
-                  (->> actual
-                       (map #(contains? %
-                                        :dw_created_at)))))
-      (is (not (empty? actual))))))
-
-(deftest intrinio-test
-  ;; Simulate the job running many times throughout the day
-  (->> (concat f/intrinio-during-the-day)
-       (execute! *cxn*))
-
-  (->> (concat f/intrinio-at-end-of-day)
-       (execute! *cxn*))
-
-  (testing "Intrinio updates their end-of-day dataset throughout the day with
-            current prices; as opposed to waiting to the end-of-day data. This
-            makes the ETL a little complicated given the other moving pieces
-            (Morningstar, Quandl, etc)."
-    (let [actual  (->> "select * from dw.equities_fact where dataset = 'WIKI'"
-                       (jdbc/query *cxn*)
-                       flatten)]
-      (is (= (-> f/intrinio-result)
+      (is (= (-> f/result')
              (->> actual
                   (map #(dissoc %
                                 :dw_created_at)))))
