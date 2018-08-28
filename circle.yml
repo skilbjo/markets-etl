@@ -16,7 +16,7 @@ jobs:
             - ~/.lein
           key: << checksum "project.clj" >>
       - run: lein do test, cljfmt check
-      - run: bash <(curl -s https://codecov.io/bash) -f target/coverage/codecov.json
+      - run: bash <(curl -s https://codecov.io/bash) -f target/coverage/codecov.json || echo 'codecov is down'
   build:
     working_directory: ~/markets-etl
     docker:

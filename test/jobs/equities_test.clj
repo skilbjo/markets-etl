@@ -13,7 +13,11 @@
 (use-fixtures :each (fix/with-database))
 
 (deftest integration-test
-  (->> (concat f/tiingo f/morningstar f/quandl)
+  ;; Simulate the job running many times throughout the day
+  (->> (concat f/tiingo f/morningstar f/quandl f/intrinio-during-the-day)
+       (execute! *cxn*))
+
+  (->> (concat f/tiingo f/morningstar f/quandl f/intrinio-at-end-of-day)
        (execute! *cxn*))
 
   (testing "Quandl & Morningstar API equities integration test"
@@ -31,7 +35,11 @@
       (is (not (empty? actual))))))
 
 (deftest integration-test'
-  (->> (concat f/tiingo f/morningstar f/quandl)
+  ;; Simulate the job running many times throughout the day
+  (->> (concat f/tiingo f/morningstar f/quandl f/intrinio-during-the-day)
+       (execute!' *cxn*))
+
+  (->> (concat f/tiingo f/morningstar f/quandl f/intrinio-at-end-of-day)
        (execute!' *cxn*))
 
   (testing "Equities integration test, using reducers"
@@ -39,30 +47,6 @@
                        (jdbc/query *cxn*)
                        flatten)]
       (is (= (-> f/result')
-             (->> actual
-                  (map #(dissoc %
-                                :dw_created_at)))))
-      (is (every? true?
-                  (->> actual
-                       (map #(contains? %
-                                        :dw_created_at)))))
-      (is (not (empty? actual))))))
-
-(deftest intrinio-test
-  (->> (concat f/intrinio-data-during-the-day)
-       (execute! *cxn*))
-
-  (->> (concat f/intrinio-data-at-end-of-day)
-       (execute! *cxn*))
-
-  (testing "Intrinio updates their end-of-day dataset throughout the day with
-            current prices; as opposed to waiting to the end-of-day data. This
-            makes the ETL a little complicated given the other moving pieces
-            (Morningstar, Quandl, etc)."
-    (let [actual  (->> "select * from dw.equities_fact where dataset = 'WIKI'"
-                       (jdbc/query *cxn*)
-                       flatten)]
-      (is (= (-> f/intrinio-result)
              (->> actual
                   (map #(dissoc %
                                 :dw_created_at)))))
