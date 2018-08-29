@@ -13,7 +13,10 @@
 #### when morningstar api is ready
 19 15 * * 1-5 skilbjo . /home/skilbjo/.profilelocal; cd "$app_dir" ; $cmd -m jobs.equities >/dev/null 2>&1
 #### when tiingo api is ready
+40 17 * * 1-5 skilbjo . /home/skilbjo/.profilelocal; cd "$app_dir" ; $cmd -m jobs.equities >/dev/null 2>&1
 45 17 * * 1-5 skilbjo . /home/skilbjo/.profilelocal; cd "$app_dir" ; $cmd -m jobs.equities >/dev/null 2>&1
+50 17 * * 1-5 skilbjo . /home/skilbjo/.profilelocal; cd "$app_dir" ; $cmd -m jobs.equities >/dev/null 2>&1
+55 17 * * 1-5 skilbjo . /home/skilbjo/.profilelocal; cd "$app_dir" ; $cmd -m jobs.equities >/dev/null 2>&1
 0  18 * * 1-5 skilbjo . /home/skilbjo/.profilelocal; cd "$app_dir" ; $cmd -m jobs.equities >/dev/null 2>&1
 
 ### others
