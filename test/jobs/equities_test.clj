@@ -5,7 +5,8 @@
             [clojure.test :refer :all]
             [environ.core :refer [env]]
             [jobs.equities :refer :all :rename {-main _}]
-            [benchmark.equities :refer :all :rename {-main __}]
+            [benchmark.equities :refer :all :rename {-main __
+                                                     cli-options ___}]
             [fixtures.equities :as f]
             [fixtures.fixtures :refer [*cxn*] :as fix]
             [markets-etl.util :as util]))

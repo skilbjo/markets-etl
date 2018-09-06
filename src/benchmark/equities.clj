@@ -11,7 +11,8 @@
             [environ.core :refer [env]]
             [fixtures.equities :as f]
             [jobs.equities :refer :all :rename {-main _
-                                                query-params __}]
+                                                query-params __
+                                                cli-options ___}]
             [markets-etl.api :as api]
             [markets-etl.util :as util])
   (:gen-class))

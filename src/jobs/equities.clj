@@ -1,8 +1,11 @@
 (ns jobs.equities
   (:require [clj-time.coerce :as coerce]
+            [clj-time.format :as format]
+            [clj-time.core :as time]
             [clojure.data.json :as json]
-            [clojure.tools.logging :as log]
             [clojure.java.jdbc :as jdbc]
+            [clojure.tools.cli :as cli]
+            [clojure.tools.logging :as log]
             [clojure.string :as string]
             [environ.core :refer [env]]
             [markets-etl.api :as api]
@@ -239,12 +242,29 @@
          (map #(update-or-insert! txn %))
          doall)))
 
+(def cli-options
+  [["-d" "--date DATE" "Start date (month) (yyyy-mm-dd format) to start processing"
+    :parse-fn #(format/parse %)
+    :default  util/last-week]
+   ["-h" "--help"]])
+
 (defn -main [& args]
   (error/set-default-error-handler)
 
   (jdbc/with-db-connection [cxn (-> :jdbc-db-uri env)]
-    (let [data        (->> (concat tiingo morningstar quandl intrinio)
-                           (map #(api/get-data % query-params))
+    (let [{:keys [options summary errors]} (cli/parse-opts args cli-options)
+          query-params'        (when args
+                                 {:limit      (:limit query-params)
+                                  :start_date (-> options
+                                                  :date
+                                                  time/first-day-of-the-month
+                                                  util/joda-date->date-str)
+                                  :end_date   (-> options
+                                                  :date
+                                                  util/joda-date->date-str)}
+                                 query-params)
+          data        (->> (concat tiingo morningstar quandl intrinio)
+                           (map #(api/get-data % query-params'))
                            flatten)]
       (execute! cxn data)))
 

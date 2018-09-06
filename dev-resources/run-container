@@ -11,7 +11,7 @@ app_name=$(basename $(dirname $dir))
 
 docker run --rm -it \
   --name="$(echo $app_name)" \
-  -e jdbc_db_uri="$(echo 'jdbc:postgresql://192.168.99.100:5432/postgres?loginTimeout=30&socketTimeout=900&tcpKeepAlive=true&user=postgres')" \
+  -e jdbc_db_uri="$(echo $jdbc_db_uri)" \
   -e quandl_api_key="$(echo $quandl_api_key)" \
   -e tiingo_api_key="$(echo $tiingo_api_key)" \
   -e docker_psql_uri="$(echo $docker_psql_uri)" \
