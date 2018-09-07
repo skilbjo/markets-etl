@@ -253,7 +253,7 @@
 
   (jdbc/with-db-connection [cxn (-> :jdbc-db-uri env)]
     (let [{:keys [options summary errors]} (cli/parse-opts args cli-options)
-          query-params'        (when args
+          query-params*        (if args
                                  {:limit      (:limit query-params)
                                   :start_date (-> options
                                                   :date
@@ -264,7 +264,7 @@
                                                   util/joda-date->date-str)}
                                  query-params)
           data        (->> (concat tiingo morningstar quandl intrinio)
-                           (map #(api/get-data % query-params'))
+                           (map #(api/get-data % query-params*))
                            flatten)]
       (execute! cxn data)))
 

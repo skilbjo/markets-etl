@@ -6,7 +6,8 @@
             [clojure.tools.logging :as log]
             [environ.core :refer [env]]
             [jobs.economics :refer :all :rename {-main _
-                                                 query-params __}]
+                                                query-params __
+                                                cli-options ___}]
             [markets-etl.api :as api]
             [markets-etl.error :as error]
             [markets-etl.util :as util])
