@@ -14,6 +14,12 @@
             [markets-etl.util :as util])
   (:gen-class))
 
+(def cli-options
+  [["-d" "--date DATE" "Start date (month) (yyyy-mm-dd format) to start processing"
+    :parse-fn #(format/parse %)
+    :default  util/last-week]
+   ["-h" "--help"]])
+
 (def stocks
   ["FB" "AMZN" "GOOG" "NVDA" "CY" "INTC" "TXN" "V" "SAP" "SQ" "PYPL" "BRK.B"
    "TSM"])
@@ -242,15 +248,8 @@
          (map #(update-or-insert! txn %))
          doall)))
 
-(def cli-options
-  [["-d" "--date DATE" "Start date (month) (yyyy-mm-dd format) to start processing"
-    :parse-fn #(format/parse %)
-    :default  util/last-week]
-   ["-h" "--help"]])
-
 (defn -main [& args]
   (error/set-default-error-handler)
-  (println args)
 
   (jdbc/with-db-connection [cxn (-> :jdbc-db-uri env)]
     (let [{:keys [options summary errors]} (cli/parse-opts args cli-options)
@@ -264,7 +263,6 @@
                                                   :date
                                                   util/joda-date->date-str)}
                                  query-params)
-          _       (System/exit 0)
           data        (->> (concat tiingo morningstar quandl intrinio)
                            (map #(api/get-data % query-params'))
                            flatten)]
