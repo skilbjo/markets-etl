@@ -1,7 +1,7 @@
 (ns jobs.equities
   (:require [clj-time.coerce :as coerce]
-            [clj-time.format :as format]
             [clj-time.core :as time]
+            [clj-time.format :as format]
             [clojure.data.json :as json]
             [clojure.java.jdbc :as jdbc]
             [clojure.tools.cli :as cli]
@@ -250,6 +250,7 @@
 
 (defn -main [& args]
   (error/set-default-error-handler)
+  (println args)
 
   (jdbc/with-db-connection [cxn (-> :jdbc-db-uri env)]
     (let [{:keys [options summary errors]} (cli/parse-opts args cli-options)
@@ -263,6 +264,7 @@
                                                   :date
                                                   util/joda-date->date-str)}
                                  query-params)
+          _       (System/exit 0)
           data        (->> (concat tiingo morningstar quandl intrinio)
                            (map #(api/get-data % query-params'))
                            flatten)]
