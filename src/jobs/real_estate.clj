@@ -1,7 +1,10 @@
 (ns jobs.real-estate
   (:require [clj-time.coerce :as coerce]
+            [clj-time.core :as time]
+            [clj-time.format :as format]
             [clojure.data.json :as json]
             [clojure.java.jdbc :as jdbc]
+            [clojure.tools.cli :as cli]
             [clojure.string :as string]
             [environ.core :refer [env]]
             [markets-etl.api :as api]
@@ -9,6 +12,12 @@
             [markets-etl.sql :as sql]
             [markets-etl.util :as util])
   (:gen-class))
+
+(def cli-options
+  [["-d" "--date DATE" "Start date (month) (yyyy-mm-dd format) to start processing"
+    :parse-fn #(format/parse %)
+    :default  util/last-week]
+   ["-h" "--help"]])
 
 (def datasets
   '({:dataset "ZILLOW"
@@ -78,8 +87,19 @@
 
 (defn -main [& args]
   (jdbc/with-db-connection [cxn (-> :jdbc-db-uri env)]
-    (let [data        (->> datasets
-                           (map #(api/get-data % query-params))
+    (let [{:keys [options summary errors]} (cli/parse-opts args cli-options)
+          query-params*        (if args
+                                 {:limit      (:limit query-params)
+                                  :start_date (-> options
+                                                  :date
+                                                  time/first-day-of-the-month
+                                                  util/joda-date->date-str)
+                                  :end_date   (-> options
+                                                  :date
+                                                  util/joda-date->date-str)}
+                                 query-params)
+          data        (->> datasets
+                           (map #(api/get-data % query-params*))
                            flatten)]
 
       (execute! cxn data))))
