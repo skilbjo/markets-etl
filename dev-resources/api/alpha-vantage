@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+set -eou pipefail
+
+ticker='VMRAX'
+start_date='2018-08-20'
+end_date='2018-08-31'
+params="types=quote&range=1m&last=1"
+
+# docs: https://www.alphavantage.co/documentation/
+latest(){
+  curl \
+    "https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=${ticker}&apikey=demo"
+}
+
+latest

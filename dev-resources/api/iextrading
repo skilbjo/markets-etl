@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+set -eou pipefail
+
+ticker='VMRAX'
+ticker='FB'
+start_date='2018-08-20'
+end_date='2018-08-31'
+params="types=quote&range=1m&last=1"
+
+# docs: https://iextrading.com/developer/docs/
+latest(){
+  curl \
+    "https://api.iextrading.com/1.0/stock/${ticker}/batch?${params}"
+}
+
+latest
