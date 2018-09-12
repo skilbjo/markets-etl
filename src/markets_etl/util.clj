@@ -63,6 +63,9 @@
              (time/plus _excel_epoch_start))  ; this is how excel date conversions work
         (time/plus (-> 2 time/days))))) ; morningstar's api is not exactly perfect though
 
+(defn space->underscore [s]
+  (string/replace s #" " "_"))
+
 ; -- collections ---------------------------------------
 (defn sequentialize [x]
   (if (sequential? x)
