@@ -53,12 +53,64 @@
                       flatten
                       (into []))}))
 
+(def alpha-vantage
+  '({:dataset "ALPHA-VANTAGE"
+     :ticker ["VMRAX"]}))
+  ;(list {:dataset "ALPHA-VANTAGE"
+         ;:ticker (->> (conj stocks etfs mutual-funds)
+                      ;(remove #{"BRK.B"})
+                      ;(conj ["BRK-B"])
+                      ;flatten
+                      ;(into []))}))
+
 (def query-params
   {:limit      500
    :start_date util/last-week
    :end_date   util/now})
 
 (defmulti prepare-row :dataset)
+
+(defmethod prepare-row "ALPHA-VANTAGE" [{:keys [dataset
+                                                ticker
+                                                time_series_daily] :as m}]
+  (let [transform-fn (fn [m]
+                        ;https://stackoverflow.com/questions/40064633/how-to-iterate-over-key-vals-of-a-hash-and-return-an-array
+                       )]
+    (->> time_series_daily
+         transform-fn
+         util/print-it)
+    (println dataset ticker))
+  ;(->> m
+       ;util/print-it)
+  (System/exit 0)
+  #_(let [pricedatalist' (first pricedatalist)
+        dates          (->> pricedatalist'
+                            :dateindexs
+                            (map util/excel-date-epoch->joda-date)
+                            (map #(assoc {} :date %)))
+        prices         (->> pricedatalist'
+                            :datapoints
+                            (map first)
+                            (map util/string->decimal))]
+    (->> prices
+         (map #(assoc {} :close %))
+         (map list dates)
+         (map #(merge (first %) (second %)))
+         (map #(update % :date coerce/to-sql-date))
+         (map #(assoc %
+                      :dataset     dataset
+                      :ticker      ticker
+                      :open        nil
+                      :low         nil
+                      :high        nil
+                      :volume      nil
+                      :split_ratio nil
+                      :adj_open    nil
+                      :adj_close   nil
+                      :adj_low     nil
+                      :adj_high    nil
+                      :adj_volume  nil
+                      :ex_dividend nil)))))
 
 (defmethod prepare-row "TIINGO" [{:keys [dataset
                                          ticker
@@ -243,6 +295,7 @@
 (defn execute! [cxn data]
   (jdbc/with-db-transaction [txn cxn]
     (->> data
+         ;util/print-it
          (map prepare-row)
          flatten
          (map #(update-or-insert! txn %))
@@ -263,9 +316,12 @@
                                                   :date
                                                   util/joda-date->date-str)}
                                  query-params)
-          data        (->> (concat tiingo morningstar quandl intrinio)
+          ;data        (->> (concat tiingo morningstar quandl intrinio)
+          data        (->> (concat alpha-vantage)
                            (map #(api/get-data % query-params*))
-                           flatten)]
+                           flatten)
+          ;_ (println (api/query-alpha-vantage! "VMRAX"))
+          ]
       (execute! cxn data)))
 
-  (util/notify-healthchecks-io (-> :healthchecks-io-api-key env)))
+  #_(util/notify-healthchecks-io (-> :healthchecks-io-api-key env)))

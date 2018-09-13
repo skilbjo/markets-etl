@@ -66,6 +66,11 @@
 (defn space->underscore [s]
   (string/replace s #" " "_"))
 
+(defn remove-special-characters [s]
+  (-> s
+      (string/replace #"\(" "")
+      (string/replace #"\)" "")))
+
 ; -- collections ---------------------------------------
 (defn sequentialize [x]
   (if (sequential? x)

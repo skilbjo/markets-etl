@@ -73,7 +73,11 @@
          #__      #_(log/info body)]
      (if (= 200 status)
        (-> body
-           (json/read-str :key-fn (comp util/space->underscore string/lower-case keyword)))
+           (json/read-str :key-fn (comp keyword
+                                        string/lower-case
+                                        util/space->underscore
+                                        util/remove-special-characters
+                                        )))
        (log/error "Alpha-vantage request, status:" status "Ticker:" ticker)))))
 
 (defn query-tiingo!
@@ -230,6 +234,14 @@
   (->> ticker
        (map (fn [tkr]
               (-> (query-intrinio! tkr query-params)
+                  (assoc :dataset dataset :ticker tkr))))))
+
+(defmethod get-data "ALPHA-VANTAGE" [{:keys [dataset
+                                  ticker]}
+                          query-params]
+  (->> ticker
+       (map (fn [tkr]
+              (-> (query-alpha-vantage! tkr query-params)
                   (assoc :dataset dataset :ticker tkr))))))
 
 (defmethod get-data :default [{:keys [dataset
