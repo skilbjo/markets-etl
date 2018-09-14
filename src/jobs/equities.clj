@@ -72,17 +72,17 @@
 
 (defmethod prepare-row "ALPHA-VANTAGE" [{:keys [dataset
                                                 ticker
-                                                time_series_daily] :as m}]
+                                                time_series_daily]}]
   (->> time_series_daily
        (map identity)
        (map #(assoc {} :dataset     dataset
                     :ticker      ticker
                     :date        (-> % first name coerce/to-sql-date)
-                    :open        (-> % second :1._open)
-                    :close       (-> % second :4._close)
-                    :low         (-> % second :3._low)
-                    :high        (-> % second :2.high)
-                    :volume      (-> % second :5._volume)
+                    :open        (-> % second :1._open util/string->decimal)
+                    :close       (-> % second :4._close util/string->decimal)
+                    :low         (-> % second :3._low util/string->decimal)
+                    :high        (-> % second :2.high util/string->decimal)
+                    :volume      (-> % second :5._volume util/string->decimal)
                     :split_ratio nil
                     :adj_open    nil
                     :adj_close   nil
@@ -240,42 +240,51 @@
   ; Quandl WIKI dataset not likely to return, and Morningstar API is uncertain.
   ; TIINGO has EOD prices, and Intrinio has the same signature as Quandl
   (condp = dataset
-    "TIINGO" (sql/update-or-insert! db
-                                    :dw.equities_fact
-                                    [(util/multi-line-string
-                                      "dataset  = ? and "
-                                      "ticker   = ? and "
-                                      "date     = ? ")
-                                     dataset
-                                     ticker
-                                     date]
-                                    record)
-    "WIKI" (sql/update-or-insert! db
-                                  :dw.equities_fact
-                                  [(util/multi-line-string
-                                    "dataset  = ? and "
-                                    "ticker   = ? and "
-                                    "date     = ? ")
-                                   dataset
-                                   ticker
-                                   date]
-                                  record)
-    "MSTAR" (sql/update-or-ignore! db
-                                   :dw.equities_fact
-                                   [(util/multi-line-string
-                                     "dataset  = ? and "
-                                     "ticker   = ? and "
-                                     "date   = ? and "
-                                     "(open is null)")
-                                    dataset
-                                    ticker
-                                    date]
-                                   record)))
+    "ALPHA-VANTAGE" (sql/update-or-insert! db
+                                           :dw.equities_fact
+                                           [(util/multi-line-string
+                                             "dataset  = ? and "
+                                             "ticker   = ? and "
+                                             "date     = ? ")
+                                            dataset
+                                            ticker
+                                            date]
+                                           record)
+    "TIINGO"        (sql/update-or-insert! db
+                                           :dw.equities_fact
+                                           [(util/multi-line-string
+                                             "dataset  = ? and "
+                                             "ticker   = ? and "
+                                             "date     = ? ")
+                                            dataset
+                                            ticker
+                                            date]
+                                           record)
+    "WIKI"          (sql/update-or-insert! db
+                                           :dw.equities_fact
+                                           [(util/multi-line-string
+                                             "dataset  = ? and "
+                                             "ticker   = ? and "
+                                             "date     = ? ")
+                                            dataset
+                                            ticker
+                                            date]
+                                           record)
+    "MSTAR"         (sql/update-or-ignore! db
+                                           :dw.equities_fact
+                                           [(util/multi-line-string
+                                             "dataset  = ? and "
+                                             "ticker   = ? and "
+                                             "date   = ? and "
+                                             "(open is null)")
+                                            dataset
+                                            ticker
+                                            date]
+                                           record)))
 
 (defn execute! [cxn data]
   (jdbc/with-db-transaction [txn cxn]
     (->> data
-         ;util/print-it
          (map prepare-row)
          flatten
          (map #(update-or-insert! txn %))
