@@ -89,8 +89,7 @@
                     :adj_low     nil
                     :adj_high    nil
                     :adj_volume  nil
-                    :ex_dividend nil))
-       util/print-it))
+                    :ex_dividend nil))))
 
 (defmethod prepare-row "TIINGO" [{:keys [dataset
                                          ticker
