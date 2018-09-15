@@ -52,9 +52,10 @@
 
 ; -- data types ----------------------------------------
 (defn string->decimal [n]
-  (-> n
-      java.math.BigDecimal.
-      (.setScale 2 BigDecimal/ROUND_HALF_UP)))
+  (when n
+    (-> n
+        java.math.BigDecimal.
+        (.setScale 2 BigDecimal/ROUND_HALF_UP))))
 
 (defn excel-date-epoch->joda-date [n]
   (let [_excel_epoch_start  (time/date-time 1899 12 30)]
@@ -62,6 +63,14 @@
              time/days
              (time/plus _excel_epoch_start))  ; this is how excel date conversions work
         (time/plus (-> 2 time/days))))) ; morningstar's api is not exactly perfect though
+
+(defn space->underscore [s]
+  (string/replace s #" " "_"))
+
+(defn remove-special-characters [s]
+  (-> s
+      (string/replace #"\(" "")
+      (string/replace #"\)" "")))
 
 ; -- collections ---------------------------------------
 (defn sequentialize [x]

@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+set -eou pipefail
+
+ticker='VMRAX'
+#ticker='FB'
+start_date='2018-08-20'
+end_date='2018-08-31'
+params="startDate=${start_date}&endDate=${end_date}"
+
+# docs: https://eodhistoricaldata.com/knowledgebase/stock-etfs-fundamental-data-feeds/
+date_range(){
+  curl \
+    "https://eodhistoricaldata.com/api/fundamentals/${ticker}.US?api_token=${eod_api_key}"
+}
+
+latest(){
+  ## api_token here is test, only works with AAPL & VTI
+  #curl \
+    #"https://eodhistoricaldata.com/api/fundamentals/VTI.US?api_token=OeAFFmMliFG5orCUuwAKQ8l4WWFQ67YX"
+
+  curl \
+    "https://eodhistoricaldata.com/api/real-time/VTI.US?api_token=OeAFFmMliFG5orCUuwAKQ8l4WWFQ67YX&fmt=json"
+}
+
+latest

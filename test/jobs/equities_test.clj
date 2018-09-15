@@ -15,10 +15,10 @@
 
 (deftest integration-test
   ;; Simulate the job running many times throughout the day
-  (->> (concat f/tiingo f/morningstar f/quandl f/intrinio-during-the-day)
+  (->> (concat f/alpha-vantage f/tiingo f/morningstar f/quandl f/intrinio-during-the-day)
        (execute! *cxn*))
 
-  (->> (concat f/tiingo f/morningstar f/quandl f/intrinio-at-end-of-day)
+  (->> (concat f/alpha-vantage f/tiingo f/morningstar f/quandl f/intrinio-at-end-of-day)
        (execute! *cxn*))
 
   (testing "Quandl & Morningstar API equities integration test"
@@ -37,10 +37,10 @@
 
 (deftest integration-test'
   ;; Simulate the job running many times throughout the day
-  (->> (concat f/tiingo f/morningstar f/quandl f/intrinio-during-the-day)
+  (->> (concat f/alpha-vantage f/tiingo f/morningstar f/quandl f/intrinio-during-the-day)
        (execute!' *cxn*))
 
-  (->> (concat f/tiingo f/morningstar f/quandl f/intrinio-at-end-of-day)
+  (->> (concat f/alpha-vantage f/tiingo f/morningstar f/quandl f/intrinio-at-end-of-day)
        (execute!' *cxn*))
 
   (testing "Equities integration test, using reducers"

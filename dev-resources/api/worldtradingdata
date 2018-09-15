@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+set -eou pipefail
+
+ticker='VMRAX'
+start_date='2018-08-20'
+end_date='2018-08-31'
+params="startDate=${start_date}&endDate=${end_date}"
+
+# docs: https://www.worldtradingdata.com/documentation#introduction
+latest(){
+  ## note, as of 2018-08-10, the data is *way* out of date with current prices
+  #curl \
+    #"https://www.worldtradingdata.com/api/v1/stock?symbol=${ticker}&api_token=${worldtradingdata_api_key}"
+  curl \
+    "https://www.worldtradingdata.com/api/v1/mutualfund?symbol=${ticker}&api_token=${worldtradingdata_api_key}"
+}
+
+latest

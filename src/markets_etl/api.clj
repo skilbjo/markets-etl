@@ -26,6 +26,12 @@
    :url       "api.tiingo.com/tiingo/daily/"
    :suffix    "prices"})
 
+(def ^:private alpha-vantage-api
+  {:protocol  "https://"
+   :url       "www.alphavantage.co/query?"
+   :params    "&outputsize=compact&datatype=json"
+   :api-key   (str "&apikey=" (-> :alpha-vantage-api-key env))})
+
 (def ^:private allowed
   {:collapse     #{"none" "daily" "weekly" "monthly" "quarterly" "annual"}
    :transform    #{"none" "rdiff" "diff" "cumul" "normalize"}
@@ -42,6 +48,36 @@
   (->> m
        (map (fn [[k v]]
               ((allowed k) v)))))
+
+(defn query-alpha-vantage!
+  ([ticker]
+   (query-alpha-vantage! ticker {}))
+  ([ticker paramz]
+   {:pre [(every? true? (allowed? paramz))]}
+   (let [params   (dissoc paramz :limit)
+         url      (str (:protocol alpha-vantage-api)
+                       (:url alpha-vantage-api)
+                       (str "function=TIME_SERIES_DAILY")
+                       (str "&symbol=" ticker)
+                       (:params alpha-vantage-api)
+                       (:api-key alpha-vantage-api))
+         response (try
+                    (http/get url)
+                    (catch Exception e
+                      #_(log/error "Error in query-alpha-vantage!: "
+                                   (ex-data e))
+                      (ex-data e)))
+         {:keys [status body]}  response
+         _        (log/debug ticker)
+         _        (log/debug params)
+         #__      #_(log/info body)]
+     (if (= 200 status)
+       (-> body
+           (json/read-str :key-fn (comp keyword
+                                        string/lower-case
+                                        util/space->underscore
+                                        util/remove-special-characters)))
+       (log/error "Alpha-vantage request, status:" status "Ticker:" ticker)))))
 
 (defn query-tiingo!
   ([ticker]
@@ -197,6 +233,14 @@
   (->> ticker
        (map (fn [tkr]
               (-> (query-intrinio! tkr query-params)
+                  (assoc :dataset dataset :ticker tkr))))))
+
+(defmethod get-data "ALPHA-VANTAGE" [{:keys [dataset
+                                             ticker]}
+                                     query-params]
+  (->> ticker
+       (map (fn [tkr]
+              (-> (query-alpha-vantage! tkr query-params)
                   (assoc :dataset dataset :ticker tkr))))))
 
 (defmethod get-data :default [{:keys [dataset
