@@ -54,14 +54,12 @@
                       (into []))}))
 
 (def alpha-vantage
-  '({:dataset "ALPHA-VANTAGE"
-     :ticker ["VMRAX"]}))
-  ;(list {:dataset "ALPHA-VANTAGE"
-         ;:ticker (->> (conj stocks etfs mutual-funds)
-                      ;(remove #{"BRK.B"})
-                      ;(conj ["BRK-B"])
-                      ;flatten
-                      ;(into []))}))
+  (list {:dataset "ALPHA-VANTAGE"
+         :ticker (->> (conj stocks etfs mutual-funds)
+                      (remove #{"BRK.B"})
+                      (conj ["BRK-B"])
+                      flatten
+                      (into []))}))
 
 (def query-params
   {:limit      500
@@ -304,7 +302,7 @@
                                                   :date
                                                   util/joda-date->date-str)}
                                  query-params)
-          data        (->> (concat alpha-vantage #_tiingo #_morningstar #_quandl #_intrinio)
+          data        (->> (concat alpha-vantage tiingo morningstar quandl intrinio)
                            (map #(api/get-data % query-params*))
                            flatten)]
       (execute! cxn data)))
