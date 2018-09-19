@@ -307,4 +307,4 @@
                            flatten)]
       (execute! cxn data)))
 
-  #_(util/notify-healthchecks-io (-> :healthchecks-io-api-key env)))
+  (util/notify-healthchecks-io (-> :healthchecks-io-api-key env)))
