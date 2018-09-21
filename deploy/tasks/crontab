@@ -16,6 +16,8 @@
 40 17 * * 1-5 skilbjo . /home/skilbjo/.profilelocal; cd "$app_dir" ; $cmd -m jobs.equities >/dev/null 2>&1
 ### when alpha-vantage api is ready
 00 19 * * 1-5 skilbjo . /home/skilbjo/.profilelocal; cd "$app_dir" ; $cmd -m jobs.equities >/dev/null 2>&1
+### when everything fails
+00 21 * * 1-5 skilbjo . /home/skilbjo/.profilelocal; cd "$app_dir" ; $cmd -m jobs.equities >/dev/null 2>&1
 
 ### others
 0 6 *    * *  skilbjo . /home/skilbjo/.profilelocal; cd "$app_dir" ; $cmd -m jobs.currency >/dev/null 2>&1
