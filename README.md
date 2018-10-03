@@ -58,6 +58,14 @@ llein run -m jobs.equities
 lein run -m backfill.equities -d 2018-06-30
 ```
 
+or, if you need something manually,
+
+```sql
+insert into dw.equities_fact
+(dataset, ticker, date, close) values
+('MSTAR','VMMXX','2018-01-02',1.00)
+```
+
 ### lein
 
 #### Dependencies

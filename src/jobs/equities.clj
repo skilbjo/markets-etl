@@ -167,20 +167,21 @@
                                          ticker]
                                   {:keys [column_names
                                           data]} :dataset_data}]
-  (let [columns       (->> (-> column_names
-                               string/lower-case
-                               (string/replace #"\." "")
-                               (string/replace #"-" "_")
-                               json/read-str)
-                           (map #(string/replace % #" " "_"))
-                           (map keyword))]
-    (->> data
-         (map #(zipmap columns %))
-         (map #(update % :date coerce/to-sql-date)) ; needed as Quandl returns
-         (map #(update % :open (fn [v] (-> v        ; prices more than 3 decimal
-                                           java.math.BigDecimal. ; places out
-                                           (.setScale 2 BigDecimal/ROUND_HALF_UP)))))
-         (map #(assoc % :dataset dataset :ticker ticker)))))
+  (when data
+    (let [columns       (->> (-> column_names
+                                 string/lower-case
+                                 (string/replace #"\." "")
+                                 (string/replace #"-" "_")
+                                 json/read-str)
+                             (map #(string/replace % #" " "_"))
+                             (map keyword))]
+      (->> data
+           (map #(zipmap columns %))
+           (map #(update % :date coerce/to-sql-date)) ; needed as Quandl returns
+           (map #(update % :open (fn [v] (-> v        ; prices more than 3 decimal
+                                             java.math.BigDecimal. ; places out
+                                             (.setScale 2 BigDecimal/ROUND_HALF_UP)))))
+           (map #(assoc % :dataset dataset :ticker ticker))))))
 
 (defn update-or-insert! [db {:keys [dataset
                                     ticker
@@ -277,7 +278,8 @@
                                             dataset
                                             ticker
                                             date]
-                                           record)))
+                                           record)
+    nil))
 
 (defn execute! [cxn data]
   (jdbc/with-db-transaction [txn cxn]
