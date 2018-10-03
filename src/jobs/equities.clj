@@ -21,8 +21,10 @@
    ["-h" "--help"]])
 
 (def stocks
-  ["FB" "AMZN" "GOOG" "NVDA" "CY" "INTC" "TXN" "V" "SAP" "SQ" "PYPL" "BRK.B"
-   "TSM"])
+  ["FB" "AMZN" "GOOG" "NVDA" "CY" "INTC" "TXN" "V" "SAP" "SQ" "PYPL" "BRK.B"])
+
+(def international
+  ["LON:FCH" "SFTBF" "TSM"])
 
 (def etfs
   ["VFH" "VEA" "VWO" "VHT" "VGT"])
@@ -41,7 +43,7 @@
 
 (def tiingo
   (list {:dataset "TIINGO"
-         :ticker (->> (conj stocks etfs mutual-funds)
+         :ticker (->> (conj stocks international etfs mutual-funds)
                       (remove #{"BRK.B"})
                       (conj ["BRK-B"])
                       flatten
@@ -49,13 +51,13 @@
 
 (def morningstar
   (list {:dataset "MSTAR"
-         :ticker (->> (conj stocks etfs mutual-funds)
+         :ticker (->> (conj stocks international etfs mutual-funds)
                       flatten
                       (into []))}))
 
 (def alpha-vantage
   (list {:dataset "ALPHA-VANTAGE"
-         :ticker (->> (conj stocks etfs mutual-funds)
+         :ticker (->> (conj stocks international etfs mutual-funds)
                       (remove #{"BRK.B"})
                       (conj ["BRK-B"])
                       flatten

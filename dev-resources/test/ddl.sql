@@ -71,6 +71,9 @@ begin;
     (        'MSTAR',           'SAP', 'SAP SE ADR'),
     (        'MSTAR',            'SQ', 'Square Inc A'),
     (        'MSTAR',          'PYPL', 'PayPal Holdings Inc'),
+    (        'MSTAR',       'LON:FCH', 'Funding Circle Holdings PLC'),
+    (        'MSTAR',         'SFTBF', 'SoftBank Group Corp'),
+
     (       'TIINGO',         'VEMAX', 'Vanguard Emerging Markets Stock Index Fund Admiral Shares'),
     (       'TIINGO',         'VEURX', 'Vanguard European Stock Index Fund Investor Shares'),
     (       'TIINGO',         'VEXPX', 'Vanguard Explorer Fund Investor Class'),
@@ -107,6 +110,9 @@ begin;
     (       'TIINGO',           'SAP', 'SAP SE ADR'),
     (       'TIINGO',            'SQ', 'Square Inc A'),
     (       'TIINGO',          'PYPL', 'PayPal Holdings Inc'),
+    (       'TIINGO',       'LON:FCH', 'Funding Circle Holdings PLC'),
+    (       'TIINGO',         'SFTBF', 'SoftBank Group Corp'),
+
     (     'INTRINIO',            'FB', 'Facebook'),
     (     'INTRINIO',          'AMZN', 'Amazon'),
     (     'INTRINIO',          'GOOG', 'Google'),
@@ -115,6 +121,7 @@ begin;
     (     'INTRINIO',          'INTC', 'INTEL CORP'),
     (     'INTRINIO',           'TXN', 'TEXAS INSTRUMENTS INC'),
     (     'INTRINIO',             'V', 'VISA INC CLASS A'),
+
     ('ALPHA-VANTAGE',         'VEMAX', 'Vanguard Emerging Markets Stock Index Fund Admiral Shares'),
     ('ALPHA-VANTAGE',         'VEURX', 'Vanguard European Stock Index Fund Investor Shares'),
     ('ALPHA-VANTAGE',         'VEXPX', 'Vanguard Explorer Fund Investor Class'),
@@ -150,9 +157,14 @@ begin;
     ('ALPHA-VANTAGE',         'VMMSX', 'Vanguard Emerging Markets Select Stock Fund'),
     ('ALPHA-VANTAGE',           'SAP', 'SAP SE ADR'),
     ('ALPHA-VANTAGE',            'SQ', 'Square Inc A'),
-    ('ALPHA-VANTAGE',          'PYPL', 'PayPal Holdings Inc')
+    ('ALPHA-VANTAGE',          'PYPL', 'PayPal Holdings Inc'),
+    ('ALPHA-VANTAGE',       'LON:FCH', 'Funding Circle Holdings PLC'),
+    ('ALPHA-VANTAGE',         'SFTBF', 'SoftBank Group Corp')
+
   on conflict (dataset,ticker) do update
   set
+    dataset     = excluded.dataset,
+    ticker      = excluded.ticker,
     description = excluded.description
   ;
 
