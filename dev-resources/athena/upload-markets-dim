@@ -6,7 +6,7 @@ dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )" && cd "$dir"
 source athena
 
 get_dw_markets_dim(){
-  psql $aws_db_uri -AF',' -c 'select * from dw.markets_dim' | \
+  psql $db_uri -AF',' -c 'select * from dw.markets_dim' | \
     ghead -n -1 >~/Downloads/file.csv
 }
 

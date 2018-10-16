@@ -33,12 +33,30 @@ jobs:
           key: << checksum "project.clj" >>
       - setup_remote_docker
       - run: deploy/bin/publish-image
+  experimental_build_and_test:
+    working_directory: ~/markets-etl
+    docker:
+    - image: circleci/clojure:lein-2.7.1
+    - image: circleci/postgres:9.5.12-alpine # for integration test
+    steps:
+      - checkout
+      - restore_cache:
+          key: << checksum "project.clj" >>
+      - run: lein deps
+      - save_cache:
+          paths:
+            - ~/.m2
+            - ~/.lein
+          key: << checksum "project.clj" >>
+      - setup_remote_docker
+      - run: (lein cloverage --codecov && bash <(curl -s https://codecov.io/bash) -f target/coverage/codecov.json & 2>/dev/null; lein test & 2>/dev/null; lein cljfmt check & 2>/dev/null) && wait && deploy/bin/publish-image
 
 workflows:
   version: 2
   build_and_test:
     jobs:
-      - test
-      - build:
-          requires:
-            - test
+      - experimental_build_and_test
+      #- test
+      #- build:
+          #requires:
+            #- test
