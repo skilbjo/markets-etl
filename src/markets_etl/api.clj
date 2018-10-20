@@ -54,6 +54,7 @@
    (query-alpha-vantage! ticker {}))
   ([ticker paramz]
    {:pre [(every? true? (allowed? paramz))]}
+   (Thread/sleep 3500) ; prevent rate limiting. can go up to 5000
    (let [params   (dissoc paramz :limit)
          url      (str (:protocol alpha-vantage-api)
                        (:url alpha-vantage-api)
