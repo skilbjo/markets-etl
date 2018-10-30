@@ -1,7 +1,8 @@
 (ns markets-etl.api
   (:require [clj-http.client :as http]
-            [clojure.string :as string]
             [clojure.data.json :as json]
+            [clojure.set :as set]
+            [clojure.string :as string]
             [clojure.tools.logging :as log]
             [environ.core :refer [env]]
             [markets-etl.util :as util]))
@@ -30,6 +31,7 @@
   {:protocol  "https://"
    :url       "www.alphavantage.co/query?"
    :params    "&outputsize=compact&datatype=json"
+   :endpoint  ["function=TIME_SERIES_DAILY" "function=FX_DAILY"]
    :api-key   (str "&apikey=" (-> :alpha-vantage-api-key env))})
 
 (def ^:private allowed
@@ -50,35 +52,45 @@
               ((allowed k) v)))))
 
 (defn query-alpha-vantage!
-  ([ticker]
+  ([endpoint ticker]
    (query-alpha-vantage! ticker {}))
-  ([ticker paramz]
+  ([endpoint ticker paramz]
    {:pre [(every? true? (allowed? paramz))]}
    (Thread/sleep 5500)
-   (let [params   (dissoc paramz :limit)
-         url      (str (:protocol alpha-vantage-api)
-                       (:url alpha-vantage-api)
-                       (str "function=TIME_SERIES_DAILY")
-                       (str "&symbol=" ticker)
-                       (:params alpha-vantage-api)
-                       (:api-key alpha-vantage-api))
-         response (try
-                    (http/get url)
-                    (catch Exception e
-                      #_(log/error "Error in query-alpha-vantage!: "
-                                   (ex-data e))
-                      (ex-data e)))
-         {:keys [status body]}  response
-         _        (log/debug ticker)
-         _        (log/debug params)
-         #__      #_(log/info body)]
-     (if (= 200 status)
-       (-> body
-           (json/read-str :key-fn (comp keyword
-                                        string/lower-case
-                                        util/space->underscore
-                                        util/remove-special-characters)))
-       (log/error "Alpha-vantage request, status:" status "Ticker:" ticker)))))
+   (let [function (if (= endpoint :equities)
+                    (first (:endpoint alpha-vantage-api))
+                    (second (:endpoint alpha-vantage-api)))]
+     (let [params   (dissoc paramz :limit)
+           url      (str (:protocol alpha-vantage-api)
+                         (:url alpha-vantage-api)
+                         function
+                         (str "&symbol=" ticker)
+                         (:params alpha-vantage-api)
+                         (:api-key alpha-vantage-api))
+           response (try
+                      (http/get url)
+                      (catch Exception e
+                        #_(log/error "Error in query-alpha-vantage!: "
+                                     (ex-data e))
+                        (ex-data e)))
+           {:keys [status body]}  response
+           _        (log/debug ticker)
+           _        (log/debug params)
+           #__      #_(log/info body)]
+       (if (= 200 status)
+         (-> body
+             (json/read-str :key-fn (comp keyword
+                                          string/lower-case
+                                          util/space->underscore
+                                          util/remove-special-characters)))
+         (log/error "Alpha-vantage request, status:" status
+                    "Ticker:" ticker))))))
+
+(defn query-alpha-vantage-wrapper
+  ([endpoint ticker]
+   (query-alpha-vantage! ticker {}))
+  ([endpoint ticker paramz]
+   (query-alpha-vantage! ticker {})))
 
 (defn query-tiingo!
   ([ticker]
@@ -239,10 +251,16 @@
 (defmethod get-data "ALPHA-VANTAGE" [{:keys [dataset
                                              ticker]}
                                      query-params]
-  (->> ticker
-       (map (fn [tkr]
-              (-> (query-alpha-vantage! tkr query-params)
-                  (assoc :dataset dataset :ticker tkr))))))
+  (let [currencies            ["EURUSD" "GBPUSD"]]
+    (if (clojure.set/subset [ticker] currencies)
+      (->> ticker
+           (map (fn [tkr]
+                  (-> (query-alpha-vantage-wrapper :currency tkr query-params)
+                      (assoc :dataset dataset :ticker tkr)))))
+      (->> ticker
+           (map (fn [tkr]
+                  (-> (query-alpha-vantage-wrapper :equities tkr query-params)
+                      (assoc :dataset dataset :ticker tkr)))))))
 
 (defmethod get-data :default [{:keys [dataset
                                       ticker] :as m}
