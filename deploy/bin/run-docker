@@ -46,6 +46,7 @@ docker run --rm \
   -e jdbc_db_uri="$(echo $jdbc_db_uri)" \
   -e quandl_api_key="$(echo $quandl_api_key)" \
   -e tiingo_api_key="$(echo $tiingo_api_key)" \
+  -e alpha_vantage_api_key="$(echo $alpha_vantage_api_key)" \
   -e healthchecks_io_api_key="$(echo $healthchecks_io_api_key)" \
   "$img" \
   "$job_cmd" $@
