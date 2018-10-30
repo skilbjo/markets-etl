@@ -19,9 +19,16 @@
     :default  util/last-week]
    ["-h" "--help"]])
 
-(def datasets
+(def currencies
+  ["EURUSD" "GBPUSD"])
+
+(def quandl
   '({:dataset "CURRFX"
-     :ticker ["EURUSD" "GBPUSD"]}))
+     :ticker  currencies}))
+
+(def alpha-vantage
+  (list {:dataset "ALPHA-VANTAGE"
+         :ticker  currencies}))
 
 (def query-params
   {:limit      500
@@ -84,7 +91,8 @@
                                                   :date
                                                   util/joda-date->date-str)}
                                  query-params)
-          data        (->> datasets
+          data        (->> (concat alpha-vantage quandl)
                            (map #(api/get-data % query-params*))
                            flatten)]
+
       (execute! cxn data))))
