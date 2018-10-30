@@ -27,7 +27,7 @@
             query-params {:limit      2600
                           :start_date (-> month t/first-day-of-the-month)
                           :end_date   month}
-            data         (->> (concat datasets)
+            data         (->> (concat alpha-vantage quandl)
                               (map #(api/get-data % query-params))
                               flatten)]
 
