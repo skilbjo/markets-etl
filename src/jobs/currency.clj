@@ -93,6 +93,7 @@
 (defn execute! [cxn data]
   (jdbc/with-db-transaction [txn cxn]
     (->> data
+         util/print-it
          (map prepare-row)
          flatten
          (map #(update-or-insert! txn %))

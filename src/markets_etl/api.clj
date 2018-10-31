@@ -85,13 +85,13 @@
 
 (defmulti query-alpha-vantage! :endpoint)
 
-(defmethod query-alpha-vantage! :equities [tkr query-params]
+(defmethod query-alpha-vantage! :equities [{:keys [ticker query-params]}]
   (let [alpha-vantage-dataset (first (:endpoint alpha-vantage-api))]
-    (query-alpha-vantage-api! alpha-vantage-dataset tkr query-params)))
+    (query-alpha-vantage-api! alpha-vantage-dataset ticker query-params)))
 
-(defmethod query-alpha-vantage! :currency [tkr query-params]
+(defmethod query-alpha-vantage! :currency [{:keys [ticker query-params]}]
   (let [alpha-vantage-dataset (first (:endpoint alpha-vantage-api))]
-    (query-alpha-vantage-api! alpha-vantage-dataset tkr query-params)))
+    (query-alpha-vantage-api! alpha-vantage-dataset ticker query-params)))
 
 (defn query-tiingo!
   ([ticker]
@@ -252,15 +252,16 @@
 (defmethod get-data "ALPHA-VANTAGE" [{:keys [dataset
                                              ticker]}
                                      query-params]
-  (let [currencies              ["EURUSD" "GBPUSD"]
-        alpha-vantage-dataset   (if (clojure.set/subset? [ticker] currencies)
-                                  {:endpoint :currency}
-                                  {:endpoint :equities})]
+  (let [currencies             #{"EURUSD" "GBPUSD"}
+        ticker'                (into #{} ticker)
+        alpha-vantage-dataset   (if (clojure.set/subset? ticker' currencies)
+                                  :currency
+                                  :equities)]
     (->> ticker
          (map (fn [tkr]
-                (-> (query-alpha-vantage! alpha-vantage-dataset
-                                          tkr
-                                          query-params)
+                (-> (query-alpha-vantage! {:endpoint     alpha-vantage-dataset
+                                           :ticker       tkr
+                                           :query-params query-params})
                     (assoc :dataset dataset :ticker tkr)))))))
 
 (defmethod get-data :default [{:keys [dataset
