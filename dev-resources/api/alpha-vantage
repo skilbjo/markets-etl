@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -eou pipefail
 
-ticker='VMRAX'
+ticker='LON:FCH'
 params='outputsize=compact&datatype=json'
 
 # docs: https://www.alphavantage.co/documentation/
@@ -721,7 +721,7 @@ latest(){
   }
 }'
 
-  echo "$result"
+  #echo "$result"
 }
 
 latest

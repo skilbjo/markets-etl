@@ -234,8 +234,8 @@ begin;
     currency        text,
     date            date,
     rate            decimal(24,14),
-    high_est        decimal(24,14),
-    low_est         decimal(24,14),
+    high            decimal(24,14),
+    low             decimal(24,14),
 
     dw_created_at   timestamp default now(),
 

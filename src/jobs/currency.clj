@@ -6,6 +6,7 @@
             [clojure.java.jdbc :as jdbc]
             [clojure.tools.cli :as cli]
             [clojure.string :as string]
+            [clojure.set :as set]
             [environ.core :refer [env]]
             [markets-etl.api :as api]
             [markets-etl.error :as error]
@@ -35,10 +36,26 @@
    :start_date util/last-week
    :end_date   util/now})
 
-(defn prepare-row [{:keys [dataset
-                           ticker]
-                    {:keys [column_names
-                            data]} :dataset_data}]
+(defmulti prepare-row :dataset)
+
+(defmethod prepare-row "ALPHA-VANTAGE" [{:keys [dataset
+                                                ticker
+                                                time_series_daily]}]
+  (->> time_series_daily
+       (map identity)
+       (map #(assoc {}
+                    :dataset     dataset
+                    :ticker      ticker
+                    :currency    ""
+                    :date        (-> % first name coerce/to-sql-date)
+                    :rate        ""
+                    :high        (-> % second :2.high util/string->decimal)
+                    :low         (-> % second :3._low util/string->decimal)))))
+
+(defmethod prepare-row :default [{:keys [dataset
+                                         ticker]
+                                  {:keys [column_names
+                                          data]} :dataset_data}]
   (let [columns       (->> (-> column_names
                                string/lower-case
                                (string/replace #"\." "")
@@ -48,12 +65,16 @@
                                json/read-str)
                            (map #(string/replace % #" " "_"))
                            (map keyword))]
-    (->> data
-         (map #(zipmap columns %))
-         (map #(update % :date coerce/to-sql-date))
-         (map #(assoc % :dataset dataset
-                      :ticker ticker
-                      :currency (subs ticker 0 3))))))
+    (-> (->> data
+             (map #(zipmap columns %))
+             (map #(update % :date coerce/to-sql-date))
+             (map #(update % :date coerce/to-sql-date))
+             (map #(assoc %
+                          :dataset dataset
+                          :ticker ticker
+                          :currency (subs ticker 0 3))))
+        (set/rename-keys {:high_est :high
+                          :low_est  :low}))))
 
 (defn update-or-insert! [db {:keys [dataset
                                     ticker
@@ -79,7 +100,7 @@
 
 (defn -main [& args]
   (error/set-default-error-handler)
-  (jdbc/with-db-connection [cxn (-> :jdbc-db-uri env)]
+  (jdbc/with-db-connection [cxn (-> :test-jdbc-db-uri env)]
     (let [{:keys [options summary errors]} (cli/parse-opts args cli-options)
           query-params*        (if args
                                  {:limit      (:limit query-params)

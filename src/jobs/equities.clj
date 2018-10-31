@@ -75,7 +75,8 @@
                                                 time_series_daily]}]
   (->> time_series_daily
        (map identity)
-       (map #(assoc {} :dataset     dataset
+       (map #(assoc {}
+                    :dataset     dataset
                     :ticker      ticker
                     :date        (-> % first name coerce/to-sql-date)
                     :open        (-> % second :1._open util/string->decimal)
