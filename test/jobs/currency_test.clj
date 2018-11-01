@@ -10,7 +10,7 @@
 (use-fixtures :each (fix/with-database))
 
 (deftest integration-test
-  (->> f/source
+  (->> (f/alpha-vantage f/quandl)
        (execute! *cxn*))
 
   (testing "currency integration test"

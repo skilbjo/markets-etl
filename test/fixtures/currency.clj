@@ -1,6 +1,33 @@
 (ns fixtures.currency)
 
-(def source
+(def alpha-vantage
+  '({:meta_data
+     {:1._information "Forex Daily Prices (open, high, low, close)",
+      :2._from_symbol "EUR",
+      :3._to_symbol "USD",
+      :4._output_size "Compact",
+      :5._last_refreshed "2018-11-01 17:25:00",
+      :6._time_zone "GMT+8"},
+     :time_series_fx_daily {:2018-09-04 {:1._open "1.1617",
+                                         :2._high "1.1618",
+                                         :3._low "1.1529",
+                                         :4._close "1.1583"},
+                            :2018-07-25 {:1._open "1.1682",
+                                         :2._high "1.1739",
+                                         :3._low "1.1663",
+                                         :4._close "1.1731"},
+                            :2018-10-02 {:1._open "1.1576",
+                                         :2._high "1.1580",
+                                         :3._low "1.1504",
+                                         :4._close "1.1550"},
+                            :2018-07-26 {:1._open "1.1731",
+                                         :2._high "1.1744",
+                                         :3._low "1.1636",
+                                         :4._close "1.1641"}}
+     :dataset "ALPHA-VANTAGE"
+     :ticker  "EURUSD"}))
+
+(def quandl
   '({:dataset_data
      {:transform nil,
       :limit 200,

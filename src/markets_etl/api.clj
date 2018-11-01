@@ -74,8 +74,7 @@
            (json/read-str :key-fn (comp keyword
                                         string/lower-case
                                         util/space->underscore
-                                        util/remove-special-characters))
-           util/print-it)
+                                        util/remove-special-characters)))
        (log/error "Alpha-vantage request, status:" status
                   "Ticker:" ticker)))))
 

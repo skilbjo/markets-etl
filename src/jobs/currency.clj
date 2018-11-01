@@ -7,7 +7,6 @@
             [clojure.set :as set]
             [clojure.string :as string]
             [clojure.tools.cli :as cli]
-            [clojure.tools.logging :as log]
             [environ.core :refer [env]]
             [markets-etl.api :as api]
             [markets-etl.error :as error]
@@ -25,8 +24,8 @@
   ["EURUSD" #_"GBPUSD"])
 
 (def quandl
-  '({:dataset "CURRFX"
-     :ticker  currencies}))
+  (list {:dataset "CURRFX"
+         :ticker  currencies}))
 
 (def alpha-vantage
   (list {:dataset "ALPHA-VANTAGE"
@@ -42,43 +41,41 @@
 (defmethod prepare-row "ALPHA-VANTAGE" [{:keys [dataset
                                                 ticker
                                                 time_series_fx_daily]}]
-  (let [result (->> time_series_fx_daily
-                    (map identity)
-                    (map #(assoc {}
-                                 :dataset     dataset
-                                 :ticker      ticker
-                                 :currency    (-> ticker (string/split #"USD") first)
-                                 :date        (-> % first name coerce/to-sql-date)
-                                 :rate        (-> % second :4._close util/string->decimal)
-                                 :high        (-> % second :2._high util/string->decimal)
-                                 :low         (-> % second :3._low util/string->decimal))))]
-    ;(util/print-it (flatten result))
-    (println "finished with prepare-row")
-    (flatten result)))
+  (->> time_series_fx_daily
+       (map identity)
+       (map #(assoc {}
+                    :dataset     dataset
+                    :ticker      ticker
+                    :currency    (-> ticker (string/split #"USD") first)
+                    :date        (-> % first name coerce/to-sql-date)
+                    :rate        (-> % second :4._close util/string->decimal)
+                    :high        (-> % second :2._high util/string->decimal)
+                    :low         (-> % second :3._low util/string->decimal)))))
 
 (defmethod prepare-row :default [{:keys [dataset
                                          ticker]
                                   {:keys [column_names
                                           data]} :dataset_data}]
-  (let [columns       (->> (-> column_names
-                               string/lower-case
-                               (string/replace #"\." "")
-                               (string/replace #"-" "_")
-                               (string/replace #"\(" "")
-                               (string/replace #"\)" "")
-                               json/read-str)
-                           (map #(string/replace % #" " "_"))
-                           (map keyword))]
-    (-> (->> data
-             (map #(zipmap columns %))
-             (map #(update % :date coerce/to-sql-date))
-             (map #(update % :date coerce/to-sql-date))
-             (map #(assoc %
-                          :dataset dataset
-                          :ticker ticker
-                          :currency (subs ticker 0 3))))
-        (set/rename-keys {:high_est :high
-                          :low_est  :low}))))
+  (when (seq data)
+    (let [columns       (->> (-> column_names
+                                 string/lower-case
+                                 (string/replace #"\." "")
+                                 (string/replace #"-" "_")
+                                 (string/replace #"\(" "")
+                                 (string/replace #"\)" "")
+                                 json/read-str)
+                             (map #(string/replace % #" " "_"))
+                             (map keyword))]
+      (-> (->> data
+               (map #(zipmap columns %))
+               (map #(update % :date coerce/to-sql-date))
+               (map #(update % :date coerce/to-sql-date))
+               (map #(assoc %
+                            :dataset dataset
+                            :ticker ticker
+                            :currency (subs ticker 0 3))))
+          (set/rename-keys {:high_est :high
+                            :low_est  :low})))))
 
 (defn update-or-insert! [db {:keys [dataset
                                     ticker
@@ -97,14 +94,9 @@
 (defn execute! [cxn data]
   (jdbc/with-db-transaction [txn cxn]
     (->> data
-         ;util/print-it
          (map prepare-row)
          flatten
-         ;util/print-it
-         (map #(util/print-it %))
-         ;first
-         ;flatten
-         ;util/print-it
+         (remove nil?)
          (map #(update-or-insert! txn %))
          doall)))
 
