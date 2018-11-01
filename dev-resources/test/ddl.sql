@@ -160,7 +160,10 @@ begin;
     ('ALPHA-VANTAGE',            'SQ', 'Square Inc A'),
     ('ALPHA-VANTAGE',          'PYPL', 'PayPal Holdings Inc'),
     ('ALPHA-VANTAGE',       'LON:FCH', 'Funding Circle Holdings PLC'),
-    ('ALPHA-VANTAGE',         'SFTBF', 'SoftBank Group Corp')
+    ('ALPHA-VANTAGE',         'SFTBF', 'SoftBank Group Corp'),
+
+    ('ALPHA-VANTAGE',        'EURUSD', 'Value of 1 EUR in USD'),
+    ('ALPHA-VANTAGE',        'GBPUSD', 'Value of 1 GBP in USD')
 
   on conflict (dataset,ticker) do update
   set

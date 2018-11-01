@@ -57,7 +57,7 @@
    (query-alpha-vantage-api! ticker {}))
   ([url ticker paramz]
    {:pre [(every? true? (allowed? paramz))]}
-   (Thread/sleep 5500)
+   (Thread/sleep 0005)
    (let [params   (dissoc paramz :limit)
          response (try
                     (http/get url)
@@ -74,7 +74,8 @@
            (json/read-str :key-fn (comp keyword
                                         string/lower-case
                                         util/space->underscore
-                                        util/remove-special-characters)))
+                                        util/remove-special-characters))
+           util/print-it)
        (log/error "Alpha-vantage request, status:" status
                   "Ticker:" ticker)))))
 

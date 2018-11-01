@@ -4,9 +4,10 @@
             [clj-time.format :as format]
             [clojure.data.json :as json]
             [clojure.java.jdbc :as jdbc]
-            [clojure.tools.cli :as cli]
-            [clojure.string :as string]
             [clojure.set :as set]
+            [clojure.string :as string]
+            [clojure.tools.cli :as cli]
+            [clojure.tools.logging :as log]
             [environ.core :refer [env]]
             [markets-etl.api :as api]
             [markets-etl.error :as error]
@@ -21,7 +22,7 @@
    ["-h" "--help"]])
 
 (def currencies
-  ["EURUSD" "GBPUSD"])
+  ["EURUSD" #_"GBPUSD"])
 
 (def quandl
   '({:dataset "CURRFX"
@@ -40,17 +41,20 @@
 
 (defmethod prepare-row "ALPHA-VANTAGE" [{:keys [dataset
                                                 ticker
-                                                time_series_daily]}]
-  (->> time_series_daily
-       (map identity)
-       (map #(assoc {}
-                    :dataset     dataset
-                    :ticker      ticker
-                    :currency    ""
-                    :date        (-> % first name coerce/to-sql-date)
-                    :rate        (-> % second :4._close util/string->decimal)
-                    :high        (-> % second :2._high util/string->decimal)
-                    :low         (-> % second :3._low util/string->decimal)))))
+                                                time_series_fx_daily]}]
+  (let [result (->> time_series_fx_daily
+                    (map identity)
+                    (map #(assoc {}
+                                 :dataset     dataset
+                                 :ticker      ticker
+                                 :currency    (-> ticker (string/split #"USD") first)
+                                 :date        (-> % first name coerce/to-sql-date)
+                                 :rate        (-> % second :4._close util/string->decimal)
+                                 :high        (-> % second :2._high util/string->decimal)
+                                 :low         (-> % second :3._low util/string->decimal))))]
+    ;(util/print-it (flatten result))
+    (println "finished with prepare-row")
+    (flatten result)))
 
 (defmethod prepare-row :default [{:keys [dataset
                                          ticker]
@@ -93,9 +97,14 @@
 (defn execute! [cxn data]
   (jdbc/with-db-transaction [txn cxn]
     (->> data
-         util/print-it
+         ;util/print-it
          (map prepare-row)
          flatten
+         ;util/print-it
+         (map #(util/print-it %))
+         ;first
+         ;flatten
+         ;util/print-it
          (map #(update-or-insert! txn %))
          doall)))
 
