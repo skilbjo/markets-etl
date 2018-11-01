@@ -81,6 +81,7 @@
     (->> data
          (map prepare-row)
          flatten
+         (remove nil?)
          (map #(update-or-insert! txn %))
          doall)))
 

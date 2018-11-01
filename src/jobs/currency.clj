@@ -102,7 +102,7 @@
 
 (defn -main [& args]
   (error/set-default-error-handler)
-  (jdbc/with-db-connection [cxn (-> :test-jdbc-db-uri env)]
+  (jdbc/with-db-connection [cxn (-> :jdbc-db-uri env)]
     (let [{:keys [options summary errors]} (cli/parse-opts args cli-options)
           query-params*        (if args
                                  {:limit      (:limit query-params)
