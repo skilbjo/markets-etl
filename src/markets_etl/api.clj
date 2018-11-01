@@ -32,6 +32,7 @@
    :url       "www.alphavantage.co/query?"
    :params    "&outputsize=compact&datatype=json"
    :endpoint  ["function=TIME_SERIES_DAILY" "function=FX_DAILY"]
+   :to-currency "&to_symbol=USD"
    :api-key   (str "&apikey=" (-> :alpha-vantage-api-key env))})
 
 (def ^:private allowed
@@ -52,18 +53,12 @@
               ((allowed k) v)))))
 
 (defn query-alpha-vantage-api!
-  ([endpoint ticker]
+  ([url ticker]
    (query-alpha-vantage-api! ticker {}))
-  ([endpoint ticker paramz]
+  ([url ticker paramz]
    {:pre [(every? true? (allowed? paramz))]}
    (Thread/sleep 5500)
    (let [params   (dissoc paramz :limit)
-         url      (str (:protocol alpha-vantage-api)
-                       (:url alpha-vantage-api)
-                       endpoint
-                       (str "&symbol=" ticker)
-                       (:params alpha-vantage-api)
-                       (:api-key alpha-vantage-api))
          response (try
                     (http/get url)
                     (catch Exception e
@@ -86,12 +81,26 @@
 (defmulti query-alpha-vantage! :endpoint)
 
 (defmethod query-alpha-vantage! :equities [{:keys [ticker query-params]}]
-  (let [alpha-vantage-dataset (first (:endpoint alpha-vantage-api))]
-    (query-alpha-vantage-api! alpha-vantage-dataset ticker query-params)))
+  (let [endpoint (first (:endpoint alpha-vantage-api))
+        url      (str (:protocol alpha-vantage-api)
+                      (:url alpha-vantage-api)
+                      endpoint
+                      (str "&symbol=" ticker)
+                      (:params alpha-vantage-api)
+                      (:api-key alpha-vantage-api))]
+    (query-alpha-vantage-api! url ticker query-params)))
 
 (defmethod query-alpha-vantage! :currency [{:keys [ticker query-params]}]
-  (let [alpha-vantage-dataset (first (:endpoint alpha-vantage-api))]
-    (query-alpha-vantage-api! alpha-vantage-dataset ticker query-params)))
+  (let [endpoint (second (:endpoint alpha-vantage-api))
+        url      (str (:protocol alpha-vantage-api)
+                      (:url alpha-vantage-api)
+                      endpoint
+                      (->> (-> ticker (string/split #"USD") first)
+                           (str "&from_symbol="))
+                      (:to-currency alpha-vantage-api)
+                      (:params alpha-vantage-api)
+                      (:api-key alpha-vantage-api))]
+    (query-alpha-vantage-api! url ticker query-params)))
 
 (defn query-tiingo!
   ([ticker]
@@ -206,7 +215,7 @@
                     (http/get url
                               {:query-params params})
                     (catch Exception e
-                      #_(log/error "Error in query-morningstar!: "
+                      #_(log/error "Error in query-quandl!"
                                    (ex-data e))
                       (ex-data e)))
          {:keys [status body]}  response

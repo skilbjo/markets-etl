@@ -48,8 +48,8 @@
                     :ticker      ticker
                     :currency    ""
                     :date        (-> % first name coerce/to-sql-date)
-                    :rate        ""
-                    :high        (-> % second :2.high util/string->decimal)
+                    :rate        (-> % second :4._close util/string->decimal)
+                    :high        (-> % second :2._high util/string->decimal)
                     :low         (-> % second :3._low util/string->decimal)))))
 
 (defmethod prepare-row :default [{:keys [dataset
