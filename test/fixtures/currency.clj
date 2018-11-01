@@ -1,6 +1,33 @@
 (ns fixtures.currency)
 
-(def source
+(def alpha-vantage
+  '({:meta_data
+     {:1._information "Forex Daily Prices (open, high, low, close)",
+      :2._from_symbol "EUR",
+      :3._to_symbol "USD",
+      :4._output_size "Compact",
+      :5._last_refreshed "2018-11-01 17:25:00",
+      :6._time_zone "GMT+8"},
+     :time_series_fx_daily {:2018-09-04 {:1._open "1.1617",
+                                         :2._high "1.1618",
+                                         :3._low "1.1529",
+                                         :4._close "1.1583"},
+                            :2018-07-25 {:1._open "1.1682",
+                                         :2._high "1.1739",
+                                         :3._low "1.1663",
+                                         :4._close "1.1731"},
+                            :2018-10-02 {:1._open "1.1576",
+                                         :2._high "1.1580",
+                                         :3._low "1.1504",
+                                         :4._close "1.1550"},
+                            :2018-07-26 {:1._open "1.1731",
+                                         :2._high "1.1744",
+                                         :3._low "1.1636",
+                                         :4._close "1.1641"}}
+     :dataset "ALPHA-VANTAGE"
+     :ticker  "EURUSD"}))
+
+(def quandl
   '({:dataset_data
      {:transform nil,
       :limit 200,
@@ -37,59 +64,87 @@
      :ticker "GBPUSD"}))
 
 (def result
-  '({:currency "EUR",
-     :dataset "CURRFX",
+  '({:dataset "ALPHA-VANTAGE",
+     :ticker "EURUSD",
+     :currency "EUR",
+     :date #inst "2018-09-04T00:00:00.000-00:00",
+     :rate 1.15830000000000M,
+     :high 1.16180000000000M,
+     :low 1.15290000000000M}
+    {:dataset "ALPHA-VANTAGE",
+     :ticker "EURUSD",
+     :currency "EUR",
+     :date #inst "2018-07-25T00:00:00.000-00:00",
+     :rate 1.17310000000000M,
+     :high 1.17390000000000M,
+     :low 1.16630000000000M}
+    {:dataset "ALPHA-VANTAGE",
+     :ticker "EURUSD",
+     :currency "EUR",
+     :date #inst "2018-10-02T00:00:00.000-00:00",
+     :rate 1.15500000000000M,
+     :high 1.15800000000000M,
+     :low 1.15040000000000M}
+    {:dataset "ALPHA-VANTAGE",
+     :ticker "EURUSD",
+     :currency "EUR",
+     :date #inst "2018-07-26T00:00:00.000-00:00",
+     :rate 1.16410000000000M,
+     :high 1.17440000000000M,
+     :low 1.16360000000000M}
+    {:dataset "CURRFX",
+     :ticker "EURUSD",
+     :currency "EUR",
      :date #inst "2017-12-07T00:00:00.000-00:00",
-     :high_est 1.18091630935670M,
-     :low_est 1.17771756649020M,
      :rate 1.18042850494380M,
-     :ticker "EURUSD"}
-    {:currency "EUR",
-     :dataset "CURRFX",
+     :high 1.18091630935670M,
+     :low 1.17771756649020M}
+    {:dataset "CURRFX",
+     :ticker "EURUSD",
+     :currency "EUR",
      :date #inst "2017-12-06T00:00:00.000-00:00",
-     :high_est 1.18483412265780M,
-     :low_est 1.17813384532930M,
      :rate 1.18329191207890M,
-     :ticker "EURUSD"}
-    {:currency "EUR",
-     :dataset "CURRFX",
+     :high 1.18483412265780M,
+     :low 1.17813384532930M}
+    {:dataset "CURRFX",
+     :ticker "EURUSD",
+     :currency "EUR",
      :date #inst "2017-12-05T00:00:00.000-00:00",
-     :high_est 1.18793070316310M,
-     :low_est 1.18088853359220M,
      :rate 1.18677461147310M,
-     :ticker "EURUSD"}
-    {:currency "EUR",
-     :dataset "CURRFX",
+     :high 1.18793070316310M,
+     :low 1.18088853359220M}
+    {:dataset "CURRFX",
+     :ticker "EURUSD",
+     :currency "EUR",
      :date #inst "2017-12-04T00:00:00.000-00:00",
-     :high_est 1.18993782997130M,
-     :low_est 1.18312382698060M,
      :rate 1.18598639965060M,
-     :ticker "EURUSD"}
-    {:currency "GBP",
-     :dataset "CURRFX",
+     :high 1.18993782997130M,
+     :low 1.18312382698060M}
+    {:dataset "CURRFX",
+     :ticker "GBPUSD",
+     :currency "GBP",
      :date #inst "2017-12-07T00:00:00.000-00:00",
-     :high_est 1.34311127662660M,
-     :low_est 1.33233857154850M,
      :rate 1.33922588825230M,
-     :ticker "GBPUSD"}
-    {:currency "GBP",
-     :dataset "CURRFX",
+     :high 1.34311127662660M,
+     :low 1.33233857154850M}
+    {:dataset "CURRFX",
+     :ticker "GBPUSD",
+     :currency "GBP",
      :date #inst "2017-12-06T00:00:00.000-00:00",
-     :high_est 1.34372484683990M,
-     :low_est 1.33605885505680M,
      :rate 1.34152567386630M,
-     :ticker "GBPUSD"}
-    {:currency "GBP",
-     :dataset "CURRFX",
+     :high 1.34372484683990M,
+     :low 1.33605885505680M}
+    {:dataset "CURRFX",
+     :ticker "GBPUSD",
+     :currency "GBP",
      :date #inst "2017-12-05T00:00:00.000-00:00",
-     :high_est 1.34807229042050M,
-     :low_est 1.33761370182040M,
      :rate 1.34752726554870M,
-     :ticker "GBPUSD"}
-    {:currency "GBP",
-     :dataset "CURRFX",
+     :high 1.34807229042050M,
+     :low 1.33761370182040M}
+    {:dataset "CURRFX",
+     :ticker "GBPUSD",
+     :currency "GBP",
      :date #inst "2017-12-04T00:00:00.000-00:00",
-     :high_est 1.35385787487030M,
-     :low_est 1.34224593639370M,
      :rate 1.34940028190610M,
-     :ticker "GBPUSD"}))
+     :high 1.35385787487030M,
+     :low 1.34224593639370M}))

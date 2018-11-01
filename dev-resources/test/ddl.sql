@@ -143,6 +143,7 @@ begin;
     ('ALPHA-VANTAGE',           'VHT', 'VANGUARD HEALTH CARE ETF'),
     ('ALPHA-VANTAGE',           'VGT', 'VANGUARD INFORMATION TECHNOLOGY ETF'),
     ('ALPHA-VANTAGE',         'BRK.B', 'BERKSHIRE HATHAWAY INC DE CL B NEW'),
+    ('ALPHA-VANTAGE',         'BRK-B', 'BERKSHIRE HATHAWAY INC DE CL B NEW'),
     ('ALPHA-VANTAGE',           'TSM', 'TAIWAN SEMICONDUCTOR MANUFACTURING COMPANY LTD SPONS ADR'),
     ('ALPHA-VANTAGE',            'FB', 'Facebook'),
     ('ALPHA-VANTAGE',          'AMZN', 'Amazon'),
@@ -159,7 +160,10 @@ begin;
     ('ALPHA-VANTAGE',            'SQ', 'Square Inc A'),
     ('ALPHA-VANTAGE',          'PYPL', 'PayPal Holdings Inc'),
     ('ALPHA-VANTAGE',       'LON:FCH', 'Funding Circle Holdings PLC'),
-    ('ALPHA-VANTAGE',         'SFTBF', 'SoftBank Group Corp')
+    ('ALPHA-VANTAGE',         'SFTBF', 'SoftBank Group Corp'),
+
+    ('ALPHA-VANTAGE',        'EURUSD', 'Value of 1 EUR in USD'),
+    ('ALPHA-VANTAGE',        'GBPUSD', 'Value of 1 GBP in USD')
 
   on conflict (dataset,ticker) do update
   set
@@ -234,8 +238,8 @@ begin;
     currency        text,
     date            date,
     rate            decimal(24,14),
-    high_est        decimal(24,14),
-    low_est         decimal(24,14),
+    high            decimal(24,14),
+    low             decimal(24,14),
 
     dw_created_at   timestamp default now(),
 

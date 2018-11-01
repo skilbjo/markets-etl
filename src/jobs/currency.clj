@@ -4,8 +4,9 @@
             [clj-time.format :as format]
             [clojure.data.json :as json]
             [clojure.java.jdbc :as jdbc]
-            [clojure.tools.cli :as cli]
+            [clojure.set :as set]
             [clojure.string :as string]
+            [clojure.tools.cli :as cli]
             [environ.core :refer [env]]
             [markets-etl.api :as api]
             [markets-etl.error :as error]
@@ -19,34 +20,62 @@
     :default  util/last-week]
    ["-h" "--help"]])
 
-(def datasets
-  '({:dataset "CURRFX"
-     :ticker ["EURUSD" "GBPUSD"]}))
+(def currencies
+  ["EURUSD" "GBPUSD"])
+
+(def quandl
+  (list {:dataset "CURRFX"
+         :ticker  currencies}))
+
+(def alpha-vantage
+  (list {:dataset "ALPHA-VANTAGE"
+         :ticker  currencies}))
 
 (def query-params
   {:limit      500
    :start_date util/last-week
    :end_date   util/now})
 
-(defn prepare-row [{:keys [dataset
-                           ticker]
-                    {:keys [column_names
-                            data]} :dataset_data}]
-  (let [columns       (->> (-> column_names
-                               string/lower-case
-                               (string/replace #"\." "")
-                               (string/replace #"-" "_")
-                               (string/replace #"\(" "")
-                               (string/replace #"\)" "")
-                               json/read-str)
-                           (map #(string/replace % #" " "_"))
-                           (map keyword))]
-    (->> data
-         (map #(zipmap columns %))
-         (map #(update % :date coerce/to-sql-date))
-         (map #(assoc % :dataset dataset
-                      :ticker ticker
-                      :currency (subs ticker 0 3))))))
+(defmulti prepare-row :dataset)
+
+(defmethod prepare-row "ALPHA-VANTAGE" [{:keys [dataset
+                                                ticker
+                                                time_series_fx_daily]}]
+  (->> time_series_fx_daily
+       (map identity)
+       (map #(assoc {}
+                    :dataset     dataset
+                    :ticker      ticker
+                    :currency    (-> ticker (string/split #"USD") first)
+                    :date        (-> % first name coerce/to-sql-date)
+                    :rate        (-> % second :4._close util/string->decimal)
+                    :high        (-> % second :2._high util/string->decimal)
+                    :low         (-> % second :3._low util/string->decimal)))))
+
+(defmethod prepare-row :default [{:keys [dataset
+                                         ticker]
+                                  {:keys [column_names
+                                          data]} :dataset_data}]
+  (when (seq data)
+    (let [columns       (->> (-> column_names
+                                 string/lower-case
+                                 (string/replace #"\." "")
+                                 (string/replace #"-" "_")
+                                 (string/replace #"\(" "")
+                                 (string/replace #"\)" "")
+                                 json/read-str)
+                             (map #(string/replace % #" " "_"))
+                             (map keyword))]
+      (->> data
+           (map #(zipmap columns %))
+           (map #(update % :date coerce/to-sql-date))
+           (map #(update % :date coerce/to-sql-date))
+           (map #(assoc %
+                        :dataset dataset
+                        :ticker ticker
+                        :currency (subs ticker 0 3)))
+           (map #(set/rename-keys % {:high_est :high
+                                     :low_est  :low}))))))
 
 (defn update-or-insert! [db {:keys [dataset
                                     ticker
@@ -67,12 +96,13 @@
     (->> data
          (map prepare-row)
          flatten
+         (remove nil?)
          (map #(update-or-insert! txn %))
          doall)))
 
 (defn -main [& args]
   (error/set-default-error-handler)
-  (jdbc/with-db-connection [cxn (-> :jdbc-db-uri env)]
+  (jdbc/with-db-connection [cxn (-> :test-jdbc-db-uri env)]
     (let [{:keys [options summary errors]} (cli/parse-opts args cli-options)
           query-params*        (if args
                                  {:limit      (:limit query-params)
@@ -84,7 +114,8 @@
                                                   :date
                                                   util/joda-date->date-str)}
                                  query-params)
-          data        (->> datasets
+          data        (->> (concat alpha-vantage quandl)
                            (map #(api/get-data % query-params*))
                            flatten)]
+
       (execute! cxn data))))
