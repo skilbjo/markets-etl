@@ -21,7 +21,7 @@
    ["-h" "--help"]])
 
 (def currencies
-  ["EURUSD" #_"GBPUSD"])
+  ["EURUSD" "GBPUSD"])
 
 (def quandl
   (list {:dataset "CURRFX"
