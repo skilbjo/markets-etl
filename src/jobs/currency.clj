@@ -66,16 +66,16 @@
                                  json/read-str)
                              (map #(string/replace % #" " "_"))
                              (map keyword))]
-      (-> (->> data
-               (map #(zipmap columns %))
-               (map #(update % :date coerce/to-sql-date))
-               (map #(update % :date coerce/to-sql-date))
-               (map #(assoc %
-                            :dataset dataset
-                            :ticker ticker
-                            :currency (subs ticker 0 3))))
-          (set/rename-keys {:high_est :high
-                            :low_est  :low})))))
+      (->> data
+           (map #(zipmap columns %))
+           (map #(update % :date coerce/to-sql-date))
+           (map #(update % :date coerce/to-sql-date))
+           (map #(assoc %
+                        :dataset dataset
+                        :ticker ticker
+                        :currency (subs ticker 0 3)))
+           (map #(set/rename-keys % {:high_est :high
+                                     :low_est  :low}))))))
 
 (defn update-or-insert! [db {:keys [dataset
                                     ticker

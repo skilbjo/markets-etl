@@ -170,7 +170,7 @@
                                          ticker]
                                   {:keys [column_names
                                           data]} :dataset_data}]
-  (when data
+  (when (seq data)
     (let [columns       (->> (-> column_names
                                  string/lower-case
                                  (string/replace #"\." "")
@@ -183,7 +183,7 @@
            (map #(update % :date coerce/to-sql-date)) ; needed as Quandl returns
            (map #(update % :open (fn [v] (-> v        ; prices more than 3 decimal
                                              java.math.BigDecimal. ; places out
-                                             (.setScale 2 BigDecimal/ROUND_HALF_UP)))))
+                                             (.setScale 4 BigDecimal/ROUND_HALF_UP)))))
            (map #(assoc % :dataset dataset :ticker ticker))))))
 
 (defn update-or-insert! [db {:keys [dataset

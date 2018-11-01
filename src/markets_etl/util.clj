@@ -55,7 +55,7 @@
   (when n
     (-> n
         java.math.BigDecimal.
-        (.setScale 2 BigDecimal/ROUND_HALF_UP))))
+        (.setScale 4 BigDecimal/ROUND_HALF_UP))))
 
 (defn excel-date-epoch->joda-date [n]
   (let [_excel_epoch_start  (time/date-time 1899 12 30)]
