@@ -21,7 +21,7 @@
    ["-h" "--help"]])
 
 (def stocks
-  ["FB" "AMZN" "GOOG" "NVDA" "CY" "INTC" "TXN" "V" "SAP" "SQ" "PYPL" "BRK.B"])
+  ["FB" "AMZN" "GOOG" "NVDA" "CY" "INTC" "TXN" "V" "SAP" "SQ" "PYPL" "BRK.B" "AAPL" "TWTR"])
 
 (def international
   ["LON:FCH" "SFTBF" "TSM"])
@@ -57,7 +57,7 @@
 
 (def alpha-vantage
   (list {:dataset "ALPHA-VANTAGE"
-         :ticker (->> (conj stocks international etfs mutual-funds)
+         :ticker (->> (conj international mutual-funds etfs stocks)
                       (remove #{"BRK.B"})
                       (conj ["BRK-B"])
                       flatten
