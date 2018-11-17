@@ -31,6 +31,14 @@ begin;
     (       'ZILLOW', 'Z94108_ZHVIAH', 'Zillow home value index, all homes (condos, SFR) in zipcode'),
     (       'CURRFX',        'EURUSD', 'Value of 1 EUR in USD'),
     (       'CURRFX',        'GBPUSD', 'Value of 1 GBP in USD'),
+
+    (         'WIKI',            'CY', 'CYPRESS SEMICONDUCTOR CORP'),
+    (         'WIKI',          'INTC', 'INTEL CORP'),
+    (         'WIKI',           'TXN', 'TEXAS INSTRUMENTS INC'),
+    (         'WIKI',             'V', 'VISA INC CLASS A'),
+    (         'WIKI',          'AAPL', 'Apple Inc.'),
+    (         'WIKI',          'TWTR', 'Twitter, Inc.'),
+
     (        'MSTAR',         'VEMAX', 'Vanguard Emerging Markets Stock Index Fund Admiral Shares'),
     (        'MSTAR',         'VEURX', 'Vanguard European Stock Index Fund Investor Shares'),
     (        'MSTAR',         'VEXPX', 'Vanguard Explorer Fund Investor Class'),
@@ -52,11 +60,10 @@ begin;
     (        'MSTAR',           'VHT', 'VANGUARD HEALTH CARE ETF'),
     (        'MSTAR',           'VGT', 'VANGUARD INFORMATION TECHNOLOGY ETF'),
     (        'MSTAR',         'BRK.B', 'BERKSHIRE HATHAWAY INC DE CL B NEW'),
-    (         'WIKI',            'CY', 'CYPRESS SEMICONDUCTOR CORP'),
-    (         'WIKI',          'INTC', 'INTEL CORP'),
+    (        'MSTAR',          'AAPL', 'Apple Inc.'),
+    (        'MSTAR',          'TWTR', 'Twitter, Inc.'),
+
     (        'MSTAR',           'TSM', 'TAIWAN SEMICONDUCTOR MANUFACTURING COMPANY LTD SPONS ADR'),
-    (         'WIKI',           'TXN', 'TEXAS INSTRUMENTS INC'),
-    (         'WIKI',             'V', 'VISA INC CLASS A'),
     (        'MSTAR',            'FB', 'Facebook'),
     (        'MSTAR',          'AMZN', 'Amazon'),
     (        'MSTAR',          'GOOG', 'Google'),
@@ -112,6 +119,8 @@ begin;
     (       'TIINGO',          'PYPL', 'PayPal Holdings Inc'),
     (       'TIINGO',       'LON:FCH', 'Funding Circle Holdings PLC'),
     (       'TIINGO',         'SFTBF', 'SoftBank Group Corp'),
+    (       'TIINGO',          'AAPL', 'Apple Inc.'),
+    (       'TIINGO',          'TWTR', 'Twitter, Inc.'),
 
     (     'INTRINIO',            'FB', 'Facebook'),
     (     'INTRINIO',          'AMZN', 'Amazon'),
@@ -121,6 +130,8 @@ begin;
     (     'INTRINIO',          'INTC', 'INTEL CORP'),
     (     'INTRINIO',           'TXN', 'TEXAS INSTRUMENTS INC'),
     (     'INTRINIO',             'V', 'VISA INC CLASS A'),
+    (     'INTRINIO',          'AAPL', 'Apple Inc.'),
+    (     'INTRINIO',          'TWTR', 'Twitter, Inc.'),
 
     ('ALPHA-VANTAGE',         'VEMAX', 'Vanguard Emerging Markets Stock Index Fund Admiral Shares'),
     ('ALPHA-VANTAGE',         'VEURX', 'Vanguard European Stock Index Fund Investor Shares'),
@@ -161,6 +172,8 @@ begin;
     ('ALPHA-VANTAGE',          'PYPL', 'PayPal Holdings Inc'),
     ('ALPHA-VANTAGE',       'LON:FCH', 'Funding Circle Holdings PLC'),
     ('ALPHA-VANTAGE',         'SFTBF', 'SoftBank Group Corp'),
+    ('ALPHA-VANTAGE',          'AAPL', 'Apple Inc.'),
+    ('ALPHA-VANTAGE',          'TWTR', 'Twitter, Inc.'),
 
     ('ALPHA-VANTAGE',        'EURUSD', 'Value of 1 EUR in USD'),
     ('ALPHA-VANTAGE',        'GBPUSD', 'Value of 1 GBP in USD')
