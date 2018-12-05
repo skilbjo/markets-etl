@@ -308,7 +308,7 @@
                                                   :date
                                                   util/joda-date->date-str)}
                                  query-params)
-          data        (->> (concat alpha-vantage tiingo morningstar quandl intrinio)
+          data        (->> (concat alpha-vantage tiingo morningstar quandl)
                            (map #(api/get-data % query-params*))
                            flatten)]
       (execute! cxn data)))

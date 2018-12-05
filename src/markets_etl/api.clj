@@ -135,8 +135,8 @@
            (json/read-str :key-fn (comp keyword string/lower-case)))
        (log/error "Tiingo request, status:" status "Ticker:" ticker)))))
 
-(defn query-intrinio!
-  ([ticker]
+(defn query-intrinio!   ;; turning this off for now - as of Dec 2018 need to
+  ([ticker]             ;; pay for any data now
    (query-intrinio! ticker {}))
   ([ticker paramz]
    {:pre [(every? true? (allowed? paramz))]}
