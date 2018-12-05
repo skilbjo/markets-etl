@@ -9,7 +9,7 @@ params="start_date=${start_date}&end_date=${end_date}"
 # docs: http://docs.intrinio.com/#historical-data
 curl \
   -u ":" \
-  "https://api.intrinio.com/prices?identifier=${ticker}&${params}"
+  "https://api.intrinio.com/prices?&api_key=${intrinio_api_key}&identifier=${ticker}&${params}"
 
 result='{
   "data": [
