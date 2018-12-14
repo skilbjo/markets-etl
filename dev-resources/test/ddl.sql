@@ -38,6 +38,7 @@ begin;
     (         'WIKI',             'V', 'VISA INC CLASS A'),
     (         'WIKI',          'AAPL', 'Apple Inc.'),
     (         'WIKI',          'TWTR', 'Twitter, Inc.'),
+    (         'WIKI',          'INTU', 'Intuit Inc.'),
 
     (        'MSTAR',         'VEMAX', 'Vanguard Emerging Markets Stock Index Fund Admiral Shares'),
     (        'MSTAR',         'VEURX', 'Vanguard European Stock Index Fund Investor Shares'),
@@ -80,6 +81,7 @@ begin;
     (        'MSTAR',          'PYPL', 'PayPal Holdings Inc'),
     (        'MSTAR',       'LON:FCH', 'Funding Circle Holdings PLC'),
     (        'MSTAR',         'SFTBF', 'SoftBank Group Corp'),
+    (        'MSTAR',          'INTU', 'Intuit Inc.'),
 
     (       'TIINGO',         'VEMAX', 'Vanguard Emerging Markets Stock Index Fund Admiral Shares'),
     (       'TIINGO',         'VEURX', 'Vanguard European Stock Index Fund Investor Shares'),
@@ -121,6 +123,7 @@ begin;
     (       'TIINGO',         'SFTBF', 'SoftBank Group Corp'),
     (       'TIINGO',          'AAPL', 'Apple Inc.'),
     (       'TIINGO',          'TWTR', 'Twitter, Inc.'),
+    (       'TIINGO',          'INTU', 'Intuit Inc.'),
 
     (     'INTRINIO',            'FB', 'Facebook'),
     (     'INTRINIO',          'AMZN', 'Amazon'),
@@ -132,6 +135,7 @@ begin;
     (     'INTRINIO',             'V', 'VISA INC CLASS A'),
     (     'INTRINIO',          'AAPL', 'Apple Inc.'),
     (     'INTRINIO',          'TWTR', 'Twitter, Inc.'),
+    (     'INTRINIO',          'INTU', 'Intuit Inc.'),
 
     ('ALPHA-VANTAGE',         'VEMAX', 'Vanguard Emerging Markets Stock Index Fund Admiral Shares'),
     ('ALPHA-VANTAGE',         'VEURX', 'Vanguard European Stock Index Fund Investor Shares'),
@@ -174,6 +178,7 @@ begin;
     ('ALPHA-VANTAGE',         'SFTBF', 'SoftBank Group Corp'),
     ('ALPHA-VANTAGE',          'AAPL', 'Apple Inc.'),
     ('ALPHA-VANTAGE',          'TWTR', 'Twitter, Inc.'),
+    ('ALPHA-VANTAGE',          'INTU', 'Intuit Inc.'),
 
     ('ALPHA-VANTAGE',        'EURUSD', 'Value of 1 EUR in USD'),
     ('ALPHA-VANTAGE',        'GBPUSD', 'Value of 1 GBP in USD')

@@ -21,7 +21,8 @@
    ["-h" "--help"]])
 
 (def stocks
-  ["FB" "AMZN" "GOOG" "NVDA" "CY" "INTC" "TXN" "V" "SAP" "SQ" "PYPL" "BRK.B" "AAPL" "TWTR" "GS"])
+  ["FB" "AMZN" "GOOG" "NVDA" "CY" "INTC" "TXN" "V" "SAP" "SQ" "PYPL" "BRK.B"
+   "AAPL" "TWTR" "GS" "INTU"])
 
 (def international
   ["LON:FCH" "SFTBF" "TSM"])
