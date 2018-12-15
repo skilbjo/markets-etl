@@ -39,6 +39,7 @@ begin;
     (         'WIKI',          'AAPL', 'Apple Inc.'),
     (         'WIKI',          'TWTR', 'Twitter, Inc.'),
     (         'WIKI',          'INTU', 'Intuit Inc.'),
+    (         'WIKI',            'GS', 'Goldman Sachs Group Inc'),
 
     (        'MSTAR',         'VEMAX', 'Vanguard Emerging Markets Stock Index Fund Admiral Shares'),
     (        'MSTAR',         'VEURX', 'Vanguard European Stock Index Fund Investor Shares'),
@@ -61,9 +62,6 @@ begin;
     (        'MSTAR',           'VHT', 'VANGUARD HEALTH CARE ETF'),
     (        'MSTAR',           'VGT', 'VANGUARD INFORMATION TECHNOLOGY ETF'),
     (        'MSTAR',         'BRK.B', 'BERKSHIRE HATHAWAY INC DE CL B NEW'),
-    (        'MSTAR',          'AAPL', 'Apple Inc.'),
-    (        'MSTAR',          'TWTR', 'Twitter, Inc.'),
-
     (        'MSTAR',           'TSM', 'TAIWAN SEMICONDUCTOR MANUFACTURING COMPANY LTD SPONS ADR'),
     (        'MSTAR',            'FB', 'Facebook'),
     (        'MSTAR',          'AMZN', 'Amazon'),
@@ -80,8 +78,11 @@ begin;
     (        'MSTAR',            'SQ', 'Square Inc A'),
     (        'MSTAR',          'PYPL', 'PayPal Holdings Inc'),
     (        'MSTAR',       'LON:FCH', 'Funding Circle Holdings PLC'),
+    (        'MSTAR',          'AAPL', 'Apple Inc.'),
+    (        'MSTAR',          'TWTR', 'Twitter, Inc.'),
     (        'MSTAR',         'SFTBF', 'SoftBank Group Corp'),
     (        'MSTAR',          'INTU', 'Intuit Inc.'),
+    (        'MSTAR',            'GS', 'Goldman Sachs Group Inc'),
 
     (       'TIINGO',         'VEMAX', 'Vanguard Emerging Markets Stock Index Fund Admiral Shares'),
     (       'TIINGO',         'VEURX', 'Vanguard European Stock Index Fund Investor Shares'),
@@ -124,6 +125,7 @@ begin;
     (       'TIINGO',          'AAPL', 'Apple Inc.'),
     (       'TIINGO',          'TWTR', 'Twitter, Inc.'),
     (       'TIINGO',          'INTU', 'Intuit Inc.'),
+    (       'TIINGO',            'GS', 'Goldman Sachs Group Inc'),
 
     (     'INTRINIO',            'FB', 'Facebook'),
     (     'INTRINIO',          'AMZN', 'Amazon'),
@@ -136,6 +138,7 @@ begin;
     (     'INTRINIO',          'AAPL', 'Apple Inc.'),
     (     'INTRINIO',          'TWTR', 'Twitter, Inc.'),
     (     'INTRINIO',          'INTU', 'Intuit Inc.'),
+    (     'INTRINIO',            'GS', 'Goldman Sachs Group Inc'),
 
     ('ALPHA-VANTAGE',         'VEMAX', 'Vanguard Emerging Markets Stock Index Fund Admiral Shares'),
     ('ALPHA-VANTAGE',         'VEURX', 'Vanguard European Stock Index Fund Investor Shares'),
@@ -179,6 +182,7 @@ begin;
     ('ALPHA-VANTAGE',          'AAPL', 'Apple Inc.'),
     ('ALPHA-VANTAGE',          'TWTR', 'Twitter, Inc.'),
     ('ALPHA-VANTAGE',          'INTU', 'Intuit Inc.'),
+    ('ALPHA-VANTAGE',            'GS', 'Goldman Sachs Group Inc'),
 
     ('ALPHA-VANTAGE',        'EURUSD', 'Value of 1 EUR in USD'),
     ('ALPHA-VANTAGE',        'GBPUSD', 'Value of 1 GBP in USD')
