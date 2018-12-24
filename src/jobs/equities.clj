@@ -25,7 +25,7 @@
    "AAPL" "TWTR" "GS" "INTU"])
 
 (def international
-  ["LON:FCH" "SFTBF" "TSM"])
+  ["LON:FCH" "SFTBF" "TSM" "NTDOY" "NTDOF"])
 
 (def etfs
   ["VFH" "VEA" "VWO" "VHT" "VGT"])

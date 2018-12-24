@@ -83,6 +83,8 @@ begin;
     (        'MSTAR',         'SFTBF', 'SoftBank Group Corp'),
     (        'MSTAR',          'INTU', 'Intuit Inc.'),
     (        'MSTAR',            'GS', 'Goldman Sachs Group Inc'),
+    (        'MSTAR',         'NTDOY', 'NINTENDO LTD/ADR'),
+    (        'MSTAR',         'NTDOF', 'Nintendo Co., Ltd'),
 
     (       'TIINGO',         'VEMAX', 'Vanguard Emerging Markets Stock Index Fund Admiral Shares'),
     (       'TIINGO',         'VEURX', 'Vanguard European Stock Index Fund Investor Shares'),
@@ -126,6 +128,8 @@ begin;
     (       'TIINGO',          'TWTR', 'Twitter, Inc.'),
     (       'TIINGO',          'INTU', 'Intuit Inc.'),
     (       'TIINGO',            'GS', 'Goldman Sachs Group Inc'),
+    (       'TIINGO',         'NTDOY', 'NINTENDO LTD/ADR'),
+    (       'TIINGO',         'NTDOF', 'Nintendo Co., Ltd'),
 
     (     'INTRINIO',            'FB', 'Facebook'),
     (     'INTRINIO',          'AMZN', 'Amazon'),
@@ -139,6 +143,8 @@ begin;
     (     'INTRINIO',          'TWTR', 'Twitter, Inc.'),
     (     'INTRINIO',          'INTU', 'Intuit Inc.'),
     (     'INTRINIO',            'GS', 'Goldman Sachs Group Inc'),
+    (     'INTRINIO',         'NTDOY', 'NINTENDO LTD/ADR'),
+    (     'INTRINIO',         'NTDOF', 'Nintendo Co., Ltd'),
 
     ('ALPHA-VANTAGE',         'VEMAX', 'Vanguard Emerging Markets Stock Index Fund Admiral Shares'),
     ('ALPHA-VANTAGE',         'VEURX', 'Vanguard European Stock Index Fund Investor Shares'),
@@ -183,6 +189,8 @@ begin;
     ('ALPHA-VANTAGE',          'TWTR', 'Twitter, Inc.'),
     ('ALPHA-VANTAGE',          'INTU', 'Intuit Inc.'),
     ('ALPHA-VANTAGE',            'GS', 'Goldman Sachs Group Inc'),
+    ('ALPHA-VANTAGE',         'NTDOY', 'NINTENDO LTD/ADR'),
+    ('ALPHA-VANTAGE',         'NTDOF', 'Nintendo Co., Ltd'),
 
     ('ALPHA-VANTAGE',        'EURUSD', 'Value of 1 EUR in USD'),
     ('ALPHA-VANTAGE',        'GBPUSD', 'Value of 1 GBP in USD')
