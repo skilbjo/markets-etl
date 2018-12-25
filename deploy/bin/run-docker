@@ -9,12 +9,13 @@ cd "${dir}/../.."
 
 case "$(uname -a)" in
   *amd64* | *x_86* | *x86_64* )
-    arch="x86" ;;
+    arch="x86"
+    img="quay.io/skilbjo/$app_name:latest" ;;
   *arm* )
-    arch="arm" ;;
+    arch="arm"
+    img="quay.io/skilbjo/$app_name:$arch" ;;
 esac
 
-img="quay.io/skilbjo/$app_name:$arch"
 job_cmd="usr/local/deploy/bin/run-job"
 
 get_current_artifacts(){
