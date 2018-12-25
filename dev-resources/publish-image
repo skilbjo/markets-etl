@@ -1,15 +1,27 @@
 #!/usr/bin/env bash
 set -eou pipefail
 
-dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-app=$(basename $(dirname $dir))
-image_tag='dev'
+dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )/../" && pwd )" && cd "$dir"
+app="$(basename $dir)"
 
-cd "${dir}/.."
-cp "${dir}/../deploy/default/Dockerfile" Dockerfile
+publish(){
+  set +u; local tag="$1"; set -u
+  local tag_suffix='dev'
 
-lein uberjar
-docker build --rm -t $app:$image_tag .
-docker tag $app:$image_tag $app
+  if [[ -z $tag ]]; then
+    cat "${dir}/deploy/default/Dockerfile" >Dockerfile
+    tag="$tag_suffix"
+  else
+    cat "${dir}/deploy/default/${tag}.Dockerfile" >Dockerfile
+    tag="${tag}-${tag_suffix}"
+  fi
 
-rm Dockerfile
+  docker build --rm -t "${app}:${tag}" .
+  docker tag "${app}:${tag}" "$app"
+
+  if [[ -f Dockerfile ]]; then rm Dockerfile; fi
+}
+
+lein uberjar \
+  && publish \
+  && publish 'arm'

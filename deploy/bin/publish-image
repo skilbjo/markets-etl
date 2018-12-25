@@ -1,34 +1,37 @@
 #!/usr/bin/env bash
-set -eou pipefail
+set -euo pipefail
 
-publish_x86() {
-  if [[ -f Dockerfile ]]; then rm Dockerfile; fi
-  if [[ -d target     ]]; then rm -rf target; fi
+dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )/../../" && pwd )" && cd "$dir"
+app="$(basename $(pwd))"
+registry='quay.io'
+image="${registry}/skilbjo/${app}"
 
-  cat deploy/default/publish-image | \
-    sed "s/tag='latest'/tag='x86'/g" | \
-    sed 's/$image:$CIRCLE_SHA1/$image:$CIRCLE_SHA1-x86/g' | \
-    sed 's/tag="${CIRCLE_BRANCH}_${CIRCLE_BUILD_NUM}"/tag="${CIRCLE_BRANCH}_${CIRCLE_BUILD_NUM}_x86"/g' \
-    >>deploy/bin/publish-x86
-
-  chmod u+x deploy/bin/publish-x86 && \
-    deploy/bin/publish-x86
+setup(){
+  docker login -u "$QUAY_ROBOT_USERNAME" -p "$QUAY_ROBOT_PASSWORD" "$registry"
 }
 
-publish_arm() {
+publish(){
+  set +u; local tag="$1"; set -u
+
+  if [[ -z $tag ]]; then
+    cat "${dir}/deploy/default/Dockerfile" >Dockerfile
+  else
+    cat "${dir}/deploy/default/${tag}.Dockerfile" >Dockerfile
+  fi
+
+  if [[ $CIRCLE_BRANCH == master ]]; then
+    tag='latest'
+  else
+    tag="${CIRCLE_BRANCH}_${CIRCLE_BUILD_NUM}"
+  fi
+
+  docker build --rm -t "${image}:${tag}" .
+  docker tag "${image}:${tag}" "${image}:${CIRCLE_SHA1}"
+  docker push "$image"
+
   if [[ -f Dockerfile ]]; then rm Dockerfile; fi
-  if [[ -d target     ]]; then rm -rf target; fi
-
-  cat deploy/default/publish-image | \
-    sed "s/cat '.\/deploy\/default\/Dockerfile'/cat '.\/deploy\/default\/Dockerfile.arm'/g" | \
-    sed "s/tag='latest'/tag='arm'/g" | \
-    sed 's/$image:$CIRCLE_SHA1/$image:$CIRCLE_SHA1-arm/g' | \
-    sed 's/tag="${CIRCLE_BRANCH}_${CIRCLE_BUILD_NUM}"/tag="${CIRCLE_BRANCH}_${CIRCLE_BUILD_NUM}_arm"/g' \
-    >>deploy/bin/publish-arm
-
-  chmod u+x deploy/bin/publish-arm && \
-    deploy/bin/publish-arm
 }
 
-publish_arm && \
-  publish_x86
+setup \
+  && publish \
+  && publish 'arm'

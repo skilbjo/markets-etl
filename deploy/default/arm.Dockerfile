@@ -1,4 +1,4 @@
-FROM quay.io/skilbjo/engineering:java-latest
+FROM quay.io/skilbjo/engineering:java-arm-latest
 
 COPY target/uberjar/app.jar      /app.jar
 COPY deploy                      /usr/local/deploy
