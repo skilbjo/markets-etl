@@ -15,14 +15,20 @@ publish(){
 
   if [[ -z $tag ]]; then
     cat "${dir}/deploy/default/Dockerfile" >Dockerfile
+
+    if [[ $CIRCLE_BRANCH == master ]]; then
+      tag='latest'
+    else
+      tag="${CIRCLE_BRANCH}_${CIRCLE_BUILD_NUM}"
+    fi
   else
     cat "${dir}/deploy/default/${tag}.Dockerfile" >Dockerfile
-  fi
 
-  if [[ $CIRCLE_BRANCH == master ]]; then
-    tag='latest'
-  else
-    tag="${CIRCLE_BRANCH}_${CIRCLE_BUILD_NUM}"
+    if [[ $CIRCLE_BRANCH == master ]]; then
+      tag='arm'
+    else
+      tag="arm-${CIRCLE_BRANCH}_${CIRCLE_BUILD_NUM}"
+    fi
   fi
 
   docker build --rm -t "${image}:${tag}" .
