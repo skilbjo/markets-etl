@@ -2,12 +2,12 @@
 set -eou pipefail
 
 cmd="java $JAVA_OPTS -jar app.jar"
-deploy_dir="usr/local/deploy/bin"
+deploy_dir='/usr/local/deploy/bin'
 
 # Prereqs
 case $(uname -a) in
   *arm* )
-    set +e; eval "${deploy_dir}/apk"; update-ca-certificates; apk fix || echo 'Unable to reach apk...'; set -e; ;; # set +e when apk not available
+    set +e; eval "${deploy_dir}/apk-arm"; update-ca-certificates; apk fix || echo 'Unable to reach apk...'; set -e; ;; # set +e when apk not available
 esac
 
 case "$@" in
