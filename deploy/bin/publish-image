@@ -33,5 +33,6 @@ publish(){
 }
 
 setup \
-  && publish \
+  && lein uberjar  \
+  && publish       \
   && publish 'arm'
