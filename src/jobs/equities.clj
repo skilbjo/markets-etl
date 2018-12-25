@@ -28,7 +28,7 @@
   ["LON:FCH" "SFTBF" "TSM" "NTDOY" "NTDOF"])
 
 (def etfs
-  ["VFH" "VEA" "VWO" "VHT" "VGT"])
+  ["VFH" "VEA" "VWO" "VHT" "VGT" "IAU" "GLD"])
 
 (def mutual-funds
   ["VEMAX" "VEURX" "VEXPX" "VGWAX" "VITAX" "VIMAX" "VMRAX" "VPACX" "VGSLX"

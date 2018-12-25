@@ -85,6 +85,8 @@ begin;
     (        'MSTAR',            'GS', 'Goldman Sachs Group Inc'),
     (        'MSTAR',         'NTDOY', 'NINTENDO LTD/ADR'),
     (        'MSTAR',         'NTDOF', 'Nintendo Co., Ltd'),
+    (        'MSTAR',           'IAU', 'iShares Gold Trust'),
+    (        'MSTAR',           'GLD', 'SPDR Gold Trust'),
 
     (       'TIINGO',         'VEMAX', 'Vanguard Emerging Markets Stock Index Fund Admiral Shares'),
     (       'TIINGO',         'VEURX', 'Vanguard European Stock Index Fund Investor Shares'),
@@ -130,6 +132,8 @@ begin;
     (       'TIINGO',            'GS', 'Goldman Sachs Group Inc'),
     (       'TIINGO',         'NTDOY', 'NINTENDO LTD/ADR'),
     (       'TIINGO',         'NTDOF', 'Nintendo Co., Ltd'),
+    (       'TIINGO',           'IAU', 'iShares Gold Trust'),
+    (       'TIINGO',           'GLD', 'SPDR Gold Trust'),
 
     (     'INTRINIO',            'FB', 'Facebook'),
     (     'INTRINIO',          'AMZN', 'Amazon'),
@@ -145,6 +149,8 @@ begin;
     (     'INTRINIO',            'GS', 'Goldman Sachs Group Inc'),
     (     'INTRINIO',         'NTDOY', 'NINTENDO LTD/ADR'),
     (     'INTRINIO',         'NTDOF', 'Nintendo Co., Ltd'),
+    (     'INTRINIO',           'IAU', 'iShares Gold Trust'),
+    (     'INTRINIO',           'GLD', 'SPDR Gold Trust'),
 
     ('ALPHA-VANTAGE',         'VEMAX', 'Vanguard Emerging Markets Stock Index Fund Admiral Shares'),
     ('ALPHA-VANTAGE',         'VEURX', 'Vanguard European Stock Index Fund Investor Shares'),
@@ -191,6 +197,8 @@ begin;
     ('ALPHA-VANTAGE',            'GS', 'Goldman Sachs Group Inc'),
     ('ALPHA-VANTAGE',         'NTDOY', 'NINTENDO LTD/ADR'),
     ('ALPHA-VANTAGE',         'NTDOF', 'Nintendo Co., Ltd'),
+    ('ALPHA-VANTAGE',           'IAU', 'iShares Gold Trust'),
+    ('ALPHA-VANTAGE',           'GLD', 'SPDR Gold Trust'),
 
     ('ALPHA-VANTAGE',        'EURUSD', 'Value of 1 EUR in USD'),
     ('ALPHA-VANTAGE',        'GBPUSD', 'Value of 1 GBP in USD')
