@@ -1,8 +1,0 @@
-#!/usr/bin/env bash
-set -eou pipefail
-
-dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )" && cd "$dir"
-
-psql "$db_uri" \
-  -v ON_ERROR_STOP=1 \
-  -f "${dir}/portfolio-upload.sql"

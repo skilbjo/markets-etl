@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+set -eou pipefail
+
+dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )" && cd "$dir"
+
+file="$1"
+
+case "$file" in
+  markets | portfolio )
+    psql "$db_uri" \
+      -v ON_ERROR_STOP=1 \
+      -f "${dir}/${file}-upload.sql" ;;
+  * )
+    echo 'usage: ./upload-csv portfolio|markets' && exit 1 ;;
+esac
