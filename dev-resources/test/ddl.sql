@@ -5,17 +5,20 @@ begin;
 
   drop table if exists dw.markets_dim cascade;
   create table if not exists dw.markets_dim (
-    dataset         text,
-    ticker          text,
-    description     text,
+    dataset          text,
+    ticker           text,
+    description      text,
+    asset            text, -- for equities performance only
+    location         text, -- for equities performance only
+    capitalization   text, -- for equities performance only
+    investment_style text, -- for equities performance only
 
     dw_created_at   timestamp default now(),
-
     constraint markets_dim_pk primary key (dataset, ticker)
   );
 
   truncate dw.markets_dim cascade;
-  insert into dw.markets_dim values
+  insert into dw.markets_dim (dataset, ticker, description) values
     (         'FRED',           'GDP', 'Gross domistic product, in billions of $'),
     (         'FRED',            'M1', 'M1 money stock is funds that are readily accesible for spending, in billions of $'),
     (         'FRED',           'DFF', 'Effective federal funds rate'),
