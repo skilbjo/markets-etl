@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 set -eou pipefail
 
-dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-app_name=$(basename $(dirname $dir))
+dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )/../" && pwd )" && cd "$dir"
+app="$(basename $dir)"
 
 # live
   #-e jdbc_db_uri="$(echo $jdbc_db_uri)" \
@@ -17,4 +17,4 @@ docker run --rm -it \
   -e alpha_vantage_api_key="$(echo $alpha_vantage_api_key)" \
   -e docker_psql_uri="$(echo $docker_psql_uri)" \
   -e healthchecks_io_api_key="$(echo $healthchecks_io_api_key)" \
-  "$app_name":dev bash
+  "$app":dev bash
