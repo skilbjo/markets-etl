@@ -8,7 +8,7 @@ begin;
     dataset          text,
     ticker           text,
     description      text,
-    asset            text, -- for equities performance only
+    asset_type       text, -- for equities performance only
     location         text, -- for equities performance only
     capitalization   text, -- for equities performance only
     investment_style text, -- for equities performance only
