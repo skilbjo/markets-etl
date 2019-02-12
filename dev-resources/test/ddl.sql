@@ -16,6 +16,8 @@ begin;
     dw_created_at   timestamp default now(),
     constraint markets_dim_pk primary key (dataset, ticker)
   );
+  create index on dw.markets_dim (ticker);
+  create index on dw.markets_dim (dataset, ticker);
 
   truncate dw.markets_dim cascade;
   insert into dw.markets_dim (dataset, ticker, description) values
@@ -230,6 +232,8 @@ begin;
     constraint portfolio_dim_pk primary key (dataset, ticker),
     constraint portfolio_dim_markets_dim_fk foreign key (dataset, ticker) references dw.markets_dim (dataset, ticker)
   );
+  create index on dw.portfolio_dim (ticker);
+  create index on dw.portfolio_dim (dataset, ticker);
 
 commit;
 
@@ -259,6 +263,11 @@ begin;
     constraint equities_fact_pk primary key (dataset, ticker, date),
     constraint equities_fact_markets_dim_fk foreign key (dataset, ticker) references dw.markets_dim (dataset, ticker)
   );
+  create index on dw.equities_fact (ticker);
+  create index on dw.equities_fact (date);
+  create index on dw.equities_fact (date, ticker);
+  create index on dw.equities_fact (dataset, ticker);
+  create index on dw.equities_fact (date, dataset, ticker);
 
   drop table if exists dw.real_estate_fact;
   create table if not exists dw.real_estate_fact (
@@ -275,6 +284,11 @@ begin;
     constraint real_estate_fact_pk primary key (dataset, ticker, date),
     constraint real_estate_fact_markets_dim_fk foreign key (dataset, ticker) references dw.markets_dim (dataset, ticker)
   );
+  create index on dw.real_estate_fact (ticker);
+  create index on dw.real_estate_fact (date);
+  create index on dw.real_estate_fact (date, ticker);
+  create index on dw.real_estate_fact (dataset, ticker);
+  create index on dw.real_estate_fact (date, dataset, ticker);
 
   drop table if exists dw.currency_fact;
   create table if not exists dw.currency_fact (
@@ -291,6 +305,9 @@ begin;
     constraint currency_fact_pk primary key (dataset, ticker, date),
     constraint currency_fact_markets_dim_fk foreign key (dataset, ticker) references dw.markets_dim (dataset, ticker)
   );
+  create index on dw.currency_fact (currency);
+  create index on dw.currency_fact (date);
+  create index on dw.currency_fact (date, currency);
 
   drop table if exists dw.economics_fact;
   create table if not exists dw.economics_fact (
@@ -304,6 +321,9 @@ begin;
     constraint economics_fact_pk primary key (dataset, ticker, date),
     constraint economics_fact_markets_dim_fk foreign key (dataset, ticker) references dw.markets_dim (dataset, ticker)
   );
+  create index on dw.economics_fact (ticker);
+  create index on dw.economics_fact (date);
+  create index on dw.economics_fact (date, ticker);
 
   drop table if exists dw.interest_rates_fact;
   create table if not exists dw.interest_rates_fact (
@@ -318,5 +338,8 @@ begin;
     constraint interest_rates_fact_pk primary key (dataset, ticker, date, key),
     constraint interest_rates_fact_markets_dim_fk foreign key (dataset, ticker) references dw.markets_dim (dataset, ticker)
   );
+  create index on dw.interest_rates_fact (ticker);
+  create index on dw.interest_rates_fact (date);
+  create index on dw.interest_rates_fact (date, ticker);
 
 commit;
