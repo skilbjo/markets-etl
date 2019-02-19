@@ -4,12 +4,28 @@ set -eou pipefail
 dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )" && cd "$dir"
 
 file="$1"
+db="$2"
 
-case "$file" in
-  markets | portfolio )
-    psql "$db_uri" \
-      -v ON_ERROR_STOP=1 \
-      -f "${dir}/${file}-upload.sql" ;;
-  * )
-    echo 'usage: ./upload-csv portfolio|markets' && exit 1 ;;
-esac
+upload(){
+  local file="$1"
+  local db="$2"
+  local psql_uri=''
+
+  case "$db" in
+    prod )
+      psql_uri="$(echo "$db_uri")" ;;
+    dev | * )
+      psql_uri="$(echo "$docker_psql_uri")" ;;
+  esac
+
+  case "$file" in
+    markets | portfolio )
+      psql "$psql_uri" \
+        -v ON_ERROR_STOP=1 \
+        -f "${dir}/${file}-upload.sql" ;;
+    * )
+      echo 'usage: ./upload-csv portfolio|markets dev|prod' && exit 1 ;;
+  esac
+}
+
+upload "$file" "$db"
