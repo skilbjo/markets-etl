@@ -234,9 +234,10 @@ begin;
 
     dw_created_at      timestamp default now(),
 
-    constraint portfolio_dim_pk primary key (dataset, ticker),
+    constraint portfolio_dim_pk primary key (_user, dataset, ticker),
     constraint portfolio_dim_markets_dim_fk foreign key (dataset, ticker) references dw.markets_dim (dataset, ticker)
   );
+  create index on dw.portfolio_dim (_user);
   create index on dw.portfolio_dim (ticker);
   create index on dw.portfolio_dim (dataset, ticker);
 
