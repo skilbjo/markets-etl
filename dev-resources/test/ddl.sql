@@ -209,6 +209,11 @@ begin;
     ('ALPHA-VANTAGE',           'GLD', 'SPDR Gold Trust'),
     ('ALPHA-VANTAGE',         'VWUAX', 'Vanguard U.S. Growth Fund Admiral™ Shares'),
 
+    ('ALPHA-VANTAGE',         'VIMSX', 'Vanguard Mid-Cap Index Fund Investor Shares'),
+    ('ALPHA-VANTAGE',         'VMRGX', 'Vanguard Morgan™ Growth Fund Investor Shares'),
+    ('ALPHA-VANTAGE',         'VGTSX', 'Vanguard Total International Stock Index Fund Investor Shares'),
+    ('ALPHA-VANTAGE',         'VWELX', 'Vanguard Wellington™ Fund Investor Shares'),
+
     ('ALPHA-VANTAGE',        'EURUSD', 'Value of 1 EUR in USD'),
     ('ALPHA-VANTAGE',        'GBPUSD', 'Value of 1 GBP in USD')
 
