@@ -33,7 +33,7 @@
 (def mutual-funds
   ["VEMAX" "VEURX" "VEXPX" "VGWAX" "VITAX" "VIMAX" "VMRAX" "VPACX" "VGSLX"
    "VTIAX" "VTSAX" "VWINX" "VWENX" "VWNDX" "VMMXX" "VWIGX" "VINEX" "VMMSX"
-   "VWUAX"])
+   "VWUAX" "VEXPX" "VIMSX" "VMRGX" "VGTSX"])
 
 (def quandl
   '({:dataset "WIKI"
