@@ -12,39 +12,21 @@ create temp table portfolio_stage (
 
 begin;
 
-  update dw.portfolio_dim
-  set
-    _user          = portfolio_stage._user,
-    dataset        = portfolio_stage.dataset,
-    ticker         = portfolio_stage.ticker,
-    quantity       = portfolio_stage.quantity,
-    cost_per_share = portfolio_stage.cost_per_share
-  from
-    portfolio_stage
-  where
-    portfolio_dim._user   = portfolio_stage._user   and
-    portfolio_dim.dataset = portfolio_stage.dataset and
-    portfolio_dim.ticker  = portfolio_stage.ticker;
-
-  insert into dw.portfolio_dim (
+  insert into dw.portfolio_dim
+  select
     _user,
     dataset,
     ticker,
     quantity,
     cost_per_share
-  )
-  select
-    portfolio_stage._user,
-    portfolio_stage.dataset,
-    portfolio_stage.ticker,
-    portfolio_stage.quantity,
-    portfolio_stage.cost_per_share
   from
     portfolio_stage
-    left join dw.portfolio_dim on portfolio_dim._user   = portfolio_stage._user   and
-                                  portfolio_dim.dataset = portfolio_stage.dataset and
-                                  portfolio_dim.ticker  = portfolio_stage.ticker
-  where
-    portfolio_dim.ticker is null;
+  on conflict (_user, dataset, ticker) do update set
+    _user          = excluded. _user,
+    dataset        = excluded.dataset,
+    ticker         = excluded.ticker,
+    quantity       = excluded.quantity,
+    cost_per_share = excluded.cost_per_share
+  ;
 
 commit;
