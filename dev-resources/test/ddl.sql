@@ -141,6 +141,11 @@ begin;
     (       'TIINGO',           'IAU', 'iShares Gold Trust'),
     (       'TIINGO',           'GLD', 'SPDR Gold Trust'),
     (       'TIINGO',         'VWUAX', 'Vanguard U.S. Growth Fund Admiral™ Shares'),
+    (       'TIINGO',         'VIMSX', 'Vanguard Mid-Cap Index Fund Investor Shares'),
+    (       'TIINGO',         'VMRGX', 'Vanguard Morgan™ Growth Fund Investor Shares'),
+    (       'TIINGO',         'VGTSX', 'Vanguard Total International Stock Index Fund Investor Shares'),
+    (       'TIINGO',         'VWELX', 'Vanguard Wellington™ Fund Investor Shares'),
+
 
     (     'INTRINIO',            'FB', 'Facebook'),
     (     'INTRINIO',          'AMZN', 'Amazon'),
@@ -208,7 +213,6 @@ begin;
     ('ALPHA-VANTAGE',           'IAU', 'iShares Gold Trust'),
     ('ALPHA-VANTAGE',           'GLD', 'SPDR Gold Trust'),
     ('ALPHA-VANTAGE',         'VWUAX', 'Vanguard U.S. Growth Fund Admiral™ Shares'),
-
     ('ALPHA-VANTAGE',         'VIMSX', 'Vanguard Mid-Cap Index Fund Investor Shares'),
     ('ALPHA-VANTAGE',         'VMRGX', 'Vanguard Morgan™ Growth Fund Investor Shares'),
     ('ALPHA-VANTAGE',         'VGTSX', 'Vanguard Total International Stock Index Fund Investor Shares'),
