@@ -84,7 +84,7 @@
                     :open        (-> % second :1._open  util/string->decimal)
                     :close       (-> % second :4._close util/string->decimal)
                     :low         (-> % second :3._low   util/string->decimal)
-                    :high        (-> % second :2_.high  util/string->decimal)
+                    :high        (-> % second :2._high  util/string->decimal)
                     :volume      (-> % second :5._volume util/string->decimal)
                     :split_ratio nil
                     :adj_open    nil
