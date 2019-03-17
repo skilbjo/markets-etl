@@ -3,7 +3,7 @@ set -eou pipefail
 
 dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )" && cd "$dir"
 
-source athena
+source '/Users/skilbjo/dev/engineering/src/athena.user'
 
 get_dw_portfolio(){
   psql $db_uri -AF',' -c 'select * from dw.portfolio_dim' | \
@@ -13,11 +13,11 @@ get_dw_portfolio(){
 upload_portfolio_to_s3(){
   aws s3 cp \
     --profile personal \
-    ~/Downloads/file.csv s3://skilbjo-data/datalake/markets-etl/portfolio_dim/file.csv
+    ~/Downloads/file.csv s3://skilbjo-data/datalake/markets-etl/portfolio/file.csv
 }
 
 verify_results(){
-  query 'select * from dw.portfolio_dim'
+  query 'select * from datalake.portfolio'
 }
 
 delete_artifacts(){

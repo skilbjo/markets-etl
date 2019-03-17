@@ -141,6 +141,11 @@ begin;
     (       'TIINGO',           'IAU', 'iShares Gold Trust'),
     (       'TIINGO',           'GLD', 'SPDR Gold Trust'),
     (       'TIINGO',         'VWUAX', 'Vanguard U.S. Growth Fund Admiral™ Shares'),
+    (       'TIINGO',         'VIMSX', 'Vanguard Mid-Cap Index Fund Investor Shares'),
+    (       'TIINGO',         'VMRGX', 'Vanguard Morgan™ Growth Fund Investor Shares'),
+    (       'TIINGO',         'VGTSX', 'Vanguard Total International Stock Index Fund Investor Shares'),
+    (       'TIINGO',         'VWELX', 'Vanguard Wellington™ Fund Investor Shares'),
+
 
     (     'INTRINIO',            'FB', 'Facebook'),
     (     'INTRINIO',          'AMZN', 'Amazon'),
@@ -208,6 +213,10 @@ begin;
     ('ALPHA-VANTAGE',           'IAU', 'iShares Gold Trust'),
     ('ALPHA-VANTAGE',           'GLD', 'SPDR Gold Trust'),
     ('ALPHA-VANTAGE',         'VWUAX', 'Vanguard U.S. Growth Fund Admiral™ Shares'),
+    ('ALPHA-VANTAGE',         'VIMSX', 'Vanguard Mid-Cap Index Fund Investor Shares'),
+    ('ALPHA-VANTAGE',         'VMRGX', 'Vanguard Morgan™ Growth Fund Investor Shares'),
+    ('ALPHA-VANTAGE',         'VGTSX', 'Vanguard Total International Stock Index Fund Investor Shares'),
+    ('ALPHA-VANTAGE',         'VWELX', 'Vanguard Wellington™ Fund Investor Shares'),
 
     ('ALPHA-VANTAGE',        'EURUSD', 'Value of 1 EUR in USD'),
     ('ALPHA-VANTAGE',        'GBPUSD', 'Value of 1 GBP in USD')
@@ -229,9 +238,10 @@ begin;
 
     dw_created_at      timestamp default now(),
 
-    constraint portfolio_dim_pk primary key (dataset, ticker),
+    constraint portfolio_dim_pk primary key (_user, dataset, ticker),
     constraint portfolio_dim_markets_dim_fk foreign key (dataset, ticker) references dw.markets_dim (dataset, ticker)
   );
+  create index on dw.portfolio_dim (_user);
   create index on dw.portfolio_dim (ticker);
   create index on dw.portfolio_dim (dataset, ticker);
 

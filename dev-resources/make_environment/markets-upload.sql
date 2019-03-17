@@ -10,6 +10,7 @@ create temp table markets_stage (
 
 begin;
 
+  -- we only want to update -- don't want to insert
   update dw.markets_dim
   set
     ticker              = markets_stage.ticker,
@@ -21,24 +22,5 @@ begin;
     markets_stage
   where
     markets_dim.ticker = markets_stage.ticker;
-
-  insert into dw.markets_dim (
-    ticker,
-    asset_type,
-    location,
-    capitalization,
-    investment_style
-  )
-  select
-    markets_stage.ticker,
-    markets_stage.asset_type,
-    markets_stage.location,
-    markets_stage.capitalization,
-    markets_stage.investment_style
-  from
-    markets_stage
-    left join dw.markets_dim on markets_dim.ticker = markets_stage.ticker
-  where
-    markets_dim.ticker is null;
 
 commit;
