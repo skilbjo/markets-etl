@@ -3,8 +3,8 @@ jobs:
   build_and_test:
     working_directory: ~/markets-etl
     docker:
-    - image: circleci/clojure:lein-2.8.1
-    - image: circleci/postgres:9.5.12-alpine # for integration test
+    - image: circleci/clojure:lein-2.9.0
+    - image: circleci/postgres:9.6.9-alpine # for integration test
     steps:
       - checkout
       - restore_cache:
