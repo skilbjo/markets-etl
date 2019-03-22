@@ -1,23 +1,40 @@
 #!/usr/bin/env bash
 set -eou pipefail
 
-cmd="java $JAVA_OPTS -jar app.jar"
-deploy_dir='/usr/local/deploy/bin'
+dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+get_artifact_from_circle_ci(){
+  local url='https://circleci.com/api/v1.1/project/github/skilbjo/aeon'
+  local last_build_num="$(curl "${url}?circle-token=${circleci_markets_api_key}" | \
+    jq -r '.[0].build_num')"
+  local artifact_url="$(curl "${url}/${last_build_num}/artifacts?circle-token=${circleci_markets_api_key}" | \
+    jq -r '.[0].url')"
+
+  curl "$artifact_url" >"${dir}/app.jar"
+}
 
 # Prereqs
-case $(uname -a) in
+case "$(uname -a)" in
   *arm* )
+    deploy_dir='/usr/local/deploy/bin'
     set +e; eval "${deploy_dir}/apk-arm"; update-ca-certificates; apk fix || echo 'Unable to reach apk...'; set -e; ;; # set +e when apk not available
 esac
 
-case "$@" in
-  backfill-* )
-    # call like /usr/local/deploy/bin/run-job backfill-equities
-    _job=$(echo "$@" | sed 's/backfill-//')
+case "$(uname -a)" in
+  FreeBSD* | Darwin* )
+    if [[ -f ${dir}/app.jar ]];            then rm "${dir}/app.jar"; fi
+    get_artifact_from_circle_ci
 
-    eval "/usr/local/backfill/job ${_job}"
-    ;;
-  * )
-    exec $cmd $@
+    JAVA_OPTS="-Duser.timezone=UTC -Xms256m -Xmx512m -XX:MaxMetaspaceSize=128m" ;;
+  Linux* )
+    if [[ $@ == backfill-* ]]; then
+      # call like /usr/local/deploy/bin/run-job backfill-equities
+      _job=$(echo "$@" | sed 's/backfill-//')
+
+      eval "/usr/local/backfill/job ${_job}"
+    fi
     ;;
 esac
+
+cmd="java $JAVA_OPTS -jar app.jar"
+exec $cmd $@
