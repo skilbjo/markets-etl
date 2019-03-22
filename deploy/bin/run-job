@@ -1,16 +1,26 @@
 #!/usr/bin/env bash
 set -eou pipefail
 
-dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )/../../" && pwd )" && cd "$dir"
+app="$(basename $(pwd))"
+tmp_dir='/tmp'
+
+update_crond(){
+  case "$(uname)" in
+    ('FreeBSD') sudo cp "${dir}/deploy/tasks/crontab" "/var/cron/tabs/${app}" ;;
+  esac
+}
 
 get_artifact_from_circle_ci(){
-  local url='https://circleci.com/api/v1.1/project/github/skilbjo/markets-etl'
+  git pull -f
+
+  local url="https://circleci.com/api/v1.1/project/github/skilbjo/${app}"
   local last_build_num="$(curl "${url}?circle-token=${circleci_markets_api_key}" | \
     jq -r '.[0].build_num')"
   local artifact_url="$(curl "${url}/${last_build_num}/artifacts?circle-token=${circleci_markets_api_key}" | \
     jq -r '.[0].url')"
 
-  curl "$artifact_url" >"${dir}/app.jar"
+  curl "$artifact_url" >"${tmp_dir}/${app}.jar"
 }
 
 # Prereqs
@@ -18,16 +28,17 @@ case "$(uname -a)" in
   *arm* )
     deploy_dir='/usr/local/deploy/bin'
     set +e; eval "${deploy_dir}/apk-arm"; update-ca-certificates; apk fix || echo 'Unable to reach apk...'; set -e; # set +e when apk not available
-    mv /app.jar "${dir}/app.jar" ;;
+    mv /app.jar "${tmp_dir}/${app}.jar" ;;
 esac
 
-case "$(uname -a)" in
-  FreeBSD* | Darwin* )
-    if [[ -f ${dir}/app.jar ]];            then rm "${dir}/app.jar"; fi
+case "$(uname)" in
+  FreeBSD | Darwin )
+    if [[ $(uname) == 'FreeBSD' ]]; then sudo cp "${dir}/deploy/tasks/crontab" "/var/cron/tabs/${app}"; fi
+    if [[ -f ${tmp_dir}/${app}.jar ]]; then rm "${tmp_dir}/${app}.jar"; fi
     get_artifact_from_circle_ci
 
     JAVA_OPTS="-Duser.timezone=UTC -Xms256m -Xmx512m -XX:MaxMetaspaceSize=128m" ;;
-  Linux* )
+  Linux )
     if [[ $@ == backfill-* ]]; then
       # call like /usr/local/deploy/bin/run-job backfill-equities
       _job=$(echo "$@" | sed 's/backfill-//')
@@ -37,5 +48,5 @@ case "$(uname -a)" in
     ;;
 esac
 
-cmd="java $JAVA_OPTS -jar ${dir}/app.jar"
+cmd="java $JAVA_OPTS -jar ${tmp_dir}/${app}.jar"
 exec $cmd $@
