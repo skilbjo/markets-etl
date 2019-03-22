@@ -4,7 +4,7 @@ set -eou pipefail
 dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 get_artifact_from_circle_ci(){
-  local url='https://circleci.com/api/v1.1/project/github/skilbjo/aeon'
+  local url='https://circleci.com/api/v1.1/project/github/skilbjo/markets-etl'
   local last_build_num="$(curl "${url}?circle-token=${circleci_markets_api_key}" | \
     jq -r '.[0].build_num')"
   local artifact_url="$(curl "${url}/${last_build_num}/artifacts?circle-token=${circleci_markets_api_key}" | \
@@ -17,7 +17,8 @@ get_artifact_from_circle_ci(){
 case "$(uname -a)" in
   *arm* )
     deploy_dir='/usr/local/deploy/bin'
-    set +e; eval "${deploy_dir}/apk-arm"; update-ca-certificates; apk fix || echo 'Unable to reach apk...'; set -e; ;; # set +e when apk not available
+    set +e; eval "${deploy_dir}/apk-arm"; update-ca-certificates; apk fix || echo 'Unable to reach apk...'; set -e; # set +e when apk not available
+    mv /app.jar "${dir}/app.jar" ;;
 esac
 
 case "$(uname -a)" in
@@ -36,5 +37,5 @@ case "$(uname -a)" in
     ;;
 esac
 
-cmd="java $JAVA_OPTS -jar app.jar"
+cmd="java $JAVA_OPTS -jar ${dir}/app.jar"
 exec $cmd $@
