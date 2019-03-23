@@ -6,9 +6,9 @@ app="$(basename $(pwd))"
 arch=''
 
 case "$(uname -a)" in
-  *amd64* | *x_86* | *x86_64* )
+  amd64* | x_86* | x86_64* )
     img="quay.io/skilbjo/${app}:latest" ;;
-  *arm* )
+  arm* )
     arch='arm'
     img="quay.io/skilbjo/${app}:${arch}" ;;
 esac
@@ -31,8 +31,8 @@ get_current_artifacts(){
 
 update_crond(){
   case "$(uname)" in
-    ('Linux')   sed -i '1i  SHELL=/usr/bin/bash'       "${dir}/deploy/tasks/crontab" ;;
-    ('FreeBSD') sed -i '1i  SHELL=/usr/local/bin/bash' "${dir}/deploy/tasks/crontab" ;;
+    ('Linux') sed -i '1i SHELL=/usr/bin/bash'         "${dir}/deploy/tasks/crontab"
+              sed -i '1i cmd="deploy/bin/run-docker"' "${dir}/deploy/tasks/crontab" ;;
   esac
   sudo cp "${dir}/deploy/tasks/crontab" >"/etc/cron.d/${app}"
 }

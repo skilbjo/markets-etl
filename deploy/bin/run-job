@@ -7,7 +7,8 @@ tmp_dir='/tmp'
 
 update_crond(){
   case "$(uname)" in
-    ('FreeBSD') sed -i '1i  SHELL=/usr/local/bin/bash' "${dir}/deploy/tasks/crontab" ;;
+    ('FreeBSD') sed -i '1i SHELL="/usr/local/bin/bash"' "${dir}/deploy/tasks/crontab"
+                sed -i '1i cmd="deploy/bin/run-job"'    "${dir}/deploy/tasks/crontab" ;;
   esac
   sudo cp "${dir}/deploy/tasks/crontab" >"/etc/cron.d/${app}"
 }
@@ -25,8 +26,8 @@ get_artifact_from_circle_ci(){
 }
 
 # Prereqs
-case "$(uname -a)" in
-  *arm* )
+case "$(uname -m)" in
+  arm* )
     deploy_dir='/usr/local/deploy/bin'
     set +e; eval "${deploy_dir}/apk-arm"; update-ca-certificates; apk fix || echo 'Unable to reach apk...'; set -e; # set +e when apk not available
     mv /app.jar "${tmp_dir}/${app}.jar" ;;
@@ -34,7 +35,7 @@ esac
 
 case "$(uname)" in
   FreeBSD | Darwin )
-    if [[ $(uname) == 'FreeBSD' ]]; then sudo cp "${dir}/deploy/tasks/crontab" "/var/cron/tabs/${app}"; fi
+    if [[ $(uname) == 'FreeBSD' ]]; then update_crond; fi
     if [[ -f ${tmp_dir}/${app}.jar ]]; then rm "${tmp_dir}/${app}.jar"; fi
     get_artifact_from_circle_ci
 
@@ -50,4 +51,4 @@ case "$(uname)" in
 esac
 
 cmd="java $JAVA_OPTS -jar ${tmp_dir}/${app}.jar"
-exec $cmd $@
+exec "$cmd" $@
