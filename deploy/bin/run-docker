@@ -31,9 +31,10 @@ get_current_artifacts(){
 
 update_crond(){
   case "$(uname)" in
-    ('Linux')   sudo cp "${dir}/deploy/tasks/crontab" "/etc/cron.d/${app}" ;;
-    ('FreeBSD') sudo cp "${dir}/deploy/tasks/crontab" "/var/cron/tabs/${app}" ;;
+    ('Linux')   sed -i '1i  SHELL=/usr/bin/bash'       "${dir}/deploy/tasks/crontab" ;;
+    ('FreeBSD') sed -i '1i  SHELL=/usr/local/bin/bash' "${dir}/deploy/tasks/crontab" ;;
   esac
+  sudo cp "${dir}/deploy/tasks/crontab" >"/etc/cron.d/${app}"
 }
 
 get_current_artifacts && \

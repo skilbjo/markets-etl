@@ -3,7 +3,7 @@
   PATH=:/bin:/usr/bin:/usr/local/bin:/usr/sbin:/usr/local/sbin
   MAILTO=john.skilbeck@gmail.com
   cmd="deploy/bin/run-docker"
-  app_dir="/home/skilbjo/deploy/app/markets-etl"
+  app_dir="/home/skilbjo/dev/markets-etl"
 
 ## -- jobs ----------------------------------------
 ### equities
