@@ -1,5 +1,6 @@
 (ns markets-etl.api
   (:require [clj-http.client :as http]
+            [clojure.core.reducers :as r]
             [clojure.data.json :as json]
             [clojure.set :as set]
             [clojure.string :as string]
@@ -57,7 +58,8 @@
    (query-alpha-vantage-api! ticker {}))
   ([url ticker paramz]
    {:pre [(every? true? (allowed? paramz))]}
-   (Thread/sleep 5500)
+   (log/debug "query-alpha-vantage-api! called")
+   (Thread/sleep 3500) ; previous value: 5500
    (let [params   (dissoc paramz :limit)
          response (try
                     (http/get url)
@@ -66,9 +68,9 @@
                                    (ex-data e))
                       (ex-data e)))
          {:keys [status body]}  response
-         _        (log/debug ticker)
-         _        (log/debug params)
-         #__      #_(log/info body)]
+         _        (log/trace ticker)
+         _        (log/trace params)
+         #__      #_(log/trace body)]
      (if (= 200 status)
        (-> body
            (json/read-str :key-fn (comp keyword
@@ -107,6 +109,7 @@
    (query-tiingo! ticker {}))
   ([ticker paramz]
    {:pre [(every? true? (allowed? paramz))]}
+   (log/debug "query-tiingo! called")
    (let [params   (dissoc paramz :limit)
          url      (str (:protocol tiingo-api)
                        (:url tiingo-api)
@@ -127,9 +130,9 @@
                                    (ex-data e))
                       (ex-data e)))
          {:keys [status body]}  response
-         _        (log/debug ticker)
-         _        (log/debug params)
-         #__      #_(log/info body)]
+         _        (log/trace ticker)
+         _        (log/trace params)
+         #__      #_(log/trace body)]
      (if (= 200 status)
        (-> body
            (json/read-str :key-fn (comp keyword string/lower-case)))
@@ -157,9 +160,9 @@
                                    (ex-data e))
                       (ex-data e)))
          {:keys [status body]}  response
-         _        (log/debug ticker)
-         _        (log/debug params)
-         #__      #_(log/debug body)]
+         _        (log/trace ticker)
+         _        (log/trace params)
+         #__      #_(log/trace body)]
      (if (= 200 status)
        (-> body
            (json/read-str :key-fn keyword))
@@ -170,6 +173,7 @@
    (query-morningstar! ticker {}))
   ([ticker paramz]
    {:pre [(every? true? (allowed? paramz))]}
+   (log/debug "query-morningstar! called")
    (let [params   (dissoc paramz :limit)
          url      (str (:protocol morningstar-api)
                        (:url morningstar-api)
@@ -189,10 +193,10 @@
          {:keys [status body]}  response
          body'    (-> body
                       (string/replace #"NaN" "null"))
-         _        (log/debug ticker)
-         _        (log/debug params)
-         _        (log/debug url)
-         #__      #_(log/debug body')]
+         _        (log/trace ticker)
+         _        (log/trace params)
+         _        (log/trace url)
+         #__      #_(log/trace body')]
      (if (and (= 200 status) ((comp not empty?) body'))
        (-> body'
            (json/read-str :key-fn (comp keyword string/lower-case)))
@@ -204,6 +208,7 @@
    (query-quandl! dataset ticker {}))
   ([dataset ticker paramz]
    {:pre [(every? true? (allowed? paramz))]}
+   (log/debug "query-quandl! called")
    (let [url      (str (:protocol quandl-api)
                        (:url quandl-api)
                        (str dataset "/")
@@ -219,9 +224,9 @@
                                    (ex-data e))
                       (ex-data e)))
          {:keys [status body]}  response
-         _        (log/debug ticker)
-         _        (log/debug params)
-         #__      #_(log/debug body)]
+         _        (log/trace ticker)
+         _        (log/trace params)
+         #__      #_(log/trace body)]
      (if (= 200 status)
        (-> body
            (json/read-str :key-fn keyword)
@@ -236,27 +241,30 @@
                                       ticker]}
                               query-params]
   (->> ticker
-       (map (fn [tkr]
+       (r/map (fn [tkr]
               (->> (query-tiingo! tkr
                                   query-params)
-                   (map #(assoc % :dataset dataset :ticker tkr)))))))
+                   (map #(assoc % :dataset dataset :ticker tkr)))))
+       r/foldcat))
 
 (defmethod get-data "MSTAR" [{:keys [dataset
                                      ticker]}
                              query-params]
   (->> ticker
-       (map (fn [tkr]
+       (r/map (fn [tkr]
               (-> (query-morningstar! tkr
                                       query-params)
-                  (assoc :dataset dataset :ticker tkr))))))
+                  (assoc :dataset dataset :ticker tkr))))
+       r/foldcat))
 
 (defmethod get-data "INTRINIO" [{:keys [dataset
                                         ticker]}
                                 query-params]
   (->> ticker
-       (map (fn [tkr]
+       (r/map (fn [tkr]
               (-> (query-intrinio! tkr query-params)
-                  (assoc :dataset dataset :ticker tkr))))))
+                  (assoc :dataset dataset :ticker tkr))))
+       r/foldcat))
 
 (defmethod get-data "ALPHA-VANTAGE" [{:keys [dataset
                                              ticker]}
@@ -267,16 +275,18 @@
                                   :currency
                                   :equities)]
     (->> ticker
-         (map (fn [tkr]
+         (r/map (fn [tkr]
                 (-> (query-alpha-vantage! {:endpoint     alpha-vantage-dataset
                                            :ticker       tkr
                                            :query-params query-params})
-                    (assoc :dataset dataset :ticker tkr)))))))
+                    (assoc :dataset dataset :ticker tkr))))
+         r/foldcat)))
 
 (defmethod get-data :default [{:keys [dataset
                                       ticker] :as m}
                               query-params]
   (->> ticker
-       (map (fn [tkr]
+       (r/map (fn [tkr]
               (-> (query-quandl! dataset tkr query-params)
-                  (assoc :dataset dataset :ticker tkr))))))
+                  (assoc :dataset dataset :ticker tkr))))
+       r/foldcat))

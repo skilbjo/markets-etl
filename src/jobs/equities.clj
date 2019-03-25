@@ -2,6 +2,7 @@
   (:require [clj-time.coerce :as coerce]
             [clj-time.core :as time]
             [clj-time.format :as format]
+            [clojure.core.reducers :as r]
             [clojure.data.json :as json]
             [clojure.java.jdbc :as jdbc]
             [clojure.tools.cli :as cli]
@@ -289,11 +290,11 @@
 (defn execute! [cxn data]
   (jdbc/with-db-transaction [txn cxn]
     (->> data
-         (map prepare-row)
-         flatten
-         (remove nil?)
-         (map #(update-or-insert! txn %))
-         doall)))
+         (r/map prepare-row)
+         r/flatten
+         (r/remove nil?)
+         (r/map #(update-or-insert! txn %))
+         (r/fold 1 r/cat r/append!))))
 
 (defn -main [& args]
   (error/set-default-error-handler)
@@ -311,8 +312,9 @@
                                                   util/joda-date->date-str)}
                                  query-params)
           data        (->> (concat alpha-vantage tiingo morningstar quandl)
-                           (map #(api/get-data % query-params*))
-                           flatten)]
-      (execute! cxn data)))
+                           vec
+                           (r/map #(api/get-data % query-params*))
+                           (r/fold 1 r/cat r/append!))]
+     (execute! cxn data)))
 
   (util/notify-healthchecks-io (-> :healthchecks-io-api-key env)))
