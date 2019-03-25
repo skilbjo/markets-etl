@@ -290,11 +290,11 @@
 (defn execute! [cxn data]
   (jdbc/with-db-transaction [txn cxn]
     (->> data
-         (pmap prepare-row)
-         flatten
-         (remove nil?)
-         (pmap #(update-or-insert! txn %))
-         doall)))
+         (r/map prepare-row)
+         r/flatten
+         (r/remove nil?)
+         (r/map #(update-or-insert! txn %))
+         (r/fold 1 r/cat r/append!))))
 
 (defn -main [& args]
   (error/set-default-error-handler)
@@ -312,8 +312,9 @@
                                                   util/joda-date->date-str)}
                                  query-params)
           data        (->> (concat alpha-vantage tiingo morningstar quandl)
-                           (pmap #(api/get-data % query-params*))
-                           flatten)]
-      (execute! cxn data)))
+                           vec
+                           (r/map #(api/get-data % query-params*))
+                           (r/fold 1 r/cat r/append!))]
+     (execute! cxn data)))
 
-  #_(util/notify-healthchecks-io (-> :healthchecks-io-api-key env)))
+  (util/notify-healthchecks-io (-> :healthchecks-io-api-key env)))
