@@ -2,6 +2,7 @@
   (:require [clj-time.coerce :as coerce]
             [clj-time.core :as time]
             [clj-time.format :as format]
+            [clojure.core.reducers :as r]
             [clojure.data.json :as json]
             [clojure.java.jdbc :as jdbc]
             [clojure.tools.cli :as cli]
@@ -310,9 +311,20 @@
                                                   :date
                                                   util/joda-date->date-str)}
                                  query-params)
-          data        (->> (concat alpha-vantage tiingo morningstar quandl)
-                           (map #(api/get-data % query-params*))
-                           flatten)]
-      (execute! cxn data)))
+          ;data        (->> (concat #_alpha-vantage #_tiingo morningstar quandl)
+                           ;vec
+                           ;(pmap #(api/get-data % query-params*))
+                           ;flatten)
+          data'       (->> (concat #_alpha-vantage #_tiingo morningstar quandl)
+                           (into [])
+                           (r/map #(api/get-data % query-params*))
+                           r/foldcat
+                           (into [])
+                           flatten)
+          ]
+  ;(println data)
+  (println data')
+  ;(shutdown-agents)
+      #_(execute! cxn data)))
 
-  (util/notify-healthchecks-io (-> :healthchecks-io-api-key env)))
+  #_(util/notify-healthchecks-io (-> :healthchecks-io-api-key env)))

@@ -1,5 +1,6 @@
 (ns markets-etl.api
   (:require [clj-http.client :as http]
+            [clojure.core.reducers :as r]
             [clojure.data.json :as json]
             [clojure.set :as set]
             [clojure.string :as string]
@@ -57,6 +58,7 @@
    (query-alpha-vantage-api! ticker {}))
   ([url ticker paramz]
    {:pre [(every? true? (allowed? paramz))]}
+   (log/info "query-alpha-vantage-api! called")
    (Thread/sleep 5500)
    (let [params   (dissoc paramz :limit)
          response (try
@@ -107,6 +109,7 @@
    (query-tiingo! ticker {}))
   ([ticker paramz]
    {:pre [(every? true? (allowed? paramz))]}
+   (log/info "query-tiingo! called")
    (let [params   (dissoc paramz :limit)
          url      (str (:protocol tiingo-api)
                        (:url tiingo-api)
@@ -170,6 +173,7 @@
    (query-morningstar! ticker {}))
   ([ticker paramz]
    {:pre [(every? true? (allowed? paramz))]}
+   (log/info "query-morningstar! called")
    (let [params   (dissoc paramz :limit)
          url      (str (:protocol morningstar-api)
                        (:url morningstar-api)
@@ -204,6 +208,7 @@
    (query-quandl! dataset ticker {}))
   ([dataset ticker paramz]
    {:pre [(every? true? (allowed? paramz))]}
+   (log/info "query-quandl! called")
    (let [url      (str (:protocol quandl-api)
                        (:url quandl-api)
                        (str dataset "/")
@@ -245,7 +250,7 @@
                                      ticker]}
                              query-params]
   (->> ticker
-       (map (fn [tkr]
+       (#_pmap map (fn [tkr]
               (-> (query-morningstar! tkr
                                       query-params)
                   (assoc :dataset dataset :ticker tkr))))))
@@ -277,6 +282,6 @@
                                       ticker] :as m}
                               query-params]
   (->> ticker
-       (map (fn [tkr]
+       (#_pmap map (fn [tkr]
               (-> (query-quandl! dataset tkr query-params)
                   (assoc :dataset dataset :ticker tkr))))))
