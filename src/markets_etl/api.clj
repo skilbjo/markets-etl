@@ -241,19 +241,21 @@
                                       ticker]}
                               query-params]
   (->> ticker
-       (map (fn [tkr]
+       (r/map (fn [tkr]
               (->> (query-tiingo! tkr
                                   query-params)
-                   (map #(assoc % :dataset dataset :ticker tkr)))))))
+                   (map #(assoc % :dataset dataset :ticker tkr)))))
+       r/foldcat))
 
 (defmethod get-data "MSTAR" [{:keys [dataset
                                      ticker]}
                              query-params]
   (->> ticker
-       (#_pmap map (fn [tkr]
+       (r/map (fn [tkr]
               (-> (query-morningstar! tkr
                                       query-params)
-                  (assoc :dataset dataset :ticker tkr))))))
+                  (assoc :dataset dataset :ticker tkr))))
+       r/foldcat))
 
 (defmethod get-data "INTRINIO" [{:keys [dataset
                                         ticker]}
@@ -282,6 +284,7 @@
                                       ticker] :as m}
                               query-params]
   (->> ticker
-       (#_pmap map (fn [tkr]
+       (r/map (fn [tkr]
               (-> (query-quandl! dataset tkr query-params)
-                  (assoc :dataset dataset :ticker tkr))))))
+                  (assoc :dataset dataset :ticker tkr))))
+       r/foldcat))

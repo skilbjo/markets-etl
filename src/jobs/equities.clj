@@ -312,15 +312,14 @@
                                                   util/joda-date->date-str)}
                                  query-params)
           ;data        (->> (concat #_alpha-vantage #_tiingo morningstar quandl)
-                           ;vec
                            ;(pmap #(api/get-data % query-params*))
                            ;flatten)
-          data'       (->> (concat #_alpha-vantage #_tiingo morningstar quandl)
+          data'       (->> (concat #_alpha-vantage tiingo morningstar quandl)
                            (into [])
-                           (r/map #(api/get-data % query-params*))
-                           r/foldcat
-                           (into [])
-                           flatten)
+                           (pmap #(api/get-data % query-params*))
+                           ;r/foldcat
+                           ;(into [])
+                           )
           ]
   ;(println data)
   (println data')
