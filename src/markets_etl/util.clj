@@ -4,7 +4,9 @@
             [clj-time.core :as time]
             [clj-time.format :as formatter]
             [clojure.pprint :as pprint]
-            [clojure.string :as string]))
+            [clojure.string :as string]
+            [markets-etl.api :as api])
+  (:import  (java.util.concurrent Executors)))
 
 ; -- dev -----------------------------------------------
 (defn print-it [coll]
@@ -82,6 +84,22 @@
   (->> (map sequentialize lines)
        (map string/join)
        (string/join "\n")))
+
+; -- parallelization -----------------------------------
+(defn tiled-pmap [grain-size f xs]
+  (->> xs
+       (partition-all grain-size)
+       (pmap (fn [pgroup] (doall (map f pgroup)))) (apply concat)))
+
+(defn tmap [data]                       ; threadmap
+  (let [pool  (Executors/newFixedThreadPool 3)
+        query-params {:limit      500
+                      :start_date util/last-week
+                      :end_date   util/now}
+        tasks (map #(api/get-data % query-params) data)]
+    (doseq [future (.invokeAll pool tasks)]
+      (println (.get future)))
+    (.shutdown pool)))
 
 ; -- alerts --------------------------------------------
 (defn notify-healthchecks-io [api-key]

@@ -57,7 +57,8 @@
    (query-alpha-vantage-api! ticker {}))
   ([url ticker paramz]
    {:pre [(every? true? (allowed? paramz))]}
-   (Thread/sleep 5500)
+   (log/info "query-alpha-vantage-api! called")
+   (Thread/sleep 3500)
    (let [params   (dissoc paramz :limit)
          response (try
                     (http/get url)
@@ -107,6 +108,7 @@
    (query-tiingo! ticker {}))
   ([ticker paramz]
    {:pre [(every? true? (allowed? paramz))]}
+   (log/info "query-tiingo! called")
    (let [params   (dissoc paramz :limit)
          url      (str (:protocol tiingo-api)
                        (:url tiingo-api)
@@ -170,6 +172,7 @@
    (query-morningstar! ticker {}))
   ([ticker paramz]
    {:pre [(every? true? (allowed? paramz))]}
+   (log/info "query-morningstar! called")
    (let [params   (dissoc paramz :limit)
          url      (str (:protocol morningstar-api)
                        (:url morningstar-api)
@@ -204,6 +207,7 @@
    (query-quandl! dataset ticker {}))
   ([dataset ticker paramz]
    {:pre [(every? true? (allowed? paramz))]}
+   (log/info "query-quandl! called")
    (let [url      (str (:protocol quandl-api)
                        (:url quandl-api)
                        (str dataset "/")
