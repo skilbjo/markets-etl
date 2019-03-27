@@ -4,9 +4,11 @@
             [clj-time.format :as format]
             [clojure.data.json :as json]
             [clojure.java.jdbc :as jdbc]
+            [clojure.string :as string]
             [clojure.tools.cli :as cli]
             [clojure.tools.logging :as log]
-            [clojure.string :as string]
+            [com.climate.claypoole :as cp]
+            [com.climate.claypoole.lazy :as lazy]
             [environ.core :refer [env]]
             [markets-etl.api :as api]
             [markets-etl.error :as error]
@@ -310,9 +312,14 @@
                                                   :date
                                                   util/joda-date->date-str)}
                                  query-params)
-          data        (->> (concat alpha-vantage tiingo morningstar quandl)
-                           (map #(api/get-data % query-params*))
-                           flatten)]
-      (execute! cxn data)))
+          data        (cp/with-shutdown! [pool (cp/threadpool 4)]
+                        (->> (concat #_alpha-vantage tiingo morningstar quandl)
+                             vec
+                             (cp/pmap pool #(api/get-data % query-params*))
+                             #_(map #(api/get-data % query-params*))
+                             flatten
+                             doall))]
+      (println data)
+      #_(execute! cxn data)))
 
-  (util/notify-healthchecks-io (-> :healthchecks-io-api-key env)))
+  #_(util/notify-healthchecks-io (-> :healthchecks-io-api-key env)))
