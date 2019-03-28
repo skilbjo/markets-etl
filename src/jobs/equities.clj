@@ -2,6 +2,8 @@
   (:require [clj-time.coerce :as coerce]
             [clj-time.core :as time]
             [clj-time.format :as format]
+            [clojure.core.reducers :as r]
+            [com.climate.claypoole :as cp]
             [clojure.data.json :as json]
             [clojure.java.jdbc :as jdbc]
             [clojure.tools.cli :as cli]
@@ -310,9 +312,32 @@
                                                   :date
                                                   util/joda-date->date-str)}
                                  query-params)
-          data        (->> (concat alpha-vantage tiingo morningstar quandl)
-                           (map #(api/get-data % query-params*))
-                           flatten)]
-      (execute! cxn data)))
+          r-data          (fn []
+                            (->> (concat #_alpha-vantage tiingo morningstar quandl)
+                                 vec
+                                 (r/map (fn [m] (let [d (:dataset m)]
+                                                  (->> m
+                                                       :ticker
+                                                       (map #(assoc {} :dataset d :ticker %))))))
+                                 r/flatten
+                                 (r/map #(api/get-data % query-params*))
+                                 r/flatten
+                                 r/foldcat))
+          data        (cp/with-shutdown! [pool (cp/threadpool 2)]
+                        (->> (concat #_alpha-vantage tiingo morningstar #_quandl)
+                             vec
+                             (cp/pmap pool (fn [m] (let [d (:dataset m)]
+                                                     (->> m
+                                                          :ticker
+                                                          (map #(assoc {} :dataset d :ticker %))))))
+                             flatten
+                             (cp/pmap pool #(api/get-data % query-params*))
+                             (map #((> 2 (count %))))
+                             util/print-it
+                             flatten
+                             doall
+                             ))]
+      (util/print-it data)
+      #_(execute! cxn data)))
 
-  (util/notify-healthchecks-io (-> :healthchecks-io-api-key env)))
+  #_(util/notify-healthchecks-io (-> :healthchecks-io-api-key env)))

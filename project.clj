@@ -3,6 +3,7 @@
   :dependencies [[org.clojure/clojure "1.10.0"]
                  [clj-http "3.9.1"]
                  [clj-time "0.15.1"]
+                 [com.climate/claypoole "1.1.4"]
                  [environ "1.1.0"]
                  [org.clojure/data.json "0.2.6"]
                  [org.clojure/java.jdbc "0.7.9"]
