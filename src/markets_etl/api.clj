@@ -57,6 +57,7 @@
    (query-alpha-vantage-api! ticker {}))
   ([url ticker paramz]
    {:pre [(every? true? (allowed? paramz))]}
+   (log/info "query-alpha-vantage! called")
    (Thread/sleep 5500)
    (let [params   (dissoc paramz :limit)
          response (try
@@ -107,6 +108,7 @@
    (query-tiingo! ticker {}))
   ([ticker paramz]
    {:pre [(every? true? (allowed? paramz))]}
+   (log/info "query-tiingo! called")
    (let [params   (dissoc paramz :limit)
          url      (str (:protocol tiingo-api)
                        (:url tiingo-api)
@@ -133,7 +135,8 @@
      (if (= 200 status)
        (-> body
            (json/read-str :key-fn (comp keyword string/lower-case)))
-       (log/error "Tiingo request, status:" status "Ticker:" ticker)))))
+       (do (log/error "Tiingo request, status:" status "Ticker:" ticker)
+           nil)))))
 
 (defn query-intrinio!   ;; turning this off for now - as of Dec 2018 need to
   ([ticker]             ;; pay for any data now
@@ -163,13 +166,15 @@
      (if (= 200 status)
        (-> body
            (json/read-str :key-fn keyword))
-       (log/error "Intrinio request, exception:" status "Ticker:" ticker)))))
+       (do (log/error "Intrinio request, exception:" status "Ticker:" ticker)
+           nil)))))
 
 (defn query-morningstar!
   ([ticker]
    (query-morningstar! ticker {}))
   ([ticker paramz]
    {:pre [(every? true? (allowed? paramz))]}
+   (log/info "query-morningstar! called")
    (let [params   (dissoc paramz :limit)
          url      (str (:protocol morningstar-api)
                        (:url morningstar-api)
@@ -196,14 +201,16 @@
      (if (and (= 200 status) ((comp not empty?) body'))
        (-> body'
            (json/read-str :key-fn (comp keyword string/lower-case)))
-       (log/error "Morningstar-api request, exception:" status
-                  "Ticker:" ticker)))))
+       (do (log/error "Morningstar-api request, exception:" status
+                  "Ticker:" ticker)
+           nil)))))
 
 (defn query-quandl!
   ([dataset ticker]
    (query-quandl! dataset ticker {}))
   ([dataset ticker paramz]
    {:pre [(every? true? (allowed? paramz))]}
+   (log/info "query-quandl! called")
    (let [url      (str (:protocol quandl-api)
                        (:url quandl-api)
                        (str dataset "/")
@@ -235,28 +242,22 @@
 (defmethod get-data "TIINGO" [{:keys [dataset
                                       ticker]}
                               query-params]
-  (->> ticker
-       (map (fn [tkr]
-              (->> (query-tiingo! tkr
-                                  query-params)
-                   (map #(assoc % :dataset dataset :ticker tkr)))))))
+  (->> (query-tiingo! ticker
+                      query-params)
+       (map #(assoc % :dataset dataset :ticker ticker))))
 
 (defmethod get-data "MSTAR" [{:keys [dataset
                                      ticker]}
                              query-params]
-  (->> ticker
-       (map (fn [tkr]
-              (-> (query-morningstar! tkr
-                                      query-params)
-                  (assoc :dataset dataset :ticker tkr))))))
+  (-> (query-morningstar! ticker
+                          query-params)
+      (assoc :dataset dataset :ticker ticker)))
 
 (defmethod get-data "INTRINIO" [{:keys [dataset
                                         ticker]}
                                 query-params]
-  (->> ticker
-       (map (fn [tkr]
-              (-> (query-intrinio! tkr query-params)
-                  (assoc :dataset dataset :ticker tkr))))))
+  (-> (query-intrinio! ticker query-params)
+      (assoc :dataset dataset :ticker ticker)))
 
 (defmethod get-data "ALPHA-VANTAGE" [{:keys [dataset
                                              ticker]}
@@ -266,17 +267,13 @@
         alpha-vantage-dataset   (if (clojure.set/subset? ticker' currencies)
                                   :currency
                                   :equities)]
-    (->> ticker
-         (map (fn [tkr]
-                (-> (query-alpha-vantage! {:endpoint     alpha-vantage-dataset
-                                           :ticker       tkr
-                                           :query-params query-params})
-                    (assoc :dataset dataset :ticker tkr)))))))
+    (-> (query-alpha-vantage! {:endpoint     alpha-vantage-dataset
+                               :ticker       ticker
+                               :query-params query-params})
+        (assoc :dataset dataset :ticker ticker))))
 
 (defmethod get-data :default [{:keys [dataset
-                                      ticker] :as m}
+                                      ticker]}
                               query-params]
-  (->> ticker
-       (map (fn [tkr]
-              (-> (query-quandl! dataset tkr query-params)
-                  (assoc :dataset dataset :ticker tkr))))))
+  (-> (query-quandl! dataset ticker query-params)
+      (assoc :dataset dataset :ticker ticker)))
