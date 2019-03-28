@@ -171,10 +171,14 @@
   (let [d (:dataset m)]
     (->> m
          :ticker
-         (map #(assoc {} :dataset d :ticker %)))))
+         (mapv #(assoc {} :dataset d :ticker %))
+         #_print-it)))
 
 (->> data
-     (map split-it)
-     flatten
+     (mapcat split-it)
+     ;vec
+     ;(map vector)
+     ;(partition-all 2 )
+     ;flatten
      doall
      print-it)
