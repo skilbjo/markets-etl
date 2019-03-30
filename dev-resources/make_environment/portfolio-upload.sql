@@ -5,10 +5,11 @@ create temp table portfolio_stage (
   quantity          decimal(10,3),
   cost_per_share    decimal(10,3),
   total_cost        decimal(10,3),
-  formula           text
+  formula           text,
+  notes             text
 );
 
-\copy portfolio_stage (_user,dataset,ticker,quantity,cost_per_share,total_cost,formula) from '/Users/skilbjo/Documents/Dropbox/markets-etl/portfolio.csv' with csv header;
+\copy portfolio_stage (_user,dataset,ticker,quantity,cost_per_share,total_cost,formula,notes) from '/Users/skilbjo/Documents/Dropbox/markets-etl/portfolio.csv' with csv header;
 
 begin;
 

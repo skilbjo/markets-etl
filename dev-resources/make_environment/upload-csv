@@ -1,13 +1,23 @@
 #!/usr/bin/env bash
 set -eou pipefail
 
-dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )" && cd "$dir"
+table=''
+db=''
 
-file="$1"
-db="$2"
+dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )" && cd "$dir"
+usage(){ echo "Usage: upload-csv: ${0} [--table <portfolio|markets>] [--database <dev|prod>]" 1>&2; exit 1; }
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    -t|--table)    table="$2"; shift ;;
+    -d|--database) db="$2"; shift ;;
+    *) break ;;
+  esac
+  shift
+done
+if [[ -z $table ]] || [[ -z $db ]]; then usage; fi
 
 upload(){
-  local file="$1"
+  local table="$1"
   local db="$2"
   local psql_uri=''
 
@@ -18,14 +28,14 @@ upload(){
       psql_uri="$(echo "$docker_psql_uri")" ;;
   esac
 
-  case "$file" in
+  case "$table" in
     markets | portfolio )
       psql "$psql_uri" \
         -v ON_ERROR_STOP=1 \
-        -f "${dir}/${file}-upload.sql" ;;
+        -f "${dir}/${table}-upload.sql" ;;
     * )
       echo 'usage: ./upload-csv portfolio|markets dev|prod' && exit 1 ;;
   esac
 }
 
-upload "$file" "$db"
+upload "$table" "$db"
