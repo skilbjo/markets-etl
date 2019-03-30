@@ -35,6 +35,10 @@
    "VTIAX" "VTSAX" "VWINX" "VWENX" "VWNDX" "VMMXX" "VWIGX" "VINEX" "VMMSX"
    "VWUAX" "VEXPX" "VIMSX" "VMRGX" "VGTSX"])
 
+(def retirement
+  ["DFIEX" "FLCNX" "JUSMX" "MVCKX" "PIMIX" "PTTRX" "TRRNX" "VEIRX" "VIEIX"
+   "VINIX"])
+
 (def quandl
   '({:dataset "WIKI"
      :ticker ["FB" "AMZN" "GOOG" "NVDA" "CY" "INTC" "TXN" "V"]}))
@@ -45,7 +49,7 @@
 
 (def tiingo
   (list {:dataset "TIINGO"
-         :ticker (->> (conj stocks international etfs mutual-funds)
+         :ticker (->> (conj stocks international etfs mutual-funds retirement)
                       (remove #{"BRK.B"})
                       (conj ["BRK-B"])
                       flatten

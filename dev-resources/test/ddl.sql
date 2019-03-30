@@ -145,6 +145,16 @@ begin;
     (       'TIINGO',         'VMRGX', 'Vanguard Morgan™ Growth Fund Investor Shares'),
     (       'TIINGO',         'VGTSX', 'Vanguard Total International Stock Index Fund Investor Shares'),
     (       'TIINGO',         'VWELX', 'Vanguard Wellington™ Fund Investor Shares'),
+    (       'TIINGO',         'DFIEX', 'DFA International Core Equity Portfolio Institutional Class'),
+    (       'TIINGO',         'FLCNX', 'Fidelity® Contrafund® K6'),
+    (       'TIINGO',         'JUSMX', 'JPMorgan U.S. Small Company Fund Class R6'),
+    (       'TIINGO',         'MVCKX', 'MFS Mid Cap Value Fund Class R6'),
+    (       'TIINGO',         'PIMIX', 'PIMCO Income Fund Institutional Class'),
+    (       'TIINGO',         'PTTRX', 'PIMCO Total Return Fund Institutional Class'),
+    (       'TIINGO',         'TRRNX', 'T. Rowe Price Retirement 2055 Fund'),
+    (       'TIINGO',         'VEIRX', 'Vanguard Equity-Income Fund Admiral Shares'),
+    (       'TIINGO',         'VIEIX', 'Vanguard Extended Market Index Fund Institutional Shares'),
+    (       'TIINGO',         'VINIX', 'Vanguard Institutional Index Fund Institutional Shares'),
 
 
     (     'INTRINIO',            'FB', 'Facebook'),
@@ -217,6 +227,16 @@ begin;
     ('ALPHA-VANTAGE',         'VMRGX', 'Vanguard Morgan™ Growth Fund Investor Shares'),
     ('ALPHA-VANTAGE',         'VGTSX', 'Vanguard Total International Stock Index Fund Investor Shares'),
     ('ALPHA-VANTAGE',         'VWELX', 'Vanguard Wellington™ Fund Investor Shares'),
+    ('ALPHA-VANTAGE',         'DFIEX', 'DFA International Core Equity Portfolio Institutional Class'),
+    ('ALPHA-VANTAGE',         'FLCNX', 'Fidelity® Contrafund® K6'),
+    ('ALPHA-VANTAGE',         'JUSMX', 'JPMorgan U.S. Small Company Fund Class R6'),
+    ('ALPHA-VANTAGE',         'MVCKX', 'MFS Mid Cap Value Fund Class R6'),
+    ('ALPHA-VANTAGE',         'PIMIX', 'PIMCO Income Fund Institutional Class'),
+    ('ALPHA-VANTAGE',         'PTTRX', 'PIMCO Total Return Fund Institutional Class'),
+    ('ALPHA-VANTAGE',         'TRRNX', 'T. Rowe Price Retirement 2055 Fund'),
+    ('ALPHA-VANTAGE',         'VEIRX', 'Vanguard Equity-Income Fund Admiral Shares'),
+    ('ALPHA-VANTAGE',         'VIEIX', 'Vanguard Extended Market Index Fund Institutional Shares'),
+    ('ALPHA-VANTAGE',         'VINIX', 'Vanguard Institutional Index Fund Institutional Shares'),
 
     ('ALPHA-VANTAGE',        'EURUSD', 'Value of 1 EUR in USD'),
     ('ALPHA-VANTAGE',        'GBPUSD', 'Value of 1 GBP in USD')
