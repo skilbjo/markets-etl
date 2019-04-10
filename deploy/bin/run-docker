@@ -5,7 +5,7 @@ dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )/../../" && pwd )" && cd "$dir"
 app="$(basename $(pwd))"
 arch=''
 
-case "$(uname -a)" in
+case "$(uname -m)" in
   amd64* | x_86* | x86_64* )
     img="quay.io/skilbjo/${app}:latest" ;;
   arm* )
@@ -34,7 +34,7 @@ update_crond(){
     ('Linux') sed -i '1i SHELL=/usr/bin/bash'         "${dir}/deploy/tasks/crontab"
               sed -i '1i cmd="deploy/bin/run-docker"' "${dir}/deploy/tasks/crontab" ;;
   esac
-  sudo cp "${dir}/deploy/tasks/crontab" >"/etc/cron.d/${app}"
+  sudo cp "${dir}/deploy/tasks/crontab" "/etc/cron.d/${app}"
 }
 
 get_current_artifacts && \
