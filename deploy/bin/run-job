@@ -25,8 +25,11 @@ get_artifact_from_circle_ci(){
   curl "$artifact_url" >"${tmp_dir}/${app}.jar"
 }
 
-# Prereqs
-case "$(uname -m)" in
+case "$(whoami)" in   # Prereqs
+  root ) mv /app.jar "${tmp_dir}/${app}.jar" ;;
+esac
+
+case "$(uname -m)" in # Prereqs
   arm* )
     deploy_dir='/usr/local/deploy/bin'
     set +e; eval "${deploy_dir}/apk-arm"; update-ca-certificates; apk fix || echo 'Unable to reach apk...'; set -e; # set +e when apk not available
@@ -46,8 +49,7 @@ case "$(uname)" in
       _job=$(echo "$@" | sed 's/backfill-//')
 
       eval "/usr/local/backfill/job ${_job}"
-    fi
-    ;;
+    fi ;;
 esac
 
 cmd="java $JAVA_OPTS -jar ${tmp_dir}/${app}.jar"
