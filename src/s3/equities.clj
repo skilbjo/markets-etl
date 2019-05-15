@@ -36,6 +36,4 @@
                          (map #(api/get-data % query-params*))
                          flatten)]
 
-    (execute! (-> query-params* :start_date) data))
-
-  (util/notify-healthchecks-io (-> :hc-circleci env)))
+    (execute! (-> query-params* :start_date) data)))

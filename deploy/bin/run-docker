@@ -30,11 +30,15 @@ get_current_artifacts(){
 }
 
 update_crond(){
-  case "$(uname)" in
-    ('Linux') sed -i '1i SHELL=/usr/bin/bash'         "${dir}/deploy/tasks/crontab"
-              sed -i '1i cmd="deploy/bin/run-docker"' "${dir}/deploy/tasks/crontab" ;;
+  case "$(whoami)" in
+    circleci) echo '' ;;
+    *)
+        case "$(uname)" in
+          ('Linux') sed -i '1i SHELL=/usr/bin/bash'         "${dir}/deploy/tasks/crontab"
+                    sed -i '1i cmd="deploy/bin/run-docker"' "${dir}/deploy/tasks/crontab" ;;
+        esac
+        sudo cp "${dir}/deploy/tasks/crontab" "/etc/cron.d/${app}" ;;
   esac
-  sudo cp "${dir}/deploy/tasks/crontab" "/etc/cron.d/${app}"
 }
 
 get_current_artifacts && \

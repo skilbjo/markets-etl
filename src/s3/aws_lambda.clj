@@ -25,11 +25,13 @@
   (let [{:keys [options summary errors]} (cli/parse-opts args cli-options)
         date                             (-> options :date)]
     (log/info "Starting jobs... ")
-    (currency/-main  "-d" date)
-    #_(economics/-main "-d" date)
-    (equities/-main  "-d" date)
-    (real-estate/-main "-d" date)
-    (interest-rates/-main "-d" date)
+    (currency/-main "-d" date)
+    (equities/-main "-d" date)
+    #_(economics/-main      "-d" date)
+    #_(real-estate/-main    "-d" date)
+    #_(interest-rates/-main "-d" date)
+    (log/info "Notifying healthchecks.io ... ")
+    (util/notify-healthchecks-io (-> :healthchecks-io-api-key env))
     (log/info "Finished!")))
 
 (defn main [& args]
@@ -51,8 +53,7 @@
   (real-estate/-main)
 
   (log/info "Finished!")
-  (log/info "Notifying healthchecks.io ... ")
-  (util/notify-healthchecks-io (-> :hc-circleci env)))
+  (log/info "Notifying healthchecks.io ... "))
 
 (defn -handleRequest [_ event _ context]
   (let [event' (-> event
