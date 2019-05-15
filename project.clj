@@ -1,9 +1,13 @@
 (defproject markets-etl "0.1.0"
   :uberjar-name "app.jar"
   :dependencies [[org.clojure/clojure "1.10.0"]
+                 [amazonica "0.3.117" :exclusions [com.amazonaws/aws-java-sdk]]
+                 [com.amazonaws/aws-lambda-java-core "1.0.0"]
                  [clj-http "3.9.1"]
                  [clj-time "0.15.1"]
+                 [com.amazonaws/aws-java-sdk-kms "1.11.98"]
                  [environ "1.1.0"]
+                 [org.clojure/data.csv "0.1.4"]
                  [org.clojure/data.json "0.2.6"]
                  [org.clojure/java.jdbc "0.7.9"]
                  [org.clojure/tools.cli "0.4.1"]
