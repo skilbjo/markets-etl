@@ -31,7 +31,7 @@
             (do (vreset! hdr (into [] (keys input)))))
           (if @prepend-hdr
             (do (vreset! prepend-hdr false)
-              (rf
+                (rf
                  (if format-header
                    (rf result (mapv format-header @hdr))
                    (rf result @hdr))
