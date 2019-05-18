@@ -18,7 +18,7 @@
 
 (def cli-options
   [["-d" "--date DATE" "Start date (month) (yyyy-mm-dd format) to start processing"
-    :default  util/last-week]
+    :default  util/yesterday]
    ["-h" "--help"]])
 
 (defn -main [& args]
@@ -27,9 +27,9 @@
     (log/info "Starting jobs... ")
     (currency/-main "-d" date)
     (equities/-main "-d" date)
-    #_(economics/-main      "-d" date)
-    #_(real-estate/-main    "-d" date)
-    #_(interest-rates/-main "-d" date)
+    (economics/-main      "-d" date)
+    (real-estate/-main    "-d" date)
+    (interest-rates/-main "-d" date)
     (log/info "Notifying healthchecks.io ... ")
     (util/notify-healthchecks-io (-> :healthchecks-io-api-key env))
     (log/info "Finished!")))

@@ -8,8 +8,7 @@ arch=''
 case "$(uname -m)" in
   amd64* | x_86* | x86_64* )
     img="quay.io/skilbjo/${app}:latest" ;;
-  arm* )
-    arch='arm'
+  arm* ) arch='arm'
     img="quay.io/skilbjo/${app}:${arch}" ;;
 esac
 
