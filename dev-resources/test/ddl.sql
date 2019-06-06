@@ -237,6 +237,8 @@ begin;
     ('ALPHA-VANTAGE',         'VEIRX', 'Vanguard Equity-Income Fund Admiral Shares'),
     ('ALPHA-VANTAGE',         'VIEIX', 'Vanguard Extended Market Index Fund Institutional Shares'),
     ('ALPHA-VANTAGE',         'VINIX', 'Vanguard Institutional Index Fund Institutional Shares'),
+    ('ALPHA-VANTAGE',         'VEUSX', 'Vanguard European Stock Index Fund Admiral Shares'),
+    ('ALPHA-VANTAGE',         'VPADX', 'Vanguard Pacific Stock Index Fund Admiral Shares'),
 
     ('ALPHA-VANTAGE',        'EURUSD', 'Value of 1 EUR in USD'),
     ('ALPHA-VANTAGE',        'GBPUSD', 'Value of 1 GBP in USD')
