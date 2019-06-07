@@ -93,6 +93,8 @@ begin;
     (        'MSTAR',           'IAU', 'iShares Gold Trust'),
     (        'MSTAR',           'GLD', 'SPDR Gold Trust'),
     (        'MSTAR',         'VWUAX', 'Vanguard U.S. Growth Fund Admiral™ Shares'),
+    (        'MSTAR',         'VEUSX', 'Vanguard European Stock Index Fund Admiral Shares'),
+    (        'MSTAR',         'VPADX', 'Vanguard Pacific Stock Index Fund Admiral Shares'),
 
     (       'TIINGO',         'VEMAX', 'Vanguard Emerging Markets Stock Index Fund Admiral Shares'),
     (       'TIINGO',         'VEURX', 'Vanguard European Stock Index Fund Investor Shares'),
@@ -155,7 +157,8 @@ begin;
     (       'TIINGO',         'VEIRX', 'Vanguard Equity-Income Fund Admiral Shares'),
     (       'TIINGO',         'VIEIX', 'Vanguard Extended Market Index Fund Institutional Shares'),
     (       'TIINGO',         'VINIX', 'Vanguard Institutional Index Fund Institutional Shares'),
-
+    (       'TIINGO',         'VEUSX', 'Vanguard European Stock Index Fund Admiral Shares'),
+    (       'TIINGO',         'VPADX', 'Vanguard Pacific Stock Index Fund Admiral Shares'),
 
     (     'INTRINIO',            'FB', 'Facebook'),
     (     'INTRINIO',          'AMZN', 'Amazon'),
