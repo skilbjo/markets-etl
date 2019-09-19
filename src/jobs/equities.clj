@@ -314,9 +314,11 @@
                                                   :date
                                                   util/joda-date->date-str)}
                                  query-params)
-          data        (->> (concat alpha-vantage tiingo morningstar quandl)
-                           (map #(api/get-data % query-params*))
+          data        (->> (concat #_alpha-vantage tiingo morningstar quandl)
+                           util/tmap ;api/get-data query-params*))
+                           #_(map #(future (api/get-data % query-params*)))
                            flatten)]
-      (execute! cxn data)))
+      (println data)
+      #_(execute! cxn data)))
 
-  (util/notify-healthchecks-io (-> :healthchecks-io-api-key env)))
+  #_(util/notify-healthchecks-io (-> :healthchecks-io-api-key env)))
