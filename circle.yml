@@ -16,7 +16,7 @@ jobs:
             - ~/.lein
           key: << checksum "project.clj" >>
       - setup_remote_docker
-      - run: (lein cloverage --codecov && bash <(curl -s https://codecov.io/bash) -f target/coverage/codecov.json & 2>/dev/null; lein test & 2>/dev/null; lein cljfmt check & 2>/dev/null) && wait && deploy/bin/publish-image
+      - run: (lein cloverage --codecov && bash <(curl -s https://codecov.io/bash) -f target/coverage/codecov.json & 2>/dev/null; lein test & 2>/dev/null; lein cljfmt check & 2>/dev/null; wait) && wait && deploy/bin/publish-image
       - store_artifacts:
           path: target/uberjar/app.jar
 
