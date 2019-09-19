@@ -95,6 +95,10 @@ begin;
     (        'MSTAR',         'VWUAX', 'Vanguard U.S. Growth Fund Admiral™ Shares'),
     (        'MSTAR',         'VEUSX', 'Vanguard European Stock Index Fund Admiral Shares'),
     (        'MSTAR',         'VPADX', 'Vanguard Pacific Stock Index Fund Admiral Shares'),
+    (        'MSTAR',           'NET', 'Cloudflare Inc'),
+    (        'MSTAR',          'UBER', 'Uber Technologies Inc'),
+    (        'MSTAR',            'MA', 'Mastercard Inc'),
+    (        'MSTAR',           'AXP', 'American Express Company'),
 
     (       'TIINGO',         'VEMAX', 'Vanguard Emerging Markets Stock Index Fund Admiral Shares'),
     (       'TIINGO',         'VEURX', 'Vanguard European Stock Index Fund Investor Shares'),
@@ -159,6 +163,10 @@ begin;
     (       'TIINGO',         'VINIX', 'Vanguard Institutional Index Fund Institutional Shares'),
     (       'TIINGO',         'VEUSX', 'Vanguard European Stock Index Fund Admiral Shares'),
     (       'TIINGO',         'VPADX', 'Vanguard Pacific Stock Index Fund Admiral Shares'),
+    (       'TIINGO',           'NET', 'Cloudflare Inc'),
+    (       'TIINGO',          'UBER', 'Uber Technologies Inc'),
+    (       'TIINGO',            'MA', 'Mastercard Inc'),
+    (       'TIINGO',           'AXP', 'American Express Company'),
 
     (     'INTRINIO',            'FB', 'Facebook'),
     (     'INTRINIO',          'AMZN', 'Amazon'),
@@ -242,6 +250,11 @@ begin;
     ('ALPHA-VANTAGE',         'VINIX', 'Vanguard Institutional Index Fund Institutional Shares'),
     ('ALPHA-VANTAGE',         'VEUSX', 'Vanguard European Stock Index Fund Admiral Shares'),
     ('ALPHA-VANTAGE',         'VPADX', 'Vanguard Pacific Stock Index Fund Admiral Shares'),
+    ('ALPHA-VANTAGE',           'NET', 'Cloudflare Inc'),
+    ('ALPHA-VANTAGE',          'UBER', 'Uber Technologies Inc'),
+    ('ALPHA-VANTAGE',            'MA', 'Mastercard Inc'),
+    ('ALPHA-VANTAGE',           'AXP', 'American Express Company'),
+
 
     ('ALPHA-VANTAGE',        'EURUSD', 'Value of 1 EUR in USD'),
     ('ALPHA-VANTAGE',        'GBPUSD', 'Value of 1 GBP in USD')
