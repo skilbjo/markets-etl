@@ -5,7 +5,8 @@
             [clojure.java.io :as io]
             [clojure.java.shell :as shell]
             [clojure.tools.logging :as log]
-            [environ.core :refer [env]]))
+            [environ.core :refer [env]]
+            [orca.core :as orca]))
 
 ; https://github.com/metasoarous/semantic-csv/blob/master/src/semantic_csv/impl/core.cljc#L24
 (defn stringify-keyword [x]
@@ -57,9 +58,13 @@
                                                             job
                                                             ".csv"))]
                            (csv/write-csv writer row)))
+        orc-schema     (str "<id:string,date:timestamp>")
+        convert-to-orc #(orca/file-encoder output orc-schema 1024 {:overwrite? true})
         gzip-csv       (fn [job]
                          (let [clean-cmd (str "if [[ -f /tmp/" job ".csv.gz ]]; then rm /tmp/" job ".csv.gz; fi")
-                               gzip-cmd  (str "gzip" " -9 " "/tmp/" job ".csv")]
+                               cp-cmd    (str "cp")  ; TODO finish this
+                               gzip-cmd  (str "gzip" " -9 " "/tmp/" job ".csv")  ; aws lambda gzip doesn't have -k flag
+                               mv-cmd    (str "mv")] ; TODO finish this
                            (shell/sh "bash" "-c" clean-cmd)
                            (shell/sh "bash" "-c" gzip-cmd)))
         s3-put         (fn [job]
