@@ -49,24 +49,23 @@
 (defn insert-to-athena [job date coll]
   (let [dataset        (-> coll first :dataset)
         job*           (-> job (string/replace #"_" {"_" "-"}))
+        csv-file       (str "/tmp/" job ".csv")
+        csv-bak-file   (str "/tmp/" job ".csv.bak")
+        gzip-file      (str "/tmp/" job ".csv.gz")
+        orc-file       (str "/tmp/" job ".orc")
         convert-to-csv (fn [job row]
-                         (io/delete-file (str "/tmp/"
-                                              job
-                                              ".csv")
-                                         true)
-                         (with-open [writer (io/writer (str "/tmp/"
-                                                            job
-                                                            ".csv"))]
+                         (io/delete-file csv-file true)
+                         (with-open [writer (io/writer csv-file)]
                            (csv/write-csv writer row)))
-        orc-schema     (str "<id:string,date:timestamp>")
-        convert-to-orc #(orca/file-encoder output orc-schema 1024 {:overwrite? true})
         gzip-csv       (fn [job]
-                         (let [clean-cmd (str "if [[ -f /tmp/" job ".csv.gz ]]; then rm /tmp/" job ".csv.gz; fi")
-                               cp-cmd    (str "cp")  ; TODO finish this
-                               gzip-cmd  (str "gzip" " -9 " "/tmp/" job ".csv")  ; aws lambda gzip doesn't have -k flag
-                               mv-cmd    (str "mv")] ; TODO finish this
+                         (let [clean-cmd (str "if [[ -f " gzip-file " ]]; then rm " gzip-file "; fi")
+                               cp-cmd    (str "cp" csv-file csv-bak-file)
+                               gzip-cmd  (str "gzip" " -9 " csv-file)  ; aws lambda gzip doesn't have -k flag
+                               mv-cmd    (str "mv" csv-bak-file csv-file)]
                            (shell/sh "bash" "-c" clean-cmd)
-                           (shell/sh "bash" "-c" gzip-cmd)))
+                           (shell/sh "bash" "-c" cp-cmd)
+                           (shell/sh "bash" "-c" gzip-cmd)
+                           (shell/sh "bash" "-c" mv-cmd)))
         s3-put         (fn [job]
                          (let [s3-path (str "datalake/markets-etl/"
                                             job
@@ -79,9 +78,26 @@
                            (s3/put-object :bucket-name "skilbjo-data"
                                           :key         s3-path
                                           :metadata    {:server-side-encryption "AES256"}
-                                          :file        (str "/tmp/"
-                                                            job
-                                                            ".csv.gz"))))]
+                                          :file        gzip-file)))
+        orc-schema     (fn [job]
+                         (let [schemas {:currency (str "struct<open:double,close:double,low:double,high:double,volume:double,split_ratio:double,adj_open:double,adj_close:double,adj_low:double,adj_high:double,adj_volume:double,ex_dividend:double>")
+                                        :equities (str "struct<dataset:string,ticker:string,currency:string,date:date,rate:double,high:double,low:double>")}]
+                           (-> job keyword schemas)))
+        convert-to-orc (fn [job row]
+                         (let [schema (orc-schema job)]
+                           (orca/write-rows orc-file row schema)))
+        s3-put-orc     (fn [job]
+                         (let [s3-path (str "datalake/markets-etl/" job "/date=" date "/" job ".orc")]
+                           (log/info "s3-path is:" s3-path)
+                           (s3/put-object :bucket-name "skilbjo-data"
+                                          :key         s3-path
+                                          :metadata    {:server-side-encryption "AES256"}
+                                          :file        orc-file)))]
+    (->> coll                    ; lets have only one "date" column in athena
+         (map #(dissoc % :date)) ; so "date" is the partition
+         vectorize
+         (convert-to-orc job*))
+
     (->> coll                    ; lets have only one "date" column in athena
          (map #(dissoc % :date)) ; so "date" is the partition
          vectorize

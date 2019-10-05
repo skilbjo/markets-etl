@@ -7,7 +7,7 @@
                  [clj-time "0.15.2"]
                  [com.amazonaws/aws-java-sdk-kms "1.11.642"]
                  [environ "1.1.0"]
-                 [orca "0.1.0-SNAPSHOT" :exclusions [org.slf4j/slf4j-log4j12]]
+                 [org.apache.orc/orc-core "1.4.0"]
                  [org.clojure/data.csv "0.1.4"]
                  [org.clojure/data.json "0.2.6"]
                  [org.clojure/java.jdbc "0.7.10"]
