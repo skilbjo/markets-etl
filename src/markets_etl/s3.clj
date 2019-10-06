@@ -71,7 +71,6 @@
                  :interest-rates (str "struct<key:string,value:double,dataset:string,ticker:string>")
                  :real-estate    (str "struct<dataset:string,ticker:string,value:double,area_category:string,indicator_code:string,area:string>")}
         schema  (-> job keyword schemas)]
-    (log/info "schema is: " schema)
     (orca/write-rows file row schema {:overwrite? true})
     row))
 
