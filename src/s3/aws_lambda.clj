@@ -53,7 +53,8 @@
   (real-estate/-main)
 
   (log/info "Finished!")
-  (log/info "Notifying healthchecks.io ... "))
+  (log/info "Notifying healthchecks.io ... ")
+  (util/notify-healthchecks-io (-> :healthchecks-io-api-key env)))
 
 (defn -handleRequest [_ event _ context]
   (let [event' (-> event
