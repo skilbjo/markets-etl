@@ -12,13 +12,13 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          key: << checksum "project.clj" >>
+          key: \<< checksum "project.clj" \>> # << and >> must be escaped: https://circleci.com/docs/2.0/build-processing/#limitations
       - run: lein deps
       - save_cache:
           paths:
             - ~/.m2
             - ~/.lein
-          key: << checksum "project.clj" >>
+          key: \<< checksum "project.clj" \>>
       - setup_remote_docker
       - run: (lein cloverage --codecov & 2>/dev/null; lein test & 2>/dev/null; lein cljfmt check & 2>/dev/null) && wait && deploy/bin/publish-image
       - codecov/upload:
