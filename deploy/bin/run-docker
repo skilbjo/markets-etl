@@ -4,6 +4,8 @@ set -eou pipefail
 dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )/../../" && pwd )" && cd "$dir"
 app="$(basename $(pwd))"
 arch=''
+img=''
+job_cmd='/usr/local/deploy/bin/run-job'
 
 case "$(uname -m)" in
   amd64* | x_86* | x86_64* )
@@ -11,8 +13,6 @@ case "$(uname -m)" in
   arm* ) arch='arm'
     img="quay.io/skilbjo/${app}:${arch}" ;;
 esac
-
-job_cmd='/usr/local/deploy/bin/run-job'
 
 get_current_artifacts(){
   # any scripts need updating?
@@ -30,13 +30,12 @@ get_current_artifacts(){
 
 update_crond(){
   case "$(whoami)" in
-    circleci) echo '' ;;
-    *)
-        case "$(uname)" in
-          ('Linux') sed -i '1i SHELL=/usr/bin/bash'         "${dir}/deploy/tasks/crontab"
-                    sed -i '1i cmd="deploy/bin/run-docker"' "${dir}/deploy/tasks/crontab" ;;
-        esac
-        sudo cp "${dir}/deploy/tasks/crontab" "/etc/cron.d/${app}" ;;
+    circleci ) echo '' ;;
+    *) case "$(uname)" in
+         ('Linux') sed -i '1i SHELL=/usr/bin/bash'         "${dir}/deploy/tasks/crontab"
+                   sed -i '1i cmd="deploy/bin/run-docker"' "${dir}/deploy/tasks/crontab" ;;
+       esac
+       sudo cp "${dir}/deploy/tasks/crontab" "/etc/cron.d/${app}" ;;
   esac
 }
 

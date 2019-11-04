@@ -4,7 +4,12 @@
             [clj-time.core :as time]
             [clj-time.format :as formatter]
             [clojure.pprint :as pprint]
-            [clojure.string :as string]))
+            [clojure.string :as string])
+  (:import [com.amazonaws.services.kms AWSKMS AWSKMSClientBuilder]
+           [com.amazonaws.services.kms.model DecryptRequest]
+           [java.util Base64]
+           (java.nio ByteBuffer)
+           (java.nio.charset Charset)))
 
 ; -- dev -----------------------------------------------
 (defn print-it [coll]
@@ -87,3 +92,13 @@
 (defn notify-healthchecks-io [api-key]
   (http/get (str "https://hchk.io/"
                  api-key)))
+
+; -- aws -----------------------------------------------
+(defn decrypt [ciphertext]
+  (let [decoder (Base64/getDecoder)
+        decoded-text (.decode decoder ciphertext)
+        kms-client (AWSKMSClientBuilder/defaultClient)
+        decode-request (doto (DecryptRequest.)
+                         (.withCiphertextBlob (ByteBuffer/wrap decoded-text)))
+        decode-response (.decrypt kms-client decode-request)]
+    (.toString (.decode (Charset/forName "UTF-8") (.getPlaintext decode-response)))))
