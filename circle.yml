@@ -3,14 +3,19 @@ version: 2.1
 orbs:
   codecov: codecov/codecov@1.0.5
 
-jobs:
-  build-and-test:
+executors:
+  clojure_and_postgres:
     working_directory: ~/markets-etl
+    environment:
+      - PATH: /usr/local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/home/circleci/.local/bin:/root/.local/bin
+      - TEST_JDBC_DB_URI: jdbc:postgresql://localhost:5432/postgres?loginTimeout=30&socketTimeout=900&tcpKeepAlive=true&user=postgres
     docker:
-    - image: circleci/clojure:lein-2.9.0
-    - image: circleci/postgres:9.6.9-alpine # for integration test
+      - image: circleci/clojure:lein-2.9.0
+      - image: circleci/postgres:9.6.9-alpine # for integration test
+
+commands:
+  restore_and_save_cache:
     steps:
-      - checkout
       - restore_cache:
           key: \<< checksum "project.clj" \>> # << and >> must be escaped: https://circleci.com/docs/2.0/build-processing/#limitations
       - run: lein deps
@@ -19,6 +24,13 @@ jobs:
             - ~/.m2
             - ~/.lein
           key: \<< checksum "project.clj" \>>
+
+jobs:
+  test-and-publish:
+    executor: clojure_and_postgres
+    steps:
+      - checkout
+      - restore_and_save_cache
       - setup_remote_docker
       - run: (lein cloverage --codecov & 2>/dev/null; lein test & 2>/dev/null; lein cljfmt check & 2>/dev/null) && wait && deploy/bin/publish-image
       - codecov/upload:
@@ -27,7 +39,6 @@ jobs:
           path: target/uberjar/app.jar
 
 workflows:
-  version: 2
   commit:
     jobs:
-      - build-and-test
+      - test-and-publish
