@@ -10,8 +10,14 @@ executors:
       - PATH: /usr/local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/home/circleci/.local/bin:/root/.local/bin
       - TEST_JDBC_DB_URI: jdbc:postgresql://localhost:5432/postgres?loginTimeout=30&socketTimeout=900&tcpKeepAlive=true&user=postgres
     docker:
-      - image: circleci/clojure:lein-2.9.0
+      - image: cimg/clojure:1.10.1
       - image: circleci/postgres:9.6.9-alpine # for integration test
+  clojure:
+    working_directory: ~/markets-etl
+    environment:
+      - PATH: /usr/local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/home/circleci/.local/bin:/root/.local/bin
+    docker:
+      - image: cimg/clojure:1.10.1
 
 commands:
   restore_and_save_cache:
@@ -26,19 +32,30 @@ commands:
           key: \<< checksum "project.clj" \>>
 
 jobs:
-  test-and-publish:
+  test:
     executor: clojure_and_postgres
     steps:
       - checkout
       - restore_and_save_cache
-      - setup_remote_docker
-      - run: (lein cloverage --codecov & 2>/dev/null; lein test & 2>/dev/null; lein cljfmt check & 2>/dev/null) && wait && deploy/bin/publish-image
+      - run: lein cloverage --codecov
+      - run: lein test
+      - run: lein cljfmt check
       - codecov/upload:
           file: target/coverage/codecov.json
+  publish:
+    executor: clojure
+    steps:
+      - checkout
+      - restore_and_save_cache
+      - setup_remote_docker
+      - run: deploy/bin/publish-image
       - store_artifacts:
           path: target/uberjar/app.jar
 
 workflows:
   commit:
     jobs:
-      - test-and-publish
+      - test
+      - publish:
+          requires:
+          - test
