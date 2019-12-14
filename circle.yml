@@ -10,14 +10,14 @@ executors:
       - PATH: /usr/local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/home/circleci/.local/bin:/root/.local/bin
       - TEST_JDBC_DB_URI: jdbc:postgresql://localhost:5432/postgres?loginTimeout=30&socketTimeout=900&tcpKeepAlive=true&user=postgres
     docker:
-      - image: circleci/clojure:lein-2.9.0
+      - image: circleci/clojure:lein-2.9.0    # leave this pinned; using cimg/clojure:1.10.1 fails
       - image: circleci/postgres:9.6.9-alpine # for integration test
   clojure:
     working_directory: ~/markets-etl
     environment:
       - PATH: /usr/local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/home/circleci/.local/bin:/root/.local/bin
     docker:
-      - image: cimg/clojure:1.10.1
+      - image: circleci/clojure:lein-2.9.0    # leave this pinned; using cimg/clojure:1.10.1 fails
 
 commands:
   restore_and_save_cache:
