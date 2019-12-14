@@ -17,7 +17,7 @@
                  [org.postgresql/postgresql "42.2.8"]]
   :plugins [[lein-cloverage "1.0.10"]]
   :profiles {:dev {:dependencies [#_[criterium "0.4.5"]
-                                  [org.clojure/tools.namespace "0.3.1"]]
+                                  #_[org.clojure/tools.namespace "0.3.1"]]
                    :plugins [[lein-environ "1.1.0"]
                              [lein-cljfmt "0.5.7"]]}
              :uberjar {:aot :all}}
