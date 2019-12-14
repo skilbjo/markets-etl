@@ -99,6 +99,9 @@ begin;
     (        'MSTAR',          'UBER', 'Uber Technologies Inc'),
     (        'MSTAR',            'MA', 'Mastercard Inc'),
     (        'MSTAR',           'AXP', 'American Express Company'),
+    (        'MSTAR',          'MSFT', 'Microsoft Corporation'),
+    (        'MSTAR',           'CRM', 'salesforce.com, inc.'),
+    (        'MSTAR',           'DFS', 'Discover Financial Services'),
 
     (       'TIINGO',         'VEMAX', 'Vanguard Emerging Markets Stock Index Fund Admiral Shares'),
     (       'TIINGO',         'VEURX', 'Vanguard European Stock Index Fund Investor Shares'),
@@ -167,6 +170,9 @@ begin;
     (       'TIINGO',          'UBER', 'Uber Technologies Inc'),
     (       'TIINGO',            'MA', 'Mastercard Inc'),
     (       'TIINGO',           'AXP', 'American Express Company'),
+    (       'TIINGO',          'MSFT', 'Microsoft Corporation'),
+    (       'TIINGO',           'CRM', 'salesforce.com, inc.'),
+    (       'TIINGO',           'DFS', 'Discover Financial Services'),
 
     (     'INTRINIO',            'FB', 'Facebook'),
     (     'INTRINIO',          'AMZN', 'Amazon'),
@@ -254,7 +260,9 @@ begin;
     ('ALPHA-VANTAGE',          'UBER', 'Uber Technologies Inc'),
     ('ALPHA-VANTAGE',            'MA', 'Mastercard Inc'),
     ('ALPHA-VANTAGE',           'AXP', 'American Express Company'),
-
+    ('ALPHA-VANTAGE',          'MSFT', 'Microsoft Corporation'),
+    ('ALPHA-VANTAGE',           'CRM', 'salesforce.com, inc.'),
+    ('ALPHA-VANTAGE',           'DFS', 'Discover Financial Services'),
 
     ('ALPHA-VANTAGE',        'EURUSD', 'Value of 1 EUR in USD'),
     ('ALPHA-VANTAGE',        'GBPUSD', 'Value of 1 GBP in USD')

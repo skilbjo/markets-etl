@@ -601,6 +601,7 @@
      :dataset "WIKI",
      :ticker "NVDA"}))
 
+; use http://repo.tiye.me/mvc-works/edn-formatter/
 (def result
   '({:open 102.53M,
      :date #inst "2018-09-11T00:00:00.000-00:00",
@@ -611,12 +612,13 @@
      :ex_dividend nil,
      :close 102.53M,
      :volume 0.00M,
-     :high nil,
+     :high 102.53M,
      :adj_high nil,
      :split_ratio nil,
      :low 102.53M,
      :adj_open nil,
-     :dataset "ALPHA-VANTAGE"}
+     :dataset "ALPHA-VANTAGE",
+     :dw_created_at #inst "2019-12-14T21:32:08.873732000-00:00"}
     {:open 103.97M,
      :date #inst "2018-09-10T00:00:00.000-00:00",
      :adj_volume nil,
@@ -626,12 +628,13 @@
      :ex_dividend nil,
      :close 103.97M,
      :volume 0.00M,
-     :high nil,
+     :high 103.97M,
      :adj_high nil,
      :split_ratio nil,
      :low 103.97M,
      :adj_open nil,
-     :dataset "ALPHA-VANTAGE"}
+     :dataset "ALPHA-VANTAGE",
+     :dw_created_at #inst "2019-12-14T21:32:08.873732000-00:00"}
     {:open 102.14M,
      :date #inst "2018-09-09T00:00:00.000-00:00",
      :adj_volume nil,
@@ -641,12 +644,13 @@
      :ex_dividend nil,
      :close 102.14M,
      :volume 0.00M,
-     :high nil,
+     :high 102.14M,
      :adj_high nil,
      :split_ratio nil,
      :low 102.14M,
      :adj_open nil,
-     :dataset "ALPHA-VANTAGE"}
+     :dataset "ALPHA-VANTAGE",
+     :dw_created_at #inst "2019-12-14T21:32:08.873732000-00:00"}
     {:open 101.23M,
      :date #inst "2018-09-08T00:00:00.000-00:00",
      :adj_volume nil,
@@ -656,12 +660,13 @@
      :ex_dividend nil,
      :close 101.23M,
      :volume 0.00M,
-     :high nil,
+     :high 101.23M,
      :adj_high nil,
      :split_ratio nil,
      :low 101.23M,
      :adj_open nil,
-     :dataset "ALPHA-VANTAGE"}
+     :dataset "ALPHA-VANTAGE",
+     :dw_created_at #inst "2019-12-14T21:32:08.873732000-00:00"}
     {:open 103.05M,
      :date #inst "2018-09-07T00:00:00.000-00:00",
      :adj_volume nil,
@@ -671,12 +676,13 @@
      :ex_dividend nil,
      :close 103.05M,
      :volume 0.00M,
-     :high nil,
+     :high 103.05M,
      :adj_high nil,
      :split_ratio nil,
      :low 103.05M,
      :adj_open nil,
-     :dataset "ALPHA-VANTAGE"}
+     :dataset "ALPHA-VANTAGE",
+     :dw_created_at #inst "2019-12-14T21:32:08.873732000-00:00"}
     {:open 104.15M,
      :date #inst "2018-09-06T00:00:00.000-00:00",
      :adj_volume nil,
@@ -686,12 +692,13 @@
      :ex_dividend nil,
      :close 104.15M,
      :volume 0.00M,
-     :high nil,
+     :high 104.15M,
      :adj_high nil,
      :split_ratio nil,
      :low 104.15M,
      :adj_open nil,
-     :dataset "ALPHA-VANTAGE"}
+     :dataset "ALPHA-VANTAGE",
+     :dw_created_at #inst "2019-12-14T21:32:08.873732000-00:00"}
     {:open 215.72M,
      :date #inst "2018-07-25T00:00:00.000-00:00",
      :adj_volume nil,
@@ -699,13 +706,15 @@
      :ticker "FB",
      :adj_low nil,
      :ex_dividend nil,
-     :close 217.50M, :volume 64592585.00M,
+     :close 217.50M,
+     :volume 64592585.00M,
      :high 218.62M,
      :adj_high nil,
      :split_ratio nil,
      :low 214.27M,
      :adj_open nil,
-     :dataset "TIINGO"}
+     :dataset "TIINGO",
+     :dw_created_at #inst "2019-12-14T21:32:08.873732000-00:00"}
     {:open 174.89M,
      :date #inst "2018-07-26T00:00:00.000-00:00",
      :adj_volume nil,
@@ -720,7 +729,8 @@
      :split_ratio nil,
      :low 173.75M,
      :adj_open nil,
-     :dataset "TIINGO"}
+     :dataset "TIINGO",
+     :dw_created_at #inst "2019-12-14T21:32:08.873732000-00:00"}
     {:open 179.87M,
      :date #inst "2018-07-27T00:00:00.000-00:00",
      :adj_volume nil,
@@ -735,7 +745,8 @@
      :split_ratio nil,
      :low 173.00M,
      :adj_open nil,
-     :dataset "TIINGO"}
+     :dataset "TIINGO",
+     :dw_created_at #inst "2019-12-14T21:32:08.873732000-00:00"}
     {:open nil,
      :date #inst "2018-02-23T00:00:00.000-00:00",
      :adj_volume nil,
@@ -750,7 +761,8 @@
      :split_ratio nil,
      :low nil,
      :adj_open nil,
-     :dataset "MSTAR"}
+     :dataset "MSTAR",
+     :dw_created_at #inst "2019-12-14T21:32:08.873732000-00:00"}
     {:open nil,
      :date #inst "2018-02-26T00:00:00.000-00:00",
      :adj_volume nil,
@@ -765,7 +777,8 @@
      :split_ratio nil,
      :low nil,
      :adj_open nil,
-     :dataset "MSTAR"}
+     :dataset "MSTAR",
+     :dw_created_at #inst "2019-12-14T21:32:08.873732000-00:00"}
     {:open nil,
      :date #inst "2018-02-27T00:00:00.000-00:00",
      :adj_volume nil,
@@ -780,7 +793,8 @@
      :split_ratio nil,
      :low nil,
      :adj_open nil,
-     :dataset "MSTAR"}
+     :dataset "MSTAR",
+     :dw_created_at #inst "2019-12-14T21:32:08.873732000-00:00"}
     {:open nil,
      :date #inst "2018-02-28T00:00:00.000-00:00",
      :adj_volume nil,
@@ -795,7 +809,8 @@
      :split_ratio nil,
      :low nil,
      :adj_open nil,
-     :dataset "MSTAR"}
+     :dataset "MSTAR",
+     :dw_created_at #inst "2019-12-14T21:32:08.873732000-00:00"}
     {:open nil,
      :date #inst "2018-03-01T00:00:00.000-00:00",
      :adj_volume nil,
@@ -810,7 +825,8 @@
      :split_ratio nil,
      :low nil,
      :adj_open nil,
-     :dataset "MSTAR"}
+     :dataset "MSTAR",
+     :dw_created_at #inst "2019-12-14T21:32:08.873732000-00:00"}
     {:open nil,
      :date #inst "2017-12-09T00:00:00.000-00:00",
      :adj_volume nil,
@@ -825,21 +841,8 @@
      :split_ratio nil,
      :low nil,
      :adj_open nil,
-     :dataset "MSTAR"}
-    {:open 181.53M,
-     :date #inst "2017-12-08T00:00:00.000-00:00",
-     :adj_volume 19377310.00M,
-     :adj_close 179.00M,
-     :ticker "FB",
-     :adj_low 178.74M,
-     :ex_dividend 0.00M, :close 179.00M,
-     :volume 19377310.00M,
-     :high 182.28M,
-     :adj_high 182.28M,
-     :split_ratio 1.00M,
-     :low 178.74M,
-     :adj_open 181.53M,
-     :dataset "MSTAR"}
+     :dataset "MSTAR",
+     :dw_created_at #inst "2019-12-14T21:32:08.873732000-00:00"}
     {:open 181.53M,
      :date #inst "2017-12-08T00:00:00.000-00:00",
      :adj_volume 19377310.00M,
@@ -854,7 +857,24 @@
      :split_ratio 1.00M,
      :low 178.74M,
      :adj_open 181.53M,
-     :dataset "WIKI"}
+     :dataset "MSTAR",
+     :dw_created_at #inst "2019-12-14T21:32:08.873732000-00:00"}
+    {:open 181.53M,
+     :date #inst "2017-12-08T00:00:00.000-00:00",
+     :adj_volume 19377310.00M,
+     :adj_close 179.00M,
+     :ticker "FB",
+     :adj_low 178.74M,
+     :ex_dividend 0.00M,
+     :close 179.00M,
+     :volume 19377310.00M,
+     :high 182.28M,
+     :adj_high 182.28M,
+     :split_ratio 1.00M,
+     :low 178.74M,
+     :adj_open 181.53M,
+     :dataset "WIKI",
+     :dw_created_at #inst "2019-12-14T21:32:08.873732000-00:00"}
     {:open 175.80M,
      :date #inst "2017-12-07T00:00:00.000-00:00",
      :adj_volume 19588217.00M,
@@ -869,7 +889,8 @@
      :split_ratio 1.00M,
      :low 175.80M,
      :adj_open 175.80M,
-     :dataset "MSTAR"}
+     :dataset "MSTAR",
+     :dw_created_at #inst "2019-12-14T21:32:08.873732000-00:00"}
     {:open 175.80M,
      :date #inst "2017-12-07T00:00:00.000-00:00",
      :adj_volume 19588217.00M,
@@ -884,7 +905,8 @@
      :split_ratio 1.00M,
      :low 175.80M,
      :adj_open 175.80M,
-     :dataset "WIKI"}
+     :dataset "WIKI",
+     :dw_created_at #inst "2019-12-14T21:32:08.873732000-00:00"}
     {:open 172.50M,
      :date #inst "2017-12-06T00:00:00.000-00:00",
      :adj_volume 20059293.00M,
@@ -899,7 +921,8 @@
      :split_ratio 1.00M,
      :low 171.90M,
      :adj_open 172.50M,
-     :dataset "WIKI"}
+     :dataset "WIKI",
+     :dw_created_at #inst "2019-12-14T21:32:08.873732000-00:00"}
     {:open 170.45M,
      :date #inst "2017-12-05T00:00:00.000-00:00",
      :adj_volume 20028656.00M,
@@ -914,20 +937,24 @@
      :split_ratio 1.00M,
      :low 169.01M,
      :adj_open 170.45M,
-     :dataset "WIKI"}
+     :dataset "WIKI",
+     :dw_created_at #inst "2019-12-14T21:32:08.873732000-00:00"}
     {:open 176.29M,
      :date #inst "2017-12-04T00:00:00.000-00:00",
      :adj_volume 24184006.00M,
      :adj_close 171.47M,
      :ticker "FB",
      :adj_low 170.79M,
-     :ex_dividend 0.00M, :close 171.47M,
+     :ex_dividend 0.00M,
+     :close 171.47M,
      :volume 24184006.00M,
-     :high 176.57M, :adj_high 176.57M,
+     :high 176.57M,
+     :adj_high 176.57M,
      :split_ratio 1.00M,
      :low 170.79M,
      :adj_open 176.29M,
-     :dataset "WIKI"}
+     :dataset "WIKI",
+     :dw_created_at #inst "2019-12-14T21:32:08.873732000-00:00"}
     {:open 1170.40M,
      :date #inst "2017-12-08T00:00:00.000-00:00",
      :adj_volume 2957785.00M,
@@ -942,7 +969,8 @@
      :split_ratio 1.00M,
      :low 1157.10M,
      :adj_open 1170.40M,
-     :dataset "WIKI"}
+     :dataset "WIKI",
+     :dw_created_at #inst "2019-12-14T21:32:08.873732000-00:00"}
     {:open 1156.59M,
      :date #inst "2017-12-07T00:00:00.000-00:00",
      :adj_volume 2408323.00M,
@@ -957,20 +985,24 @@
      :split_ratio 1.00M,
      :low 1151.00M,
      :adj_open 1156.59M,
-     :dataset "WIKI"}
-    {:open 1137.99M, :date #inst "2017-12-06T00:00:00.000-00:00",
+     :dataset "WIKI",
+     :dw_created_at #inst "2019-12-14T21:32:08.873732000-00:00"}
+    {:open 1137.99M,
+     :date #inst "2017-12-06T00:00:00.000-00:00",
      :adj_volume 2756730.00M,
      :adj_close 1152.35M,
      :ticker "AMZN",
      :adj_low 1136.08M,
      :ex_dividend 0.00M,
-     :close 1152.35M, :volume 2756730.00M,
+     :close 1152.35M,
+     :volume 2756730.00M,
      :high 1155.89M,
      :adj_high 1155.89M,
      :split_ratio 1.00M,
      :low 1136.08M,
      :adj_open 1137.99M,
-     :dataset "WIKI"}
+     :dataset "WIKI",
+     :dw_created_at #inst "2019-12-14T21:32:08.873732000-00:00"}
     {:open 1128.26M,
      :date #inst "2017-12-05T00:00:00.000-00:00",
      :adj_volume 4033184.00M,
@@ -985,7 +1017,8 @@
      :split_ratio 1.00M,
      :low 1124.74M,
      :adj_open 1128.26M,
-     :dataset "WIKI"}
+     :dataset "WIKI",
+     :dw_created_at #inst "2019-12-14T21:32:08.873732000-00:00"}
     {:open 1173.85M,
      :date #inst "2017-12-04T00:00:00.000-00:00",
      :adj_volume 5872358.00M,
@@ -1000,7 +1033,8 @@
      :split_ratio 1.00M,
      :low 1128.00M,
      :adj_open 1173.85M,
-     :dataset "WIKI"}
+     :dataset "WIKI",
+     :dw_created_at #inst "2019-12-14T21:32:08.873732000-00:00"}
     {:open 1037.49M,
      :date #inst "2017-12-08T00:00:00.000-00:00",
      :adj_volume 1277894.00M,
@@ -1015,7 +1049,8 @@
      :split_ratio 1.00M,
      :low 1032.52M,
      :adj_open 1037.49M,
-     :dataset "WIKI"}
+     :dataset "WIKI",
+     :dw_created_at #inst "2019-12-14T21:32:08.873732000-00:00"}
     {:open 1020.43M,
      :date #inst "2017-12-07T00:00:00.000-00:00",
      :adj_volume 1387107.00M,
@@ -1030,7 +1065,8 @@
      :split_ratio 1.00M,
      :low 1018.07M,
      :adj_open 1020.43M,
-     :dataset "WIKI"}
+     :dataset "WIKI",
+     :dw_created_at #inst "2019-12-14T21:32:08.873732000-00:00"}
     {:open 1001.50M,
      :date #inst "2017-12-06T00:00:00.000-00:00",
      :adj_volume 1254837.00M,
@@ -1045,7 +1081,8 @@
      :split_ratio 1.00M,
      :low 1001.14M,
      :adj_open 1001.50M,
-     :dataset "WIKI"}
+     :dataset "WIKI",
+     :dw_created_at #inst "2019-12-14T21:32:08.873732000-00:00"}
     {:open 995.94M,
      :date #inst "2017-12-05T00:00:00.000-00:00",
      :adj_volume 2023376.00M,
@@ -1060,7 +1097,8 @@
      :split_ratio 1.00M,
      :low 988.28M,
      :adj_open 995.94M,
-     :dataset "WIKI"}
+     :dataset "WIKI",
+     :dw_created_at #inst "2019-12-14T21:32:08.873732000-00:00"}
     {:open 1012.66M,
      :date #inst "2017-12-04T00:00:00.000-00:00",
      :adj_volume 1891408.00M,
@@ -1075,7 +1113,8 @@
      :split_ratio 1.00M,
      :low 995.57M,
      :adj_open 1012.66M,
-     :dataset "WIKI"}
+     :dataset "WIKI",
+     :dw_created_at #inst "2019-12-14T21:32:08.873732000-00:00"}
     {:open 194.01M,
      :date #inst "2017-12-08T00:00:00.000-00:00",
      :adj_volume 11483868.00M,
@@ -1090,7 +1129,8 @@
      :split_ratio 1.00M,
      :low 191.15M,
      :adj_open 194.01M,
-     :dataset "WIKI"}
+     :dataset "WIKI",
+     :dw_created_at #inst "2019-12-14T21:32:08.873732000-00:00"}
     {:open 191.96M,
      :date #inst "2017-12-07T00:00:00.000-00:00",
      :adj_volume 13190983.00M,
@@ -1105,21 +1145,24 @@
      :split_ratio 1.00M,
      :low 190.12M,
      :adj_open 191.96M,
-     :dataset "WIKI"} {:open 185.70M,
-                       :date #inst "2017-12-06T00:00:00.000-00:00",
-                       :adj_volume 11464458.00M,
-                       :adj_close 189.26M,
-                       :ticker "NVDA",
-                       :adj_low 184.84M,
-                       :ex_dividend 0.00M,
-                       :close 189.26M,
-                       :volume 11464458.00M,
-                       :high 190.14M,
-                       :adj_high 190.14M,
-                       :split_ratio 1.00M,
-                       :low 184.84M,
-                       :adj_open 185.70M,
-                       :dataset "WIKI"}
+     :dataset "WIKI",
+     :dw_created_at #inst "2019-12-14T21:32:08.873732000-00:00"}
+    {:open 185.70M,
+     :date #inst "2017-12-06T00:00:00.000-00:00",
+     :adj_volume 11464458.00M,
+     :adj_close 189.26M,
+     :ticker "NVDA",
+     :adj_low 184.84M,
+     :ex_dividend 0.00M,
+     :close 189.26M,
+     :volume 11464458.00M,
+     :high 190.14M,
+     :adj_high 190.14M,
+     :split_ratio 1.00M,
+     :low 184.84M,
+     :adj_open 185.70M,
+     :dataset "WIKI",
+     :dw_created_at #inst "2019-12-14T21:32:08.873732000-00:00"}
     {:open 182.40M,
      :date #inst "2017-12-05T00:00:00.000-00:00",
      :adj_volume 24480558.00M,
@@ -1134,7 +1177,8 @@
      :split_ratio 1.00M,
      :low 180.58M,
      :adj_open 182.40M,
-     :dataset "WIKI"}
+     :dataset "WIKI",
+     :dw_created_at #inst "2019-12-14T21:32:08.873732000-00:00"}
     {:open 200.05M,
      :date #inst "2017-12-04T00:00:00.000-00:00",
      :adj_volume 27080405.00M,
@@ -1149,7 +1193,8 @@
      :split_ratio 1.00M,
      :low 184.50M,
      :adj_open 200.05M,
-     :dataset "WIKI"}
+     :dataset "WIKI",
+     :dw_created_at #inst "2019-12-14T21:32:08.873732000-00:00"}
     {:open 182.04M,
      :date #inst "2018-08-10T00:00:00.000-00:00",
      :adj_volume 21282584.00M,
@@ -1164,12 +1209,14 @@
      :split_ratio 1.00M,
      :low 179.42M,
      :adj_open 182.04M,
-     :dataset "WIKI"}
+     :dataset "WIKI",
+     :dw_created_at #inst "2019-12-14T21:32:08.873732000-00:00"}
     {:open 185.85M,
      :date #inst "2018-08-09T00:00:00.000-00:00",
      :adj_volume 19732120.00M,
      :adj_close 183.09M,
-     :ticker "FB", :adj_low 182.48M,
+     :ticker "FB",
+     :adj_low 182.48M,
      :ex_dividend 0.00M,
      :close 183.09M,
      :volume 19732120.00M,
@@ -1178,8 +1225,10 @@
      :split_ratio 1.00M,
      :low 182.48M,
      :adj_open 185.85M,
-     :dataset "WIKI"}))
+     :dataset "WIKI",
+     :dw_created_at #inst "2019-12-14T21:32:08.873732000-00:00"}))
 
+; use http://repo.tiye.me/mvc-works/edn-formatter/
 (def result'
   '({:open 182.04M,
      :date #inst "2018-08-10T00:00:00.000-00:00",
@@ -1195,7 +1244,8 @@
      :split_ratio 1.00M,
      :low 179.42M,
      :adj_open 182.04M,
-     :dataset "WIKI"}
+     :dataset "WIKI",
+     :dw_created_at #inst "2019-12-14T21:57:24.951711000-00:00"}
     {:open 185.85M,
      :date #inst "2018-08-09T00:00:00.000-00:00",
      :adj_volume 19732120.00M,
@@ -1210,7 +1260,8 @@
      :split_ratio 1.00M,
      :low 182.48M,
      :adj_open 185.85M,
-     :dataset "WIKI"}
+     :dataset "WIKI",
+     :dw_created_at #inst "2019-12-14T21:57:24.951711000-00:00"}
     {:open 194.01M,
      :date #inst "2017-12-08T00:00:00.000-00:00",
      :adj_volume 11483868.00M,
@@ -1225,7 +1276,8 @@
      :split_ratio 1.00M,
      :low 191.15M,
      :adj_open 194.01M,
-     :dataset "WIKI"}
+     :dataset "WIKI",
+     :dw_created_at #inst "2019-12-14T21:57:24.951711000-00:00"}
     {:open 191.96M,
      :date #inst "2017-12-07T00:00:00.000-00:00",
      :adj_volume 13190983.00M,
@@ -1240,7 +1292,8 @@
      :split_ratio 1.00M,
      :low 190.12M,
      :adj_open 191.96M,
-     :dataset "WIKI"}
+     :dataset "WIKI",
+     :dw_created_at #inst "2019-12-14T21:57:24.951711000-00:00"}
     {:open 185.70M,
      :date #inst "2017-12-06T00:00:00.000-00:00",
      :adj_volume 11464458.00M,
@@ -1255,7 +1308,8 @@
      :split_ratio 1.00M,
      :low 184.84M,
      :adj_open 185.70M,
-     :dataset "WIKI"}
+     :dataset "WIKI",
+     :dw_created_at #inst "2019-12-14T21:57:24.951711000-00:00"}
     {:open 182.40M,
      :date #inst "2017-12-05T00:00:00.000-00:00",
      :adj_volume 24480558.00M,
@@ -1270,7 +1324,8 @@
      :split_ratio 1.00M,
      :low 180.58M,
      :adj_open 182.40M,
-     :dataset "WIKI"}
+     :dataset "WIKI",
+     :dw_created_at #inst "2019-12-14T21:57:24.951711000-00:00"}
     {:open 200.05M,
      :date #inst "2017-12-04T00:00:00.000-00:00",
      :adj_volume 27080405.00M,
@@ -1282,9 +1337,11 @@
      :volume 27080405.00M,
      :high 200.30M,
      :adj_high 200.30M,
-     :split_ratio 1.00M, :low 184.50M,
+     :split_ratio 1.00M,
+     :low 184.50M,
      :adj_open 200.05M,
-     :dataset "WIKI"}
+     :dataset "WIKI",
+     :dw_created_at #inst "2019-12-14T21:57:24.951711000-00:00"}
     {:open 1037.49M,
      :date #inst "2017-12-08T00:00:00.000-00:00",
      :adj_volume 1277894.00M,
@@ -1299,7 +1356,8 @@
      :split_ratio 1.00M,
      :low 1032.52M,
      :adj_open 1037.49M,
-     :dataset "WIKI"}
+     :dataset "WIKI",
+     :dw_created_at #inst "2019-12-14T21:57:24.951711000-00:00"}
     {:open 1020.43M,
      :date #inst "2017-12-07T00:00:00.000-00:00",
      :adj_volume 1387107.00M,
@@ -1314,7 +1372,8 @@
      :split_ratio 1.00M,
      :low 1018.07M,
      :adj_open 1020.43M,
-     :dataset "WIKI"}
+     :dataset "WIKI",
+     :dw_created_at #inst "2019-12-14T21:57:24.951711000-00:00"}
     {:open 1001.50M,
      :date #inst "2017-12-06T00:00:00.000-00:00",
      :adj_volume 1254837.00M,
@@ -1329,7 +1388,8 @@
      :split_ratio 1.00M,
      :low 1001.14M,
      :adj_open 1001.50M,
-     :dataset "WIKI"}
+     :dataset "WIKI",
+     :dw_created_at #inst "2019-12-14T21:57:24.951711000-00:00"}
     {:open 995.94M,
      :date #inst "2017-12-05T00:00:00.000-00:00",
      :adj_volume 2023376.00M,
@@ -1344,7 +1404,8 @@
      :split_ratio 1.00M,
      :low 988.28M,
      :adj_open 995.94M,
-     :dataset "WIKI"}
+     :dataset "WIKI",
+     :dw_created_at #inst "2019-12-14T21:57:24.951711000-00:00"}
     {:open 1012.66M,
      :date #inst "2017-12-04T00:00:00.000-00:00",
      :adj_volume 1891408.00M,
@@ -1359,7 +1420,8 @@
      :split_ratio 1.00M,
      :low 995.57M,
      :adj_open 1012.66M,
-     :dataset "WIKI"}
+     :dataset "WIKI",
+     :dw_created_at #inst "2019-12-14T21:57:24.951711000-00:00"}
     {:open 1170.40M,
      :date #inst "2017-12-08T00:00:00.000-00:00",
      :adj_volume 2957785.00M,
@@ -1371,9 +1433,11 @@
      :volume 2957785.00M,
      :high 1172.79M,
      :adj_high 1172.79M,
-     :split_ratio 1.00M, :low 1157.10M,
+     :split_ratio 1.00M,
+     :low 1157.10M,
      :adj_open 1170.40M,
-     :dataset "WIKI"}
+     :dataset "WIKI",
+     :dw_created_at #inst "2019-12-14T21:57:24.951711000-00:00"}
     {:open 1156.59M,
      :date #inst "2017-12-07T00:00:00.000-00:00",
      :adj_volume 2408323.00M,
@@ -1388,21 +1452,8 @@
      :split_ratio 1.00M,
      :low 1151.00M,
      :adj_open 1156.59M,
-     :dataset "WIKI"}
-    {:open nil,
-     :date #inst "2017-12-09T00:00:00.000-00:00",
-     :adj_volume nil,
-     :adj_close nil, :ticker "FB",
-     :adj_low nil,
-     :ex_dividend nil,
-     :close 165.26M,
-     :volume nil,
-     :high nil,
-     :adj_high nil,
-     :split_ratio nil,
-     :low nil,
-     :adj_open nil,
-     :dataset "MSTAR"}
+     :dataset "WIKI",
+     :dw_created_at #inst "2019-12-14T21:57:24.951711000-00:00"}
     {:open 1137.99M,
      :date #inst "2017-12-06T00:00:00.000-00:00",
      :adj_volume 2756730.00M,
@@ -1410,12 +1461,15 @@
      :ticker "AMZN",
      :adj_low 1136.08M,
      :ex_dividend 0.00M,
-     :close 1152.35M, :volume 2756730.00M,
+     :close 1152.35M,
+     :volume 2756730.00M,
      :high 1155.89M,
-     :adj_high 1155.89M, :split_ratio 1.00M,
+     :adj_high 1155.89M,
+     :split_ratio 1.00M,
      :low 1136.08M,
      :adj_open 1137.99M,
-     :dataset "WIKI"}
+     :dataset "WIKI",
+     :dw_created_at #inst "2019-12-14T21:57:24.951711000-00:00"}
     {:open 1128.26M,
      :date #inst "2017-12-05T00:00:00.000-00:00",
      :adj_volume 4033184.00M,
@@ -1429,7 +1483,9 @@
      :adj_high 1159.27M,
      :split_ratio 1.00M,
      :low 1124.74M,
-     :adj_open 1128.26M, :dataset "WIKI"}
+     :adj_open 1128.26M,
+     :dataset "WIKI",
+     :dw_created_at #inst "2019-12-14T21:57:24.951711000-00:00"}
     {:open 1173.85M,
      :date #inst "2017-12-04T00:00:00.000-00:00",
      :adj_volume 5872358.00M,
@@ -1444,7 +1500,8 @@
      :split_ratio 1.00M,
      :low 1128.00M,
      :adj_open 1173.85M,
-     :dataset "WIKI"}
+     :dataset "WIKI",
+     :dw_created_at #inst "2019-12-14T21:57:24.951711000-00:00"}
     {:open 181.53M,
      :date #inst "2017-12-08T00:00:00.000-00:00",
      :adj_volume 19377310.00M,
@@ -1459,7 +1516,8 @@
      :split_ratio 1.00M,
      :low 178.74M,
      :adj_open 181.53M,
-     :dataset "WIKI"}
+     :dataset "WIKI",
+     :dw_created_at #inst "2019-12-14T21:57:24.951711000-00:00"}
     {:open 175.80M,
      :date #inst "2017-12-07T00:00:00.000-00:00",
      :adj_volume 19588217.00M,
@@ -1474,7 +1532,8 @@
      :split_ratio 1.00M,
      :low 175.80M,
      :adj_open 175.80M,
-     :dataset "WIKI"}
+     :dataset "WIKI",
+     :dw_created_at #inst "2019-12-14T21:57:24.951711000-00:00"}
     {:open 172.50M,
      :date #inst "2017-12-06T00:00:00.000-00:00",
      :adj_volume 20059293.00M,
@@ -1489,7 +1548,8 @@
      :split_ratio 1.00M,
      :low 171.90M,
      :adj_open 172.50M,
-     :dataset "WIKI"}
+     :dataset "WIKI",
+     :dw_created_at #inst "2019-12-14T21:57:24.951711000-00:00"}
     {:open 170.45M,
      :date #inst "2017-12-05T00:00:00.000-00:00",
      :adj_volume 20028656.00M,
@@ -1504,7 +1564,8 @@
      :split_ratio 1.00M,
      :low 169.01M,
      :adj_open 170.45M,
-     :dataset "WIKI"}
+     :dataset "WIKI",
+     :dw_created_at #inst "2019-12-14T21:57:24.951711000-00:00"}
     {:open 176.29M,
      :date #inst "2017-12-04T00:00:00.000-00:00",
      :adj_volume 24184006.00M,
@@ -1519,7 +1580,24 @@
      :split_ratio 1.00M,
      :low 170.79M,
      :adj_open 176.29M,
-     :dataset "WIKI"}
+     :dataset "WIKI",
+     :dw_created_at #inst "2019-12-14T21:57:24.951711000-00:00"}
+    {:open nil,
+     :date #inst "2017-12-09T00:00:00.000-00:00",
+     :adj_volume nil,
+     :adj_close nil,
+     :ticker "FB",
+     :adj_low nil,
+     :ex_dividend nil,
+     :close 165.26M,
+     :volume nil,
+     :high nil,
+     :adj_high nil,
+     :split_ratio nil,
+     :low nil,
+     :adj_open nil,
+     :dataset "MSTAR",
+     :dw_created_at #inst "2019-12-14T21:57:24.951711000-00:00"}
     {:open nil,
      :date #inst "2018-02-23T00:00:00.000-00:00",
      :adj_volume nil,
@@ -1534,12 +1612,14 @@
      :split_ratio nil,
      :low nil,
      :adj_open nil,
-     :dataset "MSTAR"}
+     :dataset "MSTAR",
+     :dw_created_at #inst "2019-12-14T21:57:24.951711000-00:00"}
     {:open nil,
      :date #inst "2018-02-26T00:00:00.000-00:00",
      :adj_volume nil,
      :adj_close nil,
-     :ticker "VEMAX", :adj_low nil,
+     :ticker "VEMAX",
+     :adj_low nil,
      :ex_dividend nil,
      :close 40.68M,
      :volume nil,
@@ -1548,20 +1628,24 @@
      :split_ratio nil,
      :low nil,
      :adj_open nil,
-     :dataset "MSTAR"}
+     :dataset "MSTAR",
+     :dw_created_at #inst "2019-12-14T21:57:24.951711000-00:00"}
     {:open nil,
      :date #inst "2018-02-27T00:00:00.000-00:00",
      :adj_volume nil,
      :adj_close nil,
      :ticker "VEMAX",
      :adj_low nil,
-     :ex_dividend nil, :close 39.94M,
-     :volume nil, :high nil,
+     :ex_dividend nil,
+     :close 39.94M,
+     :volume nil,
+     :high nil,
      :adj_high nil,
      :split_ratio nil,
      :low nil,
      :adj_open nil,
-     :dataset "MSTAR"}
+     :dataset "MSTAR",
+     :dw_created_at #inst "2019-12-14T21:57:24.951711000-00:00"}
     {:open nil,
      :date #inst "2018-02-28T00:00:00.000-00:00",
      :adj_volume nil,
@@ -1576,7 +1660,8 @@
      :split_ratio nil,
      :low nil,
      :adj_open nil,
-     :dataset "MSTAR"}
+     :dataset "MSTAR",
+     :dw_created_at #inst "2019-12-14T21:57:24.951711000-00:00"}
     {:open nil,
      :date #inst "2018-03-01T00:00:00.000-00:00",
      :adj_volume nil,
@@ -1591,7 +1676,8 @@
      :split_ratio nil,
      :low nil,
      :adj_open nil,
-     :dataset "MSTAR"}
+     :dataset "MSTAR",
+     :dw_created_at #inst "2019-12-14T21:57:24.951711000-00:00"}
     {:open 179.87M,
      :date #inst "2018-07-27T00:00:00.000-00:00",
      :adj_volume nil,
@@ -1606,7 +1692,8 @@
      :split_ratio nil,
      :low 173.00M,
      :adj_open nil,
-     :dataset "TIINGO"}
+     :dataset "TIINGO",
+     :dw_created_at #inst "2019-12-14T21:57:24.951711000-00:00"}
     {:open 174.89M,
      :date #inst "2018-07-26T00:00:00.000-00:00",
      :adj_volume nil,
@@ -1621,8 +1708,10 @@
      :split_ratio nil,
      :low 173.75M,
      :adj_open nil,
-     :dataset "TIINGO"}
-    {:open 215.72M, :date #inst "2018-07-25T00:00:00.000-00:00",
+     :dataset "TIINGO",
+     :dw_created_at #inst "2019-12-14T21:57:24.951711000-00:00"}
+    {:open 215.72M,
+     :date #inst "2018-07-25T00:00:00.000-00:00",
      :adj_volume nil,
      :adj_close nil,
      :ticker "FB",
@@ -1635,7 +1724,8 @@
      :split_ratio nil,
      :low 214.27M,
      :adj_open nil,
-     :dataset "TIINGO"}
+     :dataset "TIINGO",
+     :dw_created_at #inst "2019-12-14T21:57:24.951711000-00:00"}
     {:open 102.53M,
      :date #inst "2018-09-11T00:00:00.000-00:00",
      :adj_volume nil,
@@ -1645,12 +1735,13 @@
      :ex_dividend nil,
      :close 102.53M,
      :volume 0.00M,
-     :high nil,
+     :high 102.53M,
      :adj_high nil,
      :split_ratio nil,
      :low 102.53M,
      :adj_open nil,
-     :dataset "ALPHA-VANTAGE"}
+     :dataset "ALPHA-VANTAGE",
+     :dw_created_at #inst "2019-12-14T21:57:24.951711000-00:00"}
     {:open 103.97M,
      :date #inst "2018-09-10T00:00:00.000-00:00",
      :adj_volume nil,
@@ -1660,12 +1751,13 @@
      :ex_dividend nil,
      :close 103.97M,
      :volume 0.00M,
-     :high nil,
+     :high 103.97M,
      :adj_high nil,
      :split_ratio nil,
      :low 103.97M,
      :adj_open nil,
-     :dataset "ALPHA-VANTAGE"}
+     :dataset "ALPHA-VANTAGE",
+     :dw_created_at #inst "2019-12-14T21:57:24.951711000-00:00"}
     {:open 102.14M,
      :date #inst "2018-09-09T00:00:00.000-00:00",
      :adj_volume nil,
@@ -1675,12 +1767,13 @@
      :ex_dividend nil,
      :close 102.14M,
      :volume 0.00M,
-     :high nil,
+     :high 102.14M,
      :adj_high nil,
      :split_ratio nil,
      :low 102.14M,
      :adj_open nil,
-     :dataset "ALPHA-VANTAGE"}
+     :dataset "ALPHA-VANTAGE",
+     :dw_created_at #inst "2019-12-14T21:57:24.951711000-00:00"}
     {:open 101.23M,
      :date #inst "2018-09-08T00:00:00.000-00:00",
      :adj_volume nil,
@@ -1690,25 +1783,29 @@
      :ex_dividend nil,
      :close 101.23M,
      :volume 0.00M,
-     :high nil,
+     :high 101.23M,
      :adj_high nil,
      :split_ratio nil,
      :low 101.23M,
      :adj_open nil,
-     :dataset "ALPHA-VANTAGE"}
+     :dataset "ALPHA-VANTAGE",
+     :dw_created_at #inst "2019-12-14T21:57:24.951711000-00:00"}
     {:open 103.05M,
      :date #inst "2018-09-07T00:00:00.000-00:00",
-     :adj_volume nil, :adj_close nil,
-     :ticker "VMRAX", :adj_low nil,
+     :adj_volume nil,
+     :adj_close nil,
+     :ticker "VMRAX",
+     :adj_low nil,
      :ex_dividend nil,
      :close 103.05M,
      :volume 0.00M,
-     :high nil,
+     :high 103.05M,
      :adj_high nil,
      :split_ratio nil,
      :low 103.05M,
      :adj_open nil,
-     :dataset "ALPHA-VANTAGE"}
+     :dataset "ALPHA-VANTAGE",
+     :dw_created_at #inst "2019-12-14T21:57:24.951711000-00:00"}
     {:open 104.15M,
      :date #inst "2018-09-06T00:00:00.000-00:00",
      :adj_volume nil,
@@ -1718,9 +1815,10 @@
      :ex_dividend nil,
      :close 104.15M,
      :volume 0.00M,
-     :high nil,
+     :high 104.15M,
      :adj_high nil,
      :split_ratio nil,
      :low 104.15M,
      :adj_open nil,
-     :dataset "ALPHA-VANTAGE"}))
+     :dataset "ALPHA-VANTAGE",
+     :dw_created_at #inst "2019-12-14T21:57:24.951711000-00:00"}))

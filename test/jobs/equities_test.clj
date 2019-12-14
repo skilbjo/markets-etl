@@ -25,10 +25,11 @@
     (let [actual  (->> "select * from dw.equities_fact"
                        (jdbc/query *cxn*)
                        flatten)]
-      (is (= f/result
+
+      (is (= (->> f/result
+                  (map #(dissoc % :dw_created_at)))
              (->> actual
-                  (map #(dissoc %
-                                :dw_created_at)))))
+                  (map #(dissoc % :dw_created_at)))))
       (is (every? true?
                   (->> actual
                        (map #(contains? %
@@ -47,7 +48,9 @@
     (let [actual  (->> "select * from dw.equities_fact"
                        (jdbc/query *cxn*)
                        flatten)]
-      (is (= (-> f/result')
+
+      (is (= (->> f/result'
+                  (map #(dissoc % :dw_created_at)))
              (->> actual
                   (map #(dissoc %
                                 :dw_created_at)))))

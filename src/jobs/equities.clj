@@ -22,7 +22,7 @@
 
 (def stocks
   ["FB" "AMZN" "GOOG" "NVDA" "CY" "INTC" "TXN" "V" "SAP" "SQ" "PYPL" "BRK.B"
-   "AAPL" "TWTR" "GS" "INTU" "NET" "UBER" "MA"])
+   "AAPL" "TWTR" "GS" "INTU" "NET" "UBER" "MA" "CRM" "AXP" "MSFT" "DFS"])
 
 (def international
   ["LON:FCH" "SFTBF" "TSM" "NTDOY" "NTDOF"])

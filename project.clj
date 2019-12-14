@@ -1,20 +1,22 @@
 (defproject markets-etl "0.1.0"
   :uberjar-name "app.jar"
   :dependencies [[org.clojure/clojure "1.10.0"]
-                 [amazonica "0.3.146" :exclusions [com.amazonaws/aws-java-sdk]]
+                 [amazonica "0.3.151" :exclusions [com.google.protobuf/protobuf-java commons-logging com.fasterxml.jackson.core/jackson-databind com.amazonaws/aws-java-sdk com.fasterxml.jackson.core/jackson-core]]
                  [com.amazonaws/aws-lambda-java-core "1.2.0"]
                  [clj-http "3.10.0"]
                  [clj-time "0.15.2"]
-                 [com.amazonaws/aws-java-sdk-kms "1.11.642"]
+                 [com.amazonaws/aws-java-sdk-kms "1.11.693" :exclusions [commons-logging org.apache.httpcomponents/httpclient com.fasterxml.jackson.core/jackson-databind com.fasterxml.jackson.core/jackson-core]]
                  [environ "1.1.0"]
-                 [org.apache.orc/orc-core "1.4.0"]
+                 [org.apache.orc/orc-core "1.4.0"]                      ; leave this pinned @ 1.4.0 due to orca
+                 [org.apache.hadoop/hadoop-core "0.20.2-dev"]           ; for orca
+                 [com.fasterxml.jackson.core/jackson-databind "2.5.5"]  ; for orca
                  [org.clojure/data.csv "0.1.4"]
-                 [org.clojure/data.json "0.2.6"]
+                 [org.clojure/data.json "0.2.7"]
                  [org.clojure/java.jdbc "0.7.10"]
                  [org.clojure/tools.cli "0.4.2"]
                  [org.clojure/tools.logging "0.5.0"]
-                 [org.slf4j/slf4j-log4j12 "1.7.28"]
-                 [org.postgresql/postgresql "42.2.8"]]
+                 [org.slf4j/slf4j-log4j12 "1.7.29" :exclusions [log4j org.slf4j/slf4j-api]]
+                 [org.postgresql/postgresql "42.2.9"]]
   :plugins [[lein-cloverage "1.0.10"]]
   :profiles {:dev {:dependencies [[criterium "0.4.5"]
                                   [org.clojure/tools.namespace "0.3.1"]]

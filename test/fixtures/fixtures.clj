@@ -9,10 +9,11 @@
 (defn with-database []
   (fn [f]
     (binding [*cxn* (env :test-jdbc-db-uri)]
-      (->> "test/ddl.sql"
-           io/resource
-           slurp
-           (jdbc/execute! *cxn*))
-      (f)
-      (->> "drop schema dw cascade;"
-           (jdbc/execute! *cxn*)))))
+      (try
+        (->> "test/ddl.sql"
+             io/resource
+             slurp
+             (jdbc/execute! *cxn*))
+        (f)
+        (finally (->> "drop schema dw cascade;"
+                      (jdbc/execute! *cxn*)))))))
