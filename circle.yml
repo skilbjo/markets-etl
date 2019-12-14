@@ -57,5 +57,5 @@ workflows:
     jobs:
       - test
       - publish:
-        - requires:
+          requires:
           - test
