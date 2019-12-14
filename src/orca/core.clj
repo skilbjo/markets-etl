@@ -1,4 +1,4 @@
-; https://raw.githubusercontent.com/bpoweski/orca/master/src/orca/core.clj
+; https://github.com/bpoweski/orca/blob/master/src/orca/core.clj
 (ns orca.core
   (:require [clojure.java.io :as io]
             [clojure.pprint :refer [pprint]]
@@ -11,6 +11,7 @@
             ListColumnVector MapColumnVector StructColumnVector]
            [org.apache.orc OrcFile Reader Writer TypeDescription TypeDescription$Category]
            [org.apache.hadoop.conf Configuration]
+           [org.apache.hadoop.io Writable]        ; JS added to do classdef not found
            [org.apache.hadoop.fs Path]
            [org.apache.hadoop.hive.serde2.io HiveDecimalWritable]
            [java.nio.charset Charset]
