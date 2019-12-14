@@ -7,7 +7,7 @@
                  [clj-time "0.15.2"]
                  [com.amazonaws/aws-java-sdk-kms "1.11.693" :exclusions [commons-logging org.apache.httpcomponents/httpclient com.fasterxml.jackson.core/jackson-databind com.fasterxml.jackson.core/jackson-core]]
                  [environ "1.1.0"]
-                 [org.apache.orc/orc-core "1.4.0" :exclusions [org.slf4j/slf4j-api]]
+                 [org.apache.orc/orc-core "1.4.0"]
                  [org.apache.hadoop/hadoop-core "0.20.2-dev"]           ; for orca
                  [com.fasterxml.jackson.core/jackson-databind "2.5.5"]  ; for orca
                  [org.clojure/data.csv "0.1.4"]
