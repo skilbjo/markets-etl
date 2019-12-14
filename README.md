@@ -193,6 +193,15 @@ Found 3 outliers in 60 samples (5.0000 %)
  Variance from outliers : 82.4206 % Variance is severely inflated by outliers
 ```
 
+#### Integration Tests
+
+Adding new tickers will cause sort order of actual results to change, which
+will cause integration tests to fail.
+
+To resove, instead of editing manually, best to just print `f/result` or
+`f/result'`, format using <http://repo.tiye.me/mvc-works/edn-formatter/>, and
+replace in `test/fixtures/equities.clj`
+
 ### API docs
 - <https://docs.quandl.com/docs/in-depth-usage>
 - <https://gist.github.com/hahnicity/45323026693cdde6a116>
