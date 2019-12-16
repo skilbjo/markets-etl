@@ -34,33 +34,34 @@
                            ticker]
                     {:keys [column_names
                             data]} :dataset_data}]
-  (let [columns       (->> (-> column_names
-                               string/lower-case
-                               (string/replace #"\." "")
-                               (string/replace #"-" "_")
-                               json/read-str)
-                           (map #(string/replace % #" " "_"))
-                           (map keyword))
-        data'             (->> data
-                               (map #(zipmap columns %))
-                               (map #(update % :date coerce/to-sql-date))
-                               (map #(assoc % :dataset dataset :ticker ticker)))
-        transform-row     (fn [{:keys [date] :as m}]
-                            (-> (->> m
-                                     (map (fn [[k v]]
-                                            (case k
-                                              :dataset nil
-                                              :ticker  nil
-                                              :date    nil
-                                              {:key    (-> k name)
-                                               :value  v})))
-                                     (remove nil?)
-                                     first)
-                                (assoc :dataset dataset
-                                       :ticker  ticker
-                                       :date    date)))]
-    (->> data'
-         (map transform-row))))
+  (when (seq data)
+    (let [columns       (->> (-> column_names
+                                 string/lower-case
+                                 (string/replace #"\." "")
+                                 (string/replace #"-" "_")
+                                 json/read-str)
+                             (map #(string/replace % #" " "_"))
+                             (map keyword))
+          data'             (->> data
+                                 (map #(zipmap columns %))
+                                 (map #(update % :date coerce/to-sql-date))
+                                 (map #(assoc % :dataset dataset :ticker ticker)))
+          transform-row     (fn [{:keys [date] :as m}]
+                              (-> (->> m
+                                       (map (fn [[k v]]
+                                              (case k
+                                                :dataset nil
+                                                :ticker  nil
+                                                :date    nil
+                                                {:key    (-> k name)
+                                                 :value  v})))
+                                       (remove nil?)
+                                       first)
+                                  (assoc :dataset dataset
+                                         :ticker  ticker
+                                         :date    date)))]
+      (->> data'
+           (map transform-row)))))
 
 (defn update-or-insert! [db {:keys [dataset
                                     ticker
