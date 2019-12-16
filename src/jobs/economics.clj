@@ -32,17 +32,18 @@
                            ticker]
                     {:keys [column_names
                             data]} :dataset_data}]
-  (let [columns       (->> (-> column_names
-                               string/lower-case
-                               (string/replace #"\." "")
-                               (string/replace #"-" "_")
-                               json/read-str)
-                           (map #(string/replace % #" " "_"))
-                           (map keyword))]
-    (->> data
-         (map #(zipmap columns %))
-         (map #(update % :date coerce/to-sql-date))
-         (map #(assoc % :dataset dataset :ticker ticker)))))
+  (when (seq data)
+    (let [columns       (->> (-> column_names
+                                 string/lower-case
+                                 (string/replace #"\." "")
+                                 (string/replace #"-" "_")
+                                 json/read-str)
+                             (map #(string/replace % #" " "_"))
+                             (map keyword))]
+      (->> data
+           (map #(zipmap columns %))
+           (map #(update % :date coerce/to-sql-date))
+           (map #(assoc % :dataset dataset :ticker ticker))))))
 
 (defn update-or-insert! [db {:keys [dataset
                                     ticker
