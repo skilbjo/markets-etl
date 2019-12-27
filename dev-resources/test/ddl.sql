@@ -102,6 +102,8 @@ begin;
     (        'MSTAR',          'MSFT', 'Microsoft Corporation'),
     (        'MSTAR',           'CRM', 'salesforce.com, inc.'),
     (        'MSTAR',           'DFS', 'Discover Financial Services'),
+    (        'MSTAR',          'TWLO', 'Twilio Inc'),
+    (        'MSTAR',          'SHOP', 'Shopify Inc'),
 
     (       'TIINGO',         'VEMAX', 'Vanguard Emerging Markets Stock Index Fund Admiral Shares'),
     (       'TIINGO',         'VEURX', 'Vanguard European Stock Index Fund Investor Shares'),
@@ -173,6 +175,8 @@ begin;
     (       'TIINGO',          'MSFT', 'Microsoft Corporation'),
     (       'TIINGO',           'CRM', 'salesforce.com, inc.'),
     (       'TIINGO',           'DFS', 'Discover Financial Services'),
+    (       'TIINGO',          'TWLO', 'Twilio Inc'),
+    (       'TIINGO',          'SHOP', 'Shopify Inc'),
 
     (     'INTRINIO',            'FB', 'Facebook'),
     (     'INTRINIO',          'AMZN', 'Amazon'),
@@ -263,6 +267,8 @@ begin;
     ('ALPHA-VANTAGE',          'MSFT', 'Microsoft Corporation'),
     ('ALPHA-VANTAGE',           'CRM', 'salesforce.com, inc.'),
     ('ALPHA-VANTAGE',           'DFS', 'Discover Financial Services'),
+    ('ALPHA-VANTAGE',          'TWLO', 'Twilio Inc'),
+    ('ALPHA-VANTAGE',          'SHOP', 'Shopify Inc'),
 
     ('ALPHA-VANTAGE',        'EURUSD', 'Value of 1 EUR in USD'),
     ('ALPHA-VANTAGE',        'GBPUSD', 'Value of 1 GBP in USD')
