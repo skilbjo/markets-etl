@@ -30,6 +30,9 @@ commands:
             - ~/.m2
             - ~/.lein
           key: \<< checksum "project.clj" \>>
+  install_aws_cli:
+    steps:
+      - run: sudo apt update; sudo apt install -y -qq python3-pip; pip3 install awscli --upgrade --user
 
 jobs:
   test:
@@ -70,9 +73,12 @@ workflows:
           requires:
           - test
       - markets-etl-lambda-build-and-deploy:
-          filters:
-            branches:
-              only:
-                - master
+          requires:
+            - test
+      #- markets-etl-lambda-build-and-deploy:
+          #filters:
+            #branches:
+              #only:
+                #- master
           #requires:
             #- test
