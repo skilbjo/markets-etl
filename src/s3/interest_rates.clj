@@ -4,12 +4,18 @@
             [clojure.tools.cli :as cli]
             [environ.core :refer [env]]
             [jobs.interest-rates :refer :all :rename {-main _
-                                                      execute! __}]
+                                                      execute! __
+                                                      query-params ___}]
             [markets-etl.api :as api]
             [markets-etl.error :as error]
             [markets-etl.s3 :as s3]
             [markets-etl.util :as util])
   (:gen-class))
+
+(def query-params
+  {:limit      500
+   :start_date util/yesterday
+   :end_date   util/now})
 
 (defn execute! [date data]
   (->> data
