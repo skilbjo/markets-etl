@@ -58,8 +58,8 @@ jobs:
     executor: clojure
     steps:
       - install_aws_cli
-      - run: git clone git@github.com:skilbjo/lambdas.git ~/lambdas
-      - run: git clone git@github.com:skilbjo/markets-etl.git ~/markets-etl
+      - run: git clone https://github.com/skilbjo/lambdas.git ~/lambdas
+      - run: git clone https://github.com/skilbjo/markets-etl.git ~/markets-etl
       - run: cd ~/lambdas; cd markets-etl; deploy/build-project
       - run: cd ~/lambdas; cd markets-etl; lein uberjar
       - run: mkdir -p ~/.aws; echo '[skilbjo-robot]' >~/.aws/credentials; echo "aws_access_key_id = $robot_aws_access_key_id" >>~/.aws/credentials; echo "aws_secret_access_key = $robot_aws_secret_access_key" >>~/.aws/credentials;
@@ -68,14 +68,14 @@ jobs:
 workflows:
   commit:
     jobs:
-      - test
-      - publish:
-          requires:
-          - test
+      #- test
+      #- publish:
+          #requires:
+          #- test
       - markets-etl-lambda-build-and-deploy:
           filters:
             branches:
               only:
                 - master
-          requires:
-            - test
+          #requires:
+            #- test
