@@ -73,12 +73,9 @@ workflows:
           requires:
           - test
       - markets-etl-lambda-build-and-deploy:
+          filters:
+            branches:
+              only:
+                - master
           requires:
             - test
-      #- markets-etl-lambda-build-and-deploy:
-          #filters:
-            #branches:
-              #only:
-                #- master
-          #requires:
-            #- test
