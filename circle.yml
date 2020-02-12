@@ -69,13 +69,13 @@ workflows:
   commit:
     jobs:
       - test
-      - publish:
-          requires:
-          - test
-      - markets-etl-lambda-build-and-deploy:
-          filters:
-            branches:
+      - markets-etl-lambda-build-and-deploy:  # order here is just so this job
+          filters:                            # processes first; so the publish
+            branches:                         # job is the last in the sequence
               only:
                 - master
           requires:
             - test
+      - publish:
+          requires:
+          - test
