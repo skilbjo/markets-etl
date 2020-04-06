@@ -4,7 +4,7 @@ references:
   project: &project   markets-etl
   dir:     &dir     ~/markets-etl
   img:     &img       circleci/clojure:lein-2.9.0 # leave this pinned; using cimg/clojure:1.10.1 fails
-  path:    &path      /usr/local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/home/circleci/.local/bin:/root/.local/bin
+  path:    &path     /usr/local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/home/circleci/.local/bin:/root/.local/bin
 
   environment: &environment
     environment:
