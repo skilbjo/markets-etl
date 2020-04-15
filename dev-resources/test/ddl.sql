@@ -107,6 +107,7 @@ begin;
     (        'MSTAR',           'AMD', 'Advanced Micro Devices Inc.'),
     (        'MSTAR',          'NDAQ', 'Nasdaq Inc'),
     (        'MSTAR',           'ICE', 'Intercontinental Exchange Inc'),
+    (        'MSTAR',          'APPF', 'AppFolio Inc'),
 
     (       'TIINGO',         'VEMAX', 'Vanguard Emerging Markets Stock Index Fund Admiral Shares'),
     (       'TIINGO',         'VEURX', 'Vanguard European Stock Index Fund Investor Shares'),
@@ -183,6 +184,7 @@ begin;
     (       'TIINGO',           'AMD', 'Advanced Micro Devices Inc.'),
     (       'TIINGO',          'NDAQ', 'Nasdaq Inc'),
     (       'TIINGO',           'ICE', 'Intercontinental Exchange Inc'),
+    (       'TIINGO',          'APPF', 'AppFolio Inc'),
 
     (     'INTRINIO',            'FB', 'Facebook'),
     (     'INTRINIO',          'AMZN', 'Amazon'),
@@ -278,6 +280,7 @@ begin;
     ('ALPHA-VANTAGE',           'AMD', 'Advanced Micro Devices Inc.'),
     ('ALPHA-VANTAGE',          'NDAQ', 'Nasdaq Inc'),
     ('ALPHA-VANTAGE',           'ICE', 'Intercontinental Exchange Inc'),
+    ('ALPHA-VANTAGE',          'APPF', 'AppFolio Inc'),
 
     ('ALPHA-VANTAGE',        'EURUSD', 'Value of 1 EUR in USD'),
     ('ALPHA-VANTAGE',        'GBPUSD', 'Value of 1 GBP in USD')
