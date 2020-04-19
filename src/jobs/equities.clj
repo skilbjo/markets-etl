@@ -8,7 +8,10 @@
             [clojure.tools.logging :as log]
             [clojure.string :as string]
             [environ.core :refer [env]]
-            [markets-etl.api :as api]
+            [markets-etl.api :refer [*quandl-api-key*
+                                     *intrinio-api-key*
+                                     *tiingo-api-key*
+                                     *alpha-vantage-api-key*] :as api]
             [markets-etl.error :as error]
             [markets-etl.sql :as sql]
             [markets-etl.util :as util])
@@ -315,9 +318,16 @@
                                                   :date
                                                   util/joda-date->date-str)}
                                  query-params)
-          data        (->> (concat alpha-vantage tiingo morningstar quandl)
+        data        (binding [*quandl-api-key*        (-> :quandl-api-key env)
+                              *intrinio-api-key*      (-> :intrinio-api-key env)
+                              *tiingo-api-key*        (-> :tiingo-api-key env)
+                              *alpha-vantage-api-key* (-> :alpha-vantage-api-key env)]
+                      (println "tiingo api key " *tiingo-api-key*)
+                      (println "alphavantage api key " *alpha-vantage-api-key*)
+                        ;(->> (concat alpha-vantage tiingo morningstar quandl)
+                        (->> (concat alpha-vantage )
                            (map #(api/get-data % query-params*))
-                           flatten)]
+                           flatten))]
       (execute! cxn data)))
 
   (util/notify-healthchecks-io (-> :healthchecks-io-api-key env)))

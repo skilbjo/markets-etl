@@ -4,8 +4,12 @@
             [clojure.set :as set]
             [clojure.string :as string]
             [clojure.tools.logging :as log]
-            [environ.core :refer [env]]
             [markets-etl.util :as util]))
+
+(def ^:dynamic *quandl-api-key* nil)
+(def ^:dynamic *intrinio-api-key* nil)
+(def ^:dynamic *tiingo-api-key* nil)
+(def ^:dynamic *alpha-vantage-api-key* nil)
 
 (def ^:private quandl-api
   {:protocol  "https://"
@@ -32,8 +36,7 @@
    :url       "www.alphavantage.co/query?"
    :params    "&outputsize=compact&datatype=json"
    :endpoint  ["function=TIME_SERIES_DAILY" "function=FX_DAILY"]
-   :to-currency "&to_symbol=USD"
-   :api-key   (str "&apikey=" (-> :alpha-vantage-api-key env))})
+   :to-currency "&to_symbol=USD"})
 
 (def ^:private allowed
   {:collapse     #{"none" "daily" "weekly" "monthly" "quarterly" "annual"}
@@ -57,7 +60,7 @@
    (query-alpha-vantage-api! ticker {}))
   ([url ticker paramz]
    {:pre [(every? true? (allowed? paramz))]}
-   (Thread/sleep 5500)
+   ;(Thread/sleep 5500)
    (let [params   (dissoc paramz :limit)
          response (try
                     (http/get url)
@@ -87,7 +90,8 @@
                       endpoint
                       (str "&symbol=" ticker)
                       (:params alpha-vantage-api)
-                      (:api-key alpha-vantage-api))]
+                      (str "&apikey=" *alpha-vantage-api-key*))]
+    (println "&apikey=" *alpha-vantage-api-key*)
     (query-alpha-vantage-api! url ticker query-params)))
 
 (defmethod query-alpha-vantage! :currency [{:keys [ticker query-params]}]
@@ -99,7 +103,7 @@
                            (str "&from_symbol="))
                       (:to-currency alpha-vantage-api)
                       (:params alpha-vantage-api)
-                      (:api-key alpha-vantage-api))]
+                      (str "&apikey=" *alpha-vantage-api-key*))]
     (query-alpha-vantage-api! url ticker query-params)))
 
 (defn query-tiingo!
@@ -107,7 +111,9 @@
    (query-tiingo! ticker {}))
   ([ticker paramz]
    {:pre [(every? true? (allowed? paramz))]}
-   (let [params   (dissoc paramz :limit)
+   (let [_ (println (str "Token " *tiingo-api-key*))
+         __ (println "TIINGO")
+         params   (dissoc paramz :limit)
          url      (str (:protocol tiingo-api)
                        (:url tiingo-api)
                        (str ticker "/")
@@ -116,12 +122,10 @@
                             (:start_date params)
                             "&endDate="
                             (:end_date params)))
-
          response (try
                     (http/get url
                               {:headers {:authorization (str "Token "
-                                                             (-> :tiingo-api-key
-                                                                 env))}})
+                                                             *tiingo-api-key*)}})
                     (catch Exception e
                       #_(log/error "Error in query-morningstar!: "
                                    (ex-data e))
@@ -210,7 +214,7 @@
                        (str ticker "/")
                        (:format quandl-api))
          params   (-> paramz
-                      (assoc :api_key (-> :quandl-api-key env)))
+                      (assoc :api_key *quandl-api-key*))
          response (try
                     (http/get url
                               {:query-params params})
