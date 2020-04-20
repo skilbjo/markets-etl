@@ -2,15 +2,22 @@
   (:require [clj-time.coerce :as coerce]
             [clojure.string :as string]
             [clojure.tools.cli :as cli]
-            [environ.core :refer [env]]
             [jobs.equities :refer :all :rename {-main _
                                                 execute! __
-                                                query-params ___}]
+                                                query-params ___
+                                                api-keys ____}]
             [markets-etl.api :as api]
             [markets-etl.error :as error]
             [markets-etl.s3 :as s3]
             [markets-etl.util :as util])
   (:gen-class))
+
+(def api-keys   ;; env vars are encrypted on lambda
+  (delay        ;; defs evaluated at compile time; delay until runtime
+   {:quandl-api-key        (util/decrypt :quandl-api-key)
+    :intrinio-api-key      (util/decrypt :intrinio-api-key)
+    :tiingo-api-key        (util/decrypt :tiingo-api-key)
+    :alpha-vantage-api-key (util/decrypt :alpha-vantage-api-key)}))
 
 (def query-params
   {:limit      500
@@ -38,8 +45,8 @@
                                                 :date
                                                 util/joda-date->date-str)}
                                query-params)
-        data        (->> (concat alpha-vantage tiingo morningstar quandl intrinio)
-                         (map #(api/get-data % query-params*))
-                         flatten)]
+        data          (->> (concat alpha-vantage tiingo morningstar quandl intrinio)
+                           (map #(api/get-data % @api-keys query-params*))
+                           flatten)]
 
     (execute! (-> query-params* :start_date) data)))

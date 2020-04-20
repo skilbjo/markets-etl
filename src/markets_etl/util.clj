@@ -4,7 +4,8 @@
             [clj-time.core :as time]
             [clj-time.format :as formatter]
             [clojure.pprint :as pprint]
-            [clojure.string :as string])
+            [clojure.string :as string]
+            [environ.core :refer [env]])
   (:import [com.amazonaws.services.kms AWSKMS AWSKMSClientBuilder]
            [com.amazonaws.services.kms.model DecryptRequest]
            [java.util Base64]
@@ -94,7 +95,7 @@
                  api-key)))
 
 ; -- aws -----------------------------------------------
-(defn decrypt [ciphertext]
+(defn kms-decrypt [ciphertext]
   (let [decoder (Base64/getDecoder)
         decoded-text (.decode decoder ciphertext)
         kms-client (AWSKMSClientBuilder/defaultClient)
@@ -102,3 +103,6 @@
                          (.withCiphertextBlob (ByteBuffer/wrap decoded-text)))
         decode-response (.decrypt kms-client decode-request)]
     (.toString (.decode (Charset/forName "UTF-8") (.getPlaintext decode-response)))))
+
+(defn decrypt [env-var]
+  (-> env-var env kms-decrypt))
