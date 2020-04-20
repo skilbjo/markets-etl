@@ -55,7 +55,7 @@
    (query-alpha-vantage-api! ticker {}))
   ([url ticker paramz]
    {:pre [(every? true? (allowed? paramz))]}
-   ;(Thread/sleep 5500)
+   (Thread/sleep 1500)
    (let [params   (dissoc paramz :limit)
          response (try
                     (http/get url)
