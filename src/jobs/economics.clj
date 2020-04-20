@@ -15,7 +15,7 @@
 
 (def api-keys   ;; env vars are encrypted on lambda
   (delay        ;; defs evaluated at compile time; delay until runtime
-    {:quandl-api-key        (-> :quandl-api-key env)}))
+   {:quandl-api-key        (-> :quandl-api-key env)}))
 
 (def cli-options
   [["-d" "--date DATE" "Start date (month) (yyyy-mm-dd format) to start processing"
