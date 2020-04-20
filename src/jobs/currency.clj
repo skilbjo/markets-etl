@@ -14,6 +14,11 @@
             [markets-etl.util :as util])
   (:gen-class))
 
+(def api-keys   ;; env vars are encrypted on lambda
+  (delay        ;; defs evaluated at compile time; delay until runtime
+    {:quandl-api-key        (-> :quandl-api-key env)
+     :alpha-vantage-api-key (-> :alpha-vantage-api-key env)}))
+
 (def cli-options
   [["-d" "--date DATE" "Start date (month) (yyyy-mm-dd format) to start processing"
     :parse-fn #(format/parse %)
@@ -115,7 +120,7 @@
                                                   util/joda-date->date-str)}
                                  query-params)
           data        (->> (concat alpha-vantage quandl)
-                           (map #(api/get-data % query-params*))
+                           (map #(api/get-data % @api-keys query-params*))
                            flatten)]
 
       (execute! cxn data))))
