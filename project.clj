@@ -3,7 +3,7 @@
   :dependencies [[org.clojure/clojure "1.10.0"]
                  [amazonica "0.3.151" :exclusions [com.google.protobuf/protobuf-java commons-logging com.fasterxml.jackson.core/jackson-databind com.amazonaws/aws-java-sdk com.fasterxml.jackson.core/jackson-core]]
                  [com.amazonaws/aws-lambda-java-core "1.2.0"]
-                 [clj-http "3.10.0"]
+                 [clj-http "3.10.1"]
                  [clj-time "0.15.2"]
                  [com.amazonaws/aws-java-sdk-kms "1.11.693" :exclusions [commons-logging org.apache.httpcomponents/httpclient com.fasterxml.jackson.core/jackson-databind com.fasterxml.jackson.core/jackson-core]]
                  [environ "1.1.0"]
