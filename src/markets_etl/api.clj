@@ -208,9 +208,10 @@
                       (assoc :api_key api-key))
          response (try
                     (http/get url
-                              {:query-params params})
+                              {:query-params params
+                               :cookie-policy :standard}) ;; https://github.com/dakrone/clj-http/issues/325
                     (catch Exception e
-                      #_(log/error "Error in query-quandl!"
+                      (log/error "Error in query-quandl!"
                                    (ex-data e))
                       (ex-data e)))
          {:keys [status body]}  response
@@ -280,5 +281,5 @@
                               query-params]
   (->> ticker
        (map (fn [tkr]
-              (-> (query-quandl! dataset tkr query-params)
+              (-> (query-quandl! dataset tkr quandl-api-key query-params)
                   (assoc :dataset dataset :ticker tkr))))))
