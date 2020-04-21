@@ -212,7 +212,7 @@
                                :cookie-policy :standard}) ;; https://github.com/dakrone/clj-http/issues/325
                     (catch Exception e
                       (log/error "Error in query-quandl!"
-                                   (ex-data e))
+                                 (ex-data e))
                       (ex-data e)))
          {:keys [status body]}  response
          _        (log/debug ticker)
