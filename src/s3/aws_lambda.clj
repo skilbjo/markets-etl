@@ -31,7 +31,7 @@
     (real-estate/-main    "-d" date)
     (interest-rates/-main "-d" date)
     (log/info "Notifying healthchecks.io ... ")
-    (util/notify-healthchecks-io (util/kms-decrypt :healthchecks-io-api-key))
+    (util/notify-healthchecks-io (util/decrypt :healthchecks-io-api-key))
     (log/info "Finished!")))
 
 (defn main [& args]
@@ -54,7 +54,7 @@
 
   (log/info "Finished!")
   (log/info "Notifying healthchecks.io ... ")
-  (util/notify-healthchecks-io (util/kms-decrypt :healthchecks-io-api-key)))
+  (util/notify-healthchecks-io (util/decrypt :healthchecks-io-api-key)))
 
 (defn -handleRequest [_ event _ context]
   (let [event' (-> event
