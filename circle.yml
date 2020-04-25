@@ -39,9 +39,15 @@ commands:
             - ~/.m2
             - ~/.lein
           key: \<< checksum "project.clj" \>>
-  install_aws_cli:
+  install-aws-cli:
     steps:
       - run: sudo apt update; sudo apt install -y -qq python3-pip; pip3 install awscli --upgrade --user
+  save-uberjar:
+    steps:
+      - persist_to_workspace:
+          root: .
+          paths:
+            - target/uberjar/app.jar
 
 jobs:
   test:
@@ -62,19 +68,22 @@ jobs:
       - restore_and_save_cache
       - setup_remote_docker
       - run: deploy/bin/publish-image
+      - save-uberjar
       - store_artifacts:
           path: target/uberjar/app.jar
 
   markets-etl-lambda-build-and-deploy:
     executor: clojure
     steps:
-      - install_aws_cli
+      - install-aws-cli
       - run: git clone https://github.com/skilbjo/lambdas.git ~/lambdas
       - run: git clone https://github.com/skilbjo/markets-etl.git ~/markets-etl
-      - run: cd ~/lambdas; cd markets-etl; deploy/build-project
-      - run: cd ~/lambdas; cd markets-etl; lein uberjar
+      - attach_workspace: { at: ~/lambdas/markets-etl }  # grab already-generated uberjar
       - run: mkdir -p ~/.aws; echo '[skilbjo-robot]' >~/.aws/credentials; echo "aws_access_key_id = $robot_aws_access_key_id" >>~/.aws/credentials; echo "aws_secret_access_key = $robot_aws_secret_access_key" >>~/.aws/credentials;
-      - run: if [[ $CIRCLE_BRANCH == 'master' ]]; then cd ~/lambdas; cd markets-etl; deploy/publish-lambda; fi    # uncomment to turn on auto-deploys
+      - run: if [[ $CIRCLE_BRANCH == 'master' ]]; then cd ~/lambdas; cd markets-etl; deploy/publish-lambda; fi
+
+      #- run: cd ~/lambdas; cd markets-etl; deploy/build-project
+      #- run: cd ~/lambdas; cd markets-etl; lein uberjar
 
 workflows:
   commit:

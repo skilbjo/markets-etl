@@ -21,43 +21,26 @@
     :default  util/yesterday]
    ["-h" "--help"]])
 
-(defn -main [& args]
+(defn main [& args]
   (let [{:keys [options summary errors]} (cli/parse-opts args cli-options)
         date                             (-> options :date)]
     (log/info "Starting jobs... ")
-    (currency/-main "-d" date)
-    (equities/-main "-d" date)
+
+    (currency/-main       "-d" date)
+    (equities/-main       "-d" date)
     (economics/-main      "-d" date)
     (real-estate/-main    "-d" date)
     (interest-rates/-main "-d" date)
+
+    (log/info "Finished!")
     (log/info "Notifying healthchecks.io ... ")
-    (util/notify-healthchecks-io (util/decrypt :healthchecks-io-api-key))
-    (log/info "Finished!")))
-
-(defn main [& args]
-  (log/info "Starting jobs... ")
-
-  (log/info "Currency... ")
-  (currency/-main)
-
-  (log/info "Economics... ")
-  (economics/-main)
-
-  (log/info "Equities... ")
-  (equities/-main)
-
-  (log/info "Interest rates... ")
-  (interest-rates/-main)
-
-  (log/info "Real estate... ")
-  (real-estate/-main)
-
-  (log/info "Finished!")
-  (log/info "Notifying healthchecks.io ... ")
-  (util/notify-healthchecks-io (util/decrypt :healthchecks-io-api-key)))
+    (util/notify-healthchecks-io (util/decrypt :healthchecks-io-api-key))))
 
 (defn -handleRequest [_ event _ context]
   (let [event' (-> event
                    io/reader
                    (json/read :key-fn keyword))]
     (main)))
+
+(defn -main [& args]
+  (main args))
