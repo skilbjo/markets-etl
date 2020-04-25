@@ -78,12 +78,12 @@ jobs:
       - install-aws-cli
       - run: git clone https://github.com/skilbjo/lambdas.git ~/lambdas
       - run: git clone https://github.com/skilbjo/markets-etl.git ~/markets-etl
-      - attach_workspace: { at: ~/lambdas/markets-etl }  # grab already-generated uberjar
+      - run: cd ~/lambdas; cd markets-etl; deploy/build-project
+      - run: cd ~/lambdas; cd markets-etl; lein uberjar
+      #- attach_workspace: { at: ~/lambdas/markets-etl }  # grab already-generated uberjar ## Dont do this, so publish will have most recent build number
       - run: mkdir -p ~/.aws; echo '[skilbjo-robot]' >~/.aws/credentials; echo "aws_access_key_id = $robot_aws_access_key_id" >>~/.aws/credentials; echo "aws_secret_access_key = $robot_aws_secret_access_key" >>~/.aws/credentials;
       - run: if [[ $CIRCLE_BRANCH == 'master' ]]; then cd ~/lambdas; cd markets-etl; deploy/publish-lambda; fi
 
-      #- run: cd ~/lambdas; cd markets-etl; deploy/build-project
-      #- run: cd ~/lambdas; cd markets-etl; lein uberjar
 
 workflows:
   commit:
