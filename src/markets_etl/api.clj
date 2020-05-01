@@ -40,7 +40,7 @@
    :series     {:gdp          "GNPCA"
                 :sentiment    "UMCSENT"
                 :unemployment "UNRATE"}
-   :file-type  "&file_type=json"}
+   :file-type  "&file_type=json"})
 
 (def ^:private allowed
   {:collapse     #{"none" "daily" "weekly" "monthly" "quarterly" "annual"}
