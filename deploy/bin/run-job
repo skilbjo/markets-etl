@@ -22,7 +22,7 @@ get_artifact_from_circle_ci(){
   local artifact_url="$(curl "${url}/${last_build_num}/artifacts?circle-token=${circleci_markets_api_key}" | \
     jq -r '.[0].url')"
 
-  curl "$artifact_url" >"${tmp_dir}/${app}.jar"
+  curl -L "$artifact_url" >"${tmp_dir}/${app}.jar"  # w/o -L you get: "Redirecting to..."
 }
 
 case "$(whoami)" in   # Prereqs
