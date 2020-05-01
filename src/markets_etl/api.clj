@@ -33,6 +33,15 @@
    :endpoint    ["function=TIME_SERIES_DAILY" "function=FX_DAILY"]
    :to-currency "&to_symbol=USD"})
 
+(def ^:private fred-api
+  {:protocol   "https://"
+   :url        "api.stlouisfed.org/fred/series/observations"
+   :params     "?series_id="
+   :series     {:gdp          "GNPCA"
+                :sentiment    "UMCSENT"
+                :unemployment "UNRATE"}
+   :file-type  "&file_type=json"}
+
 (def ^:private allowed
   {:collapse     #{"none" "daily" "weekly" "monthly" "quarterly" "annual"}
    :transform    #{"none" "rdiff" "diff" "cumul" "normalize"}
