@@ -28,19 +28,32 @@
   '({:dataset "FRED"
      :ticker ["GDP" "M1" "DFF" "UNRATE"]}))
 
-(def fred-api                                ; GDP          : GNPCA
+(def fred-api                                ; GDP          : GNPCA / GDP
   '({:dataset "FRED-API"                     ; Sentiment    : UMCSENT
-     :ticker ["GNPCA" "UMCSENT" "UNRATE"]})) ; Unemployment : UNRATE
+     :ticker ["GDP" "GNPCA" "UMCSENT"        ; Unemployment : UNRATE
+              "UNRATE"]}))
 
 (def query-params
   {:limit      500
    :start_date util/last-week
    :end_date   util/now})
 
-(defn prepare-row [{:keys [dataset
-                           ticker]
-                    {:keys [column_names
-                            data]} :dataset_data}]
+(defmulti prepare-row :dataset)
+
+(defmethod prepare-row "FRED-API" [{:keys [dataset
+                                           ticker
+                                           observations]}]
+  (->> observations
+       (map #(assoc {}
+                    :dataset  dataset
+                    :ticker   ticker
+                    :date     (-> % :date coerce/to-sql-date)
+                    :value    (-> % :value util/string->decimal)))))
+
+(defmethod prepare-row :default [{:keys [dataset
+                                         ticker]
+                                  {:keys [column_names
+                                          data]} :dataset_data}]
   (when (seq data)
     (let [columns       (->> (-> column_names
                                  string/lower-case
@@ -91,8 +104,7 @@
                                                   :date
                                                   util/joda-date->date-str)}
                                  query-params)
-          data        (->> (concat quandl #_fred-api)
-                           util/print-it
+          data        (->> (concat quandl fred-api)
                            (map #(api/get-data % @api-keys query-params*))
                            flatten)]
 

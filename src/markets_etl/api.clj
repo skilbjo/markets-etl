@@ -330,7 +330,6 @@
                                         ticker]}
                                 {:keys [fred-api-key]}
                                 query-params]
-  (println query-params)
   (->> ticker
        (map (fn [tkr]
               (-> (query-fred! tkr fred-api-key query-params)

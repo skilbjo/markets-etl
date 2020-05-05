@@ -25,6 +25,12 @@ begin;
     (         'FRED',            'M1', 'M1 money stock is funds that are readily accesible for spending, in billions of $'),
     (         'FRED',           'DFF', 'Effective federal funds rate'),
     (         'FRED',        'UNRATE', 'Civilian unemployment rate'),
+
+    (     'FRED-API',         'GNPCA', 'Real Gross National Product, Billions of Chained 2012 Dollars, Not Seasonally Adjusted'),
+    (     'FRED-API',           'GDP', 'Gross Domestic Product, Billions of Dollars, Seasonally Adjusted Annual Rate'),
+    (     'FRED-API',       'UMCSENT', 'University of Michigan: Consumer Sentiment, Index 1966:Q1=100, Not Seasonally Adjusted'),
+    (     'FRED-API',        'UNRATE', 'Unemployment Rate, Percent, Seasonally Adjusted'),
+
     (         'WIKI',            'FB', 'Facebook'),
     (         'WIKI',          'AMZN', 'Amazon'),
     (         'WIKI',          'GOOG', 'Google'),
