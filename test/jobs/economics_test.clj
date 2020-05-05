@@ -10,7 +10,7 @@
 (use-fixtures :each (fix/with-database))
 
 (deftest integration-test
-  (->> f/source
+  (->> (concat f/quandl f/fred-api)
        (execute! *cxn*))
 
   (testing "economics integration test"
