@@ -157,7 +157,7 @@
                     (http/get url
                               {:basic-auth ["" ""]})
                     (catch Exception e
-                      #_(log/error "Error in query-morningstar!: "
+                      #_(log/error "Error in query-intrinio!: "
                                    (ex-data e))
                       (ex-data e)))
          {:keys [status body]}  response
@@ -168,6 +168,48 @@
        (-> body
            (json/read-str :key-fn keyword))
        (log/error "Intrinio request, exception:" status "Ticker:" ticker)))))
+
+(def ^:private fred-api
+  {:protocol   "https://"
+   :url        "api.stlouisfed.org/fred/series/observations"
+   :params     "?series_id="
+   :series     {:gdp          "GNPCA"
+                :sentiment    "UMCSENT"
+                :unemployment "UNRATE"}
+   :file-type  "&file_type=json"})
+
+(defn query-fred!
+  ([ticker api-key]
+   (query-fred! ticker api-key {}))
+  ([ticker api-key paramz]
+   {:pre [(every? true? (allowed? paramz))]}
+   (let [params   paramz
+         url      (str (:protocol fred-api)
+                       (:url fred-api)
+                       (str (:params fred-api)
+                            ticker)
+                       (str "&api_key=" api-key)
+                       (:file-type fred-api)
+                       (str "&observation_start="
+                            (:start_date params)
+                            "&observation_end="
+                            (:end_date params))
+                       (str "&limit="
+                            (:limit params)))
+         response (try
+                    (http/get url)
+                    (catch Exception e
+                      #_(log/error "Error in query-fred!: "
+                                   (ex-data e))
+                      (ex-data e)))
+         {:keys [status body]}  response
+         _        (log/debug ticker)
+         _        (log/debug params)
+         #__      #_(log/debug body)]
+     (if (= 200 status)
+       (-> body
+           (json/read-str :key-fn keyword))
+       (log/error "FRED-API request, exception:" status "Ticker:" ticker)))))
 
 (defn query-morningstar!
   ([ticker api-key]
@@ -283,6 +325,16 @@
                                            :query-params query-params
                                            :api-key      alpha-vantage-api-key})
                     (assoc :dataset dataset :ticker tkr)))))))
+
+(defmethod get-data "FRED-API" [{:keys [dataset
+                                        ticker]}
+                                {:keys [fred-api-key]}
+                                query-params]
+  (println query-params)
+  (->> ticker
+       (map (fn [tkr]
+              (-> (query-fred! tkr fred-api-key query-params)
+                  (assoc :dataset dataset :ticker tkr))))))
 
 (defmethod get-data :default [{:keys [dataset
                                       ticker] :as m}

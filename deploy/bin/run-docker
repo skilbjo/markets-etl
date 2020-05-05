@@ -51,6 +51,7 @@ docker run --rm \
   -e tiingo_api_key="$(echo $tiingo_api_key)" \
   -e intrinio_api_key="$(echo $intrinio_api_key)" \
   -e alpha_vantage_api_key="$(echo $alpha_vantage_api_key)" \
+  -e fred_api_key="$(echo $fred_api_key)" \
   -e healthchecks_io_api_key="$(echo $healthchecks_io_api_key)" \
   -e AWS_ACCESS_KEY_ID="$(cat ~/.aws/credentials | grep -A 2 skilbjo-robot | grep aws_access_key_id | awk '{print $3}')" \
   -e AWS_SECRET_ACCESS_KEY="$(cat ~/.aws/credentials | grep -A 2 skilbjo-robot | grep aws_secret_access_key | awk '{print $3}')" \
