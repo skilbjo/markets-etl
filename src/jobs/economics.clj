@@ -35,7 +35,7 @@
 
 (def query-params
   {:limit      500
-   :start_date util/last-week
+   :start_date util/last-quarter
    :end_date   util/now})
 
 (defmulti prepare-row :dataset)
