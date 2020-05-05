@@ -15,7 +15,8 @@
 
 (def api-keys   ;; env vars are encrypted on lambda
   (delay        ;; defs evaluated at compile time; delay until runtime
-   {:quandl-api-key        (-> :quandl-api-key env)}))
+   {:quandl-api-key        (-> :quandl-api-key env)
+    :fred-api-key          (-> :fred-api-key env)}))
 
 (def cli-options
   [["-d" "--date DATE" "Start date (month) (yyyy-mm-dd format) to start processing"
@@ -23,9 +24,13 @@
     :default  util/last-week]
    ["-h" "--help"]])
 
-(def datasets
+(def quandl
   '({:dataset "FRED"
      :ticker ["GDP" "M1" "DFF" "UNRATE"]}))
+
+(def fred-api                                ; GDP          : GNPCA
+  '({:dataset "FRED-API"                     ; Sentiment    : UMCSENT
+     :ticker ["GNPCA" "UMCSENT" "UNRATE"]})) ; Unemployment : UNRATE
 
 (def query-params
   {:limit      500
@@ -86,7 +91,8 @@
                                                   :date
                                                   util/joda-date->date-str)}
                                  query-params)
-          data        (->> datasets
+          data        (->> (concat quandl #_fred-api)
+                           util/print-it
                            (map #(api/get-data % @api-keys query-params*))
                            flatten)]
 
