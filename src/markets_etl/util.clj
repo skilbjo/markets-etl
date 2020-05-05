@@ -56,12 +56,17 @@
 
 (def five-years-ago (-> 5 time/years time/ago joda-date->date-str))
 
+(def twenty-five-years-ago (-> 25 time/years time/ago joda-date->date-str))
+
+(def fifty-years-ago (-> 50 time/years time/ago joda-date->date-str))
+
 ; -- data types ----------------------------------------
 (defn string->decimal [n]
   (when n
-    (-> n
-        java.math.BigDecimal.
-        (.setScale 4 BigDecimal/ROUND_HALF_UP))))
+    (when (not= n ".") ; fred-api will show "." as a valid value for a decimal; filter this out
+      (-> n
+          java.math.BigDecimal.
+          (.setScale 4 BigDecimal/ROUND_HALF_UP)))))
 
 (defn excel-date-epoch->joda-date [n]
   (let [_excel_epoch_start  (time/date-time 1899 12 30)]

@@ -42,7 +42,7 @@
                                                 :date
                                                 util/joda-date->date-str)}
                                query-params)
-        data        (->> quandl
+        data        (->> (concat quandl fred-api)
                          (map #(api/get-data % @api-keys query-params*))
                          flatten)]
 
