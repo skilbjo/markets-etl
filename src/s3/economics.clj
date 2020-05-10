@@ -14,7 +14,8 @@
 
 (def api-keys   ;; env vars are encrypted on lambda
   (delay        ;; defs evaluated at compile time; delay until runtime
-   {:quandl-api-key        (util/decrypt :quandl-api-key)}))
+   {:quandl-api-key        (util/decrypt :quandl-api-key)
+    :fred-api-key          (util/decrypt :fred-api-key)}))
 
 (def query-params
   {:limit      500
