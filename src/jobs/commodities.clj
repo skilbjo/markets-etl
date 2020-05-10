@@ -1,4 +1,4 @@
-(ns jobs.real-estate
+(ns jobs.commodities
   (:require [clj-time.coerce :as coerce]
             [clj-time.core :as time]
             [clj-time.format :as format]
@@ -31,24 +31,25 @@
   (list {:dataset "PERTH"
          :ticker ["LONMETALS"]}))
 
+(def gold
+  (list {:dataset "LBMA"
+         :ticker ["GOLD"]}))
+
+(def oil
+  (list {:dataset "OPEC"
+         :ticker ["ORB"]}))
+
 (def query-params
-  {:limit      500
-   :start_date util/last-quarter
+  {:limit      5
+   :start_date util/last-week
    :end_date   util/now})
 
 (defmulti prepare-row :dataset)
 
-(defmethod "PERTH" prepare-row [{:keys [dataset
-                                        ticker]
-                                 {:keys [column_names
-                                         data]} :dataset_data}]
-  (when (seq data)
-    nil))
-
-(defmethod "LOCALBTC" prepare-row [{:keys [dataset
-                                           ticker]
-                                    {:keys [column_names
-                                            data]} :dataset_data}]
+(defmethod prepare-row "PERTH" [{:keys [dataset
+                                         ticker]
+                                  {:keys [column_names
+                                          data]} :dataset_data}]
   (when (seq data)
     (let [columns       (->> (-> column_names
                                  string/lower-case
@@ -56,30 +57,74 @@
                                  (string/replace #"-" "_")
                                  json/read-str)
                              (map #(string/replace % #" " "_"))
-                             (map keyword))
-          area_category     (re-find #"[a-zA-Z]" ticker)
-          indicator_code    (-> ticker
-                                (string/split #"_")
-                                (nth 1))
-          area              (-> ticker
-                                (string/split #"[a-zA-Z]")
-                                (nth 1)
-                                (string/replace #"_" ""))
-          data'             (->> data
-                                 (map #(zipmap columns %))
-                                 (map #(update % :date coerce/to-sql-date))
-                                 (map #(assoc % :dataset dataset :ticker ticker)))
-          transform-row     (fn [m]
-                              {:dataset        dataset
-                               :ticker         ticker
-                               :date           (-> m :date)
-                               :value          (-> m :value)
-                               :area_category  area_category
-                               :indicator_code indicator_code
-                               :area           area})]
-      (->> data'
-           (map transform-row)))))
+                             (map keyword))]
+      (->> data
+           (map #(zipmap columns %))
+           (map #(update % :date coerce/to-sql-date)) ; needed as Quandl returns
+           (map #(update % :open (fn [v] (-> v        ; prices more than 3 decimal
+                                             java.math.BigDecimal. ; places out
+                                             (.setScale 4 BigDecimal/ROUND_HALF_UP)))))
+           (map #(assoc % :dataset dataset :ticker ticker))))))
 
+(defmethod prepare-row "LOCALBTC" [{:keys [dataset
+                                         ticker]
+                                  {:keys [column_names
+                                          data]} :dataset_data}]
+  (when (seq data)
+    (let [columns       (->> (-> column_names
+                                 string/lower-case
+                                 (string/replace #"\." "")
+                                 (string/replace #"-" "_")
+                                 json/read-str)
+                             (map #(string/replace % #" " "_"))
+                             (map keyword))]
+      (->> data
+           (map #(zipmap columns %))
+           (map #(update % :date coerce/to-sql-date)) ; needed as Quandl returns
+           (map #(update % :open (fn [v] (-> v        ; prices more than 3 decimal
+                                             java.math.BigDecimal. ; places out
+                                             (.setScale 4 BigDecimal/ROUND_HALF_UP)))))
+           (map #(assoc % :dataset dataset :ticker ticker))))))
+
+(defmethod prepare-row "LBMA" [{:keys [dataset
+                                         ticker]
+                                  {:keys [column_names
+                                          data]} :dataset_data}]
+  (when (seq data)
+    (let [columns       (->> (-> column_names
+                                 string/lower-case
+                                 (string/replace #"\." "")
+                                 (string/replace #"-" "_")
+                                 json/read-str)
+                             (map #(string/replace % #" " "_"))
+                             (map keyword))]
+      (->> data
+           (map #(zipmap columns %))
+           (map #(update % :date coerce/to-sql-date)) ; needed as Quandl returns
+           (map #(update % :open (fn [v] (-> v        ; prices more than 3 decimal
+                                             java.math.BigDecimal. ; places out
+                                             (.setScale 4 BigDecimal/ROUND_HALF_UP)))))
+           (map #(assoc % :dataset dataset :ticker ticker))))))
+
+(defmethod prepare-row "OPEC" [{:keys [dataset
+                                         ticker]
+                                  {:keys [column_names
+                                          data]} :dataset_data}]
+  (when (seq data)
+    (let [columns       (->> (-> column_names
+                                 string/lower-case
+                                 (string/replace #"\." "")
+                                 (string/replace #"-" "_")
+                                 json/read-str)
+                             (map #(string/replace % #" " "_"))
+                             (map keyword))]
+      (->> data
+           (map #(zipmap columns %))
+           (map #(update % :date coerce/to-sql-date)) ; needed as Quandl returns
+           (map #(update % :open (fn [v] (-> v        ; prices more than 3 decimal
+                                             java.math.BigDecimal. ; places out
+                                             (.setScale 4 BigDecimal/ROUND_HALF_UP)))))
+           (map #(assoc % :dataset dataset :ticker ticker))))))
 (defn update-or-insert! [db {:keys [dataset
                                     ticker
                                     date] :as record}]
@@ -101,10 +146,11 @@
          (map prepare-row)
          flatten
          (remove nil?)
-         (map #(update-or-insert! txn %))
+         #_(map #(update-or-insert! txn %))
          doall)))
 
 (defn -main [& args]
+  (error/set-default-error-handler)
   (jdbc/with-db-connection [cxn (-> :jdbc-db-uri env)]
     (let [{:keys [options summary errors]} (cli/parse-opts args cli-options)
           query-params*        (if args
@@ -117,7 +163,7 @@
                                                   :date
                                                   util/joda-date->date-str)}
                                  query-params)
-          data        (->> (conj crypto precious-metals)
+          data        (->> (concat #_crypto #_precious-metals #_gold oil)
                            (map #(api/get-data % @api-keys query-params*))
                            flatten)]
 
