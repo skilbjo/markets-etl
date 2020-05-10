@@ -48,7 +48,8 @@
                     :dataset  dataset
                     :ticker   ticker
                     :date     (-> % :date coerce/to-sql-date)
-                    :value    (-> % :value util/string->decimal)))))
+                    :value    (-> % :value util/string->decimal)))
+       (filter #(some? (:value %))))) ; fred-api will give nils for certain dates; filter these out
 
 (defmethod prepare-row :default [{:keys [dataset
                                          ticker]
@@ -87,7 +88,6 @@
          (map prepare-row)
          flatten
          (remove nil?)
-         (filter #(some? (:value %))) ; fred-api will give nils for certain dates; filter these out
          (map #(update-or-insert! txn %))
          doall)))
 
