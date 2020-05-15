@@ -10,6 +10,7 @@
             [markets-etl.api :as api]
             [markets-etl.error :as error]
             [markets-etl.sql :as sql]
+            [fixtures.commodities :as f] ;; remove me when development complete
             [markets-etl.util :as util])
   (:gen-class))
 
@@ -57,14 +58,51 @@
                                  (string/replace #"-" "_")
                                  json/read-str)
                              (map #(string/replace % #" " "_"))
-                             (map keyword))]
-      (->> data
-           (map #(zipmap columns %))
-           (map #(update % :date coerce/to-sql-date)) ; needed as Quandl returns
-           (map #(update % :open (fn [v] (-> v        ; prices more than 3 decimal
-                                             java.math.BigDecimal. ; places out
-                                             (.setScale 4 BigDecimal/ROUND_HALF_UP)))))
-           (map #(assoc % :dataset dataset :ticker ticker))))))
+                             (map keyword))
+          data' (->> data
+                     (map #(zipmap columns %))
+                     (map #(update % :date coerce/to-sql-date)))
+
+          gold (->> data'
+                    (map #(assoc {}
+                                 :date    (-> % :date)
+                                 :open    (-> % :gold_am_fix util/string->decimal)
+                                 :average (-> (util/average
+                                                (list (-> % :gold_am_fix)
+                                                      (-> % :gold_pm_fix)))
+                                              util/string->decimal)
+                                 :close   (-> % :gold_pm_fix util/string->decimal)
+                                 :ticker  "GOLD")))
+          silver (->> data'
+                      (map #(assoc {}
+                                   :date    (-> % :date)
+                                   :close   (-> % :silver_fix util/string->decimal)
+                                   :ticker "SILVER")))
+          platinum (->> data'
+                        (map #(assoc {}
+                                     :date    (-> % :date)
+                                     :open    (-> % :platinum_am_fix util/string->decimal)
+                                     :average (-> (util/average
+                                                    (list (-> % :platinum_am_fix)
+                                                          (-> % :platinum_pm_fix)))
+                                                  util/string->decimal)
+                                     :close   (-> % :platinum_pm_fix util/string->decimal)
+                                     :ticker "PLATINUM")))
+          palladium (->> data'
+                         (map #(assoc {}
+                                      :date    (-> % :date)
+                                      :open    (-> % :platinum_am_fix util/string->decimal)
+                                      :average (-> (util/average
+                                                     (list (-> % :platinum_am_fix)
+                                                           (-> % :platinum_pm_fix)))
+                                                   util/string->decimal)
+                                      :close   (-> % :platinum_pm_fix util/string->decimal)
+                                      :ticker "PALLADIUM")))
+          data* (->> (concat gold silver platinum palladium)
+                     (map #(assoc %
+                                  :dataset dataset)))
+          ]
+      data*)))
 
 (defmethod prepare-row "LOCALBTC" [{:keys [dataset
                                          ticker]
@@ -139,15 +177,22 @@
                           date]
                          record))
 
-(defn execute! [cxn data]
-  (error/set-default-error-handler)
-  (jdbc/with-db-transaction [txn cxn]
+(defn execute! [#_cxn data]
     (->> data
          (map prepare-row)
+         util/print-it
          flatten
          (remove nil?)
-         #_(map #(update-or-insert! txn %))
-         doall)))
+         doall))
+
+  ;(error/set-default-error-handler)
+  ;#_(jdbc/with-db-transaction [txn cxn]
+    ;(->> data
+         ;(map prepare-row)
+         ;flatten
+         ;(remove nil?)
+         ;#_(map #(update-or-insert! txn %))
+         ;doall)))
 
 (defn -main [& args]
   (error/set-default-error-handler)
@@ -163,10 +208,11 @@
                                                   :date
                                                   util/joda-date->date-str)}
                                  query-params)
-          data        (->> (concat #_crypto #_precious-metals #_gold oil)
-                           (map #(api/get-data % @api-keys query-params*))
+          data        (->> #_(concat #_crypto #_precious-metals #_gold oil)
+                           #_(map #(api/get-data % @api-keys query-params*))
+                           (concat f/precious-metals #_f/crypto #_f/gold #_f/oil)
                            flatten)]
 
-      (util/print-it data)
+      (execute! data)
 
       #_(execute! cxn data))))

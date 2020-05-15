@@ -94,6 +94,9 @@
        (map string/join)
        (string/join "\n")))
 
+(defn average [coll]
+  (/ (reduce + coll) (count coll)))
+
 ; -- alerts --------------------------------------------
 (defn notify-healthchecks-io [api-key]
   (http/get (str "https://hchk.io/"
