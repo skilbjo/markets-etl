@@ -4,7 +4,7 @@
             [clojure.test :refer :all]
             [environ.core :refer [env]]
             [jobs.commodities :refer :all :rename {-main _}]
-            [fixtures.commodities:as f]
+            [fixtures.commodities :as f]
             [fixtures.fixtures :refer [*cxn*] :as fix]))
 
 (use-fixtures :each (fix/with-database))
@@ -14,7 +14,7 @@
        (execute! *cxn*))
 
   (testing "commoditiesintegration test"
-    (let [actual  (->> "select * from dw.commoditiesfact"
+    (let [actual  (->> "select * from dw.commodities_fact"
                        (jdbc/query *cxn*)
                        flatten)]
       (is (= f/result

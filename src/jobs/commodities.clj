@@ -11,7 +11,6 @@
             [markets-etl.api :as api]
             [markets-etl.error :as error]
             [markets-etl.sql :as sql]
-            [fixtures.commodities :as f] ;; remove me when development complete
             [markets-etl.util :as util])
   (:gen-class))
 
@@ -42,7 +41,7 @@
          :ticker ["ORB"]}))
 
 (def query-params
-  {:limit      5
+  {:limit      500
    :start_date util/last-week
    :end_date   util/now})
 
@@ -215,9 +214,8 @@
                                                   :date
                                                   util/joda-date->date-str)}
                                  query-params)
-          data        (->> #_(concat #_crypto #_precious-metals #_gold oil)
-                           #_(map #(api/get-data % @api-keys query-params*))
-                           (concat f/precious-metals f/crypto f/gold f/oil)
+          data        (->> (concat crypto precious-metals gold oil)
+                           (map #(api/get-data % @api-keys query-params*))
                            flatten)]
 
       (execute! cxn data))))
