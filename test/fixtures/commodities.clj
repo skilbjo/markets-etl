@@ -56,8 +56,7 @@
         1990.0
         nil]]},
      :dataset "PERTH",
-     :ticker "LONMETALS"}
-    ))
+     :ticker "LONMETALS"}))
 
 (def gold
   '({:dataset_data

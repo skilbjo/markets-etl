@@ -296,8 +296,8 @@ begin;
     (        'PERTH',        'SILVER', 'Silver (fix)'),
     (        'PERTH',      'PLATINUM', 'Platinum (fix)'),
     (        'PERTH',     'PALLADIUM', 'Palladium (fix)'),
-    (     'LOCALBTC',           'BTC', 'Price of Bitcoin in USD- avg here is avg last 24 hrs'),
-    (         'OPEC',           'OIL', 'Reference Price for the OPEC Crude Oil Basket.'),
+    (     'LOCALBTC',        'BTCUSD', 'Price of Bitcoin in USD- avg here is avg last 24 hrs'),
+    (         'OPEC',       'ORB-OIL', 'Reference Price for the OPEC Crude Oil Basket.'),
     (         'LBMA',          'GOLD', 'Gold (fix) - avg of am and pm prices')
 
   on conflict (dataset,ticker) do update

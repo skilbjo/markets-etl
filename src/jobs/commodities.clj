@@ -6,6 +6,7 @@
             [clojure.java.jdbc :as jdbc]
             [clojure.tools.cli :as cli]
             [clojure.string :as string]
+            [clojure.set :only [rename-keys] :as clj-set]
             [environ.core :refer [env]]
             [markets-etl.api :as api]
             [markets-etl.error :as error]
@@ -48,9 +49,9 @@
 (defmulti prepare-row :dataset)
 
 (defmethod prepare-row "PERTH" [{:keys [dataset
-                                         ticker]
-                                  {:keys [column_names
-                                          data]} :dataset_data}]
+                                        ticker]
+                                 {:keys [column_names
+                                         data]} :dataset_data}]
   (when (seq data)
     (let [columns       (->> (-> column_names
                                  string/lower-case
@@ -68,8 +69,8 @@
                                  :date    (-> % :date)
                                  :open    (-> % :gold_am_fix util/string->decimal)
                                  :average (-> (util/average
-                                                (list (-> % :gold_am_fix)
-                                                      (-> % :gold_pm_fix)))
+                                               (list (-> % :gold_am_fix)
+                                                     (-> % :gold_pm_fix)))
                                               util/string->decimal)
                                  :close   (-> % :gold_pm_fix util/string->decimal)
                                  :ticker  "GOLD")))
@@ -83,8 +84,8 @@
                                      :date    (-> % :date)
                                      :open    (-> % :platinum_am_fix util/string->decimal)
                                      :average (-> (util/average
-                                                    (list (-> % :platinum_am_fix)
-                                                          (-> % :platinum_pm_fix)))
+                                                   (list (-> % :platinum_am_fix)
+                                                         (-> % :platinum_pm_fix)))
                                                   util/string->decimal)
                                      :close   (-> % :platinum_pm_fix util/string->decimal)
                                      :ticker "PLATINUM")))
@@ -93,61 +94,73 @@
                                       :date    (-> % :date)
                                       :open    (-> % :platinum_am_fix util/string->decimal)
                                       :average (-> (util/average
-                                                     (list (-> % :platinum_am_fix)
-                                                           (-> % :platinum_pm_fix)))
+                                                    (list (-> % :platinum_am_fix)
+                                                          (-> % :platinum_pm_fix)))
                                                    util/string->decimal)
                                       :close   (-> % :platinum_pm_fix util/string->decimal)
                                       :ticker "PALLADIUM")))
           data* (->> (concat gold silver platinum palladium)
                      (map #(assoc %
-                                  :dataset dataset)))
-          ]
+                                  :dataset dataset)))]
       data*)))
 
 (defmethod prepare-row "LOCALBTC" [{:keys [dataset
-                                         ticker]
-                                  {:keys [column_names
-                                          data]} :dataset_data}]
+                                           ticker]
+                                    {:keys [column_names
+                                            data]} :dataset_data}]
   (when (seq data)
     (let [columns       (->> (-> column_names
                                  string/lower-case
                                  (string/replace #"\." "")
+                                 (string/replace #"\(" "")
+                                 (string/replace #"\)" "")
                                  (string/replace #"-" "_")
                                  json/read-str)
                              (map #(string/replace % #" " "_"))
-                             (map keyword))]
-      (->> data
-           (map #(zipmap columns %))
-           (map #(update % :date coerce/to-sql-date)) ; needed as Quandl returns
-           (map #(update % :open (fn [v] (-> v        ; prices more than 3 decimal
-                                             java.math.BigDecimal. ; places out
-                                             (.setScale 4 BigDecimal/ROUND_HALF_UP)))))
-           (map #(assoc % :dataset dataset :ticker ticker))))))
+                             (map keyword))
+          data' (->> data
+                     (map #(zipmap columns %))
+                     (map #(update % :date coerce/to-sql-date)))]
+      (->> data'
+           (map #(assoc {}
+                        :date    (-> % :date)
+                        :average (-> % :24h_average util/string->decimal)
+                        :close   (-> % :last util/string->decimal)
+                        :volume  (-> % :volume_btc util/string->decimal)
+                        :dataset dataset
+                        :ticker  (str "BTC" ticker)))))))
 
 (defmethod prepare-row "LBMA" [{:keys [dataset
-                                         ticker]
-                                  {:keys [column_names
-                                          data]} :dataset_data}]
+                                       ticker]
+                                {:keys [column_names
+                                        data]} :dataset_data}]
   (when (seq data)
     (let [columns       (->> (-> column_names
                                  string/lower-case
                                  (string/replace #"\." "")
+                                 (string/replace #"\(" "")
+                                 (string/replace #"\)" "")
                                  (string/replace #"-" "_")
                                  json/read-str)
                              (map #(string/replace % #" " "_"))
-                             (map keyword))]
-      (->> data
-           (map #(zipmap columns %))
-           (map #(update % :date coerce/to-sql-date)) ; needed as Quandl returns
-           (map #(update % :open (fn [v] (-> v        ; prices more than 3 decimal
-                                             java.math.BigDecimal. ; places out
-                                             (.setScale 4 BigDecimal/ROUND_HALF_UP)))))
-           (map #(assoc % :dataset dataset :ticker ticker))))))
+                             (map keyword))
+          data' (->> data
+                     (map #(zipmap columns %))
+                     (map #(update % :date coerce/to-sql-date)))]
+      (->> data'
+           (map #(assoc {}
+                        :date    (-> % :date)
+                        :average (-> (util/average
+                                      (list (-> % :usd_am)
+                                            (-> % :usd_pm))) util/string->decimal)
+                        :close   (-> % :usd_pm util/string->decimal)
+                        :dataset dataset
+                        :ticker  ticker))))))
 
 (defmethod prepare-row "OPEC" [{:keys [dataset
-                                         ticker]
-                                  {:keys [column_names
-                                          data]} :dataset_data}]
+                                       ticker]
+                                {:keys [column_names
+                                        data]} :dataset_data}]
   (when (seq data)
     (let [columns       (->> (-> column_names
                                  string/lower-case
@@ -158,41 +171,35 @@
                              (map keyword))]
       (->> data
            (map #(zipmap columns %))
-           (map #(update % :date coerce/to-sql-date)) ; needed as Quandl returns
-           (map #(update % :open (fn [v] (-> v        ; prices more than 3 decimal
-                                             java.math.BigDecimal. ; places out
-                                             (.setScale 4 BigDecimal/ROUND_HALF_UP)))))
-           (map #(assoc % :dataset dataset :ticker ticker))))))
+           (map #(update % :date coerce/to-sql-date))
+           (map #(clj-set/rename-keys % {:value :close}))
+           (map #(assoc %
+                        :dataset dataset
+                        :ticker (str ticker "-OIL")))))))
+
 (defn update-or-insert! [db {:keys [dataset
                                     ticker
                                     date] :as record}]
   (sql/update-or-insert! db
                          :dw.commodities_fact
                          [(util/multi-line-string
-                            "dataset = ? and "
-                            "ticker  = ? and "
-                            "date    = ?     ")
+                           "dataset = ? and "
+                           "ticker  = ? and "
+                           "date    = ?     ")
                           dataset
                           ticker
                           date]
                          record))
 
-(defn execute! [#_cxn data]
+(defn execute! [cxn data]
+  (error/set-default-error-handler)
+  (jdbc/with-db-transaction [txn cxn]
     (->> data
          (map prepare-row)
-         util/print-it
          flatten
          (remove nil?)
-         doall))
-
-  ;(error/set-default-error-handler)
-  ;#_(jdbc/with-db-transaction [txn cxn]
-    ;(->> data
-         ;(map prepare-row)
-         ;flatten
-         ;(remove nil?)
-         ;#_(map #(update-or-insert! txn %))
-         ;doall)))
+         (map #(update-or-insert! txn %))
+         doall)))
 
 (defn -main [& args]
   (error/set-default-error-handler)
@@ -210,9 +217,7 @@
                                  query-params)
           data        (->> #_(concat #_crypto #_precious-metals #_gold oil)
                            #_(map #(api/get-data % @api-keys query-params*))
-                           (concat f/precious-metals #_f/crypto #_f/gold #_f/oil)
+                           (concat f/precious-metals f/crypto f/gold f/oil)
                            flatten)]
 
-      (execute! data)
-
-      #_(execute! cxn data))))
+      (execute! cxn data))))
