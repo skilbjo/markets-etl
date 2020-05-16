@@ -194,11 +194,11 @@
                              (map keyword))]
       (->> data
            (map #(zipmap columns %))
-           (map #(update % :date coerce/to-sql-date)) ; needed as Quandl returns
-           (map #(update % :open (fn [v] (-> v        ; prices more than 3 decimal
-                                             java.math.BigDecimal. ; places out
-                                             (.setScale 4 BigDecimal/ROUND_HALF_UP)))))
-           (map #(assoc % :dataset dataset :ticker ticker))))))
+           (map #(update % :date coerce/to-sql-date))
+           (map #(update % :open (-> % util/string->decimal)))
+           (map #(assoc %
+                        :dataset dataset
+                        :ticker ticker))))))
 
 (defn update-or-insert! [db {:keys [dataset
                                     ticker
