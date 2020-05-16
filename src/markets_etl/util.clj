@@ -95,7 +95,10 @@
        (string/join "\n")))
 
 (defn average [coll]
-  (/ (reduce + coll) (count coll)))
+  (try
+    (/ (reduce + coll) (count coll))
+    (catch java.lang.NullPointerException e
+      nil)))
 
 ; -- alerts --------------------------------------------
 (defn notify-healthchecks-io [api-key]
