@@ -289,7 +289,16 @@ begin;
     ('ALPHA-VANTAGE',          'APPF', 'AppFolio Inc'),
 
     ('ALPHA-VANTAGE',        'EURUSD', 'Value of 1 EUR in USD'),
-    ('ALPHA-VANTAGE',        'GBPUSD', 'Value of 1 GBP in USD')
+    ('ALPHA-VANTAGE',        'GBPUSD', 'Value of 1 GBP in USD'),
+
+
+    (        'PERTH',          'GOLD', 'Gold (fix)'),
+    (        'PERTH',        'SILVER', 'Silver (fix)'),
+    (        'PERTH',      'PLATINUM', 'Platinum (fix)'),
+    (        'PERTH',     'PALLADIUM', 'Palladium (fix)'),
+    (     'LOCALBTC',        'BTCUSD', 'Price of Bitcoin in USD- avg here is avg last 24 hrs'),
+    (         'OPEC',       'ORB-OIL', 'Reference Price for the OPEC Crude Oil Basket.'),
+    (         'LBMA',          'GOLD', 'Gold (fix) - avg of am and pm prices')
 
   on conflict (dataset,ticker) do update
   set
@@ -348,6 +357,27 @@ begin;
   create index on dw.equities_fact (date, ticker);
   create index on dw.equities_fact (dataset, ticker);
   create index on dw.equities_fact (date, dataset, ticker);
+
+  drop table if exists dw.commodities_fact;
+  create table if not exists dw.commodities_fact (
+    dataset       text,
+    ticker        text,
+    date          date,
+    open          decimal(10,2), -- am price
+    average       decimal(10,2), -- avg price of am + pm price
+    close         decimal(10,2), -- pm price, or just price for that day
+    volume        decimal(20,2),
+
+    dw_created_at timestamp default now(),
+
+    constraint commodities_fact_pk primary key (dataset, ticker, date),
+    constraint commodities_fact_markets_dim_fk foreign key (dataset, ticker) references dw.markets_dim (dataset, ticker)
+  );
+  create index on dw.commodities_fact (ticker);
+  create index on dw.commodities_fact (date);
+  create index on dw.commodities_fact (date, ticker);
+  create index on dw.commodities_fact (dataset, ticker);
+  create index on dw.commodities_fact (date, dataset, ticker);
 
   drop table if exists dw.real_estate_fact;
   create table if not exists dw.real_estate_fact (
