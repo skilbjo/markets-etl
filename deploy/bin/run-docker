@@ -6,6 +6,7 @@ app="$(basename $(pwd))"
 arch=''
 img=''
 job_cmd='/usr/local/deploy/bin/run-job'
+pull_new_image=''
 
 case "$(uname -m)" in
   amd64* | x_86* | x86_64* )
@@ -14,10 +15,16 @@ case "$(uname -m)" in
     img="quay.io/skilbjo/${app}:${arch}" ;;
 esac
 
-get_current_artifacts(){
-  # any scripts need updating?
-  git pull -f
+usage(){ echo "Usage: ${0} [<--pull-new-image>]" 1>&2; exit 1; }
+arg_arr=("$@")
+for i in "${!arg_arr[@]}"; do
+  if [[ ${arg_arr[$i]} == '--pull-new-image' ]]; then
+    pull_new_image='y'
+    set -- "${@:1:${i}-1+1}" "${@:${i}+1+1}" # remove --pull-new-image from args list
+  fi
+done
 
+get_current_artifacts(){
   # remove all app containers
   set +e
   ## below not needed as the docker run cmd has the --rm flag
@@ -41,8 +48,13 @@ update_crond(){
   esac
 }
 
-get_current_artifacts && \
+# any scripts need updating?
+git pull -f && \
   update_crond
+
+if [[ -n pull_new_image ]]; then
+  get_current_artifacts
+fi
 
 docker run --rm \
   --name="$(echo $app $@ | tr ' ' '_')" \

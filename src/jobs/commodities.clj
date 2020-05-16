@@ -100,6 +100,7 @@
                                       :ticker "PALLADIUM")))
           data* (->> (concat gold silver platinum palladium)
                      (map #(assoc %
+                                  :volume  nil ; s3 requires the record have a consistent schema...
                                   :dataset dataset)))]
       data*)))
 
@@ -123,6 +124,7 @@
       (->> data'
            (map #(assoc {}
                         :date    (-> % :date)
+                        :open    nil
                         :average (-> % :24h_average util/string->decimal)
                         :close   (-> % :last util/string->decimal)
                         :volume  (-> % :volume_btc util/string->decimal)
@@ -149,10 +151,12 @@
       (->> data'
            (map #(assoc {}
                         :date    (-> % :date)
+                        :open    nil
                         :average (-> (util/average
                                       (list (-> % :usd_am)
                                             (-> % :usd_pm))) util/string->decimal)
                         :close   (-> % :usd_pm util/string->decimal)
+                        :volume  nil
                         :dataset dataset
                         :ticker  ticker))))))
 
@@ -173,8 +177,10 @@
            (map #(update % :date coerce/to-sql-date))
            (map #(clj-set/rename-keys % {:value :close}))
            (map #(assoc %
+                        :open    nil
+                        :average nil
                         :dataset dataset
-                        :ticker (str ticker "-OIL")))))))
+                        :ticker  (str ticker "-OIL")))))))
 
 (defn update-or-insert! [db {:keys [dataset
                                     ticker

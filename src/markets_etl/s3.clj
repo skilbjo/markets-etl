@@ -69,7 +69,8 @@
                  :equities       (str "struct<open:double,adj_volume:double,adj_close:double,ticker:string,adj_low:double,ex_dividend:double,close:double,volume:double,high:double,high:double,split_ratio:double,low:double,adj_open:double,dataset:string>")
                  :economics      (str "struct<value:double,dataset:string,ticker:string>")
                  :interest-rates (str "struct<key:string,value:double,dataset:string,ticker:string>")
-                 :real-estate    (str "struct<dataset:string,ticker:string,value:double,area_category:string,indicator_code:string,area:string>")}
+                 :real-estate    (str "struct<dataset:string,ticker:string,value:double,area_category:string,indicator_code:string,area:string>")
+                 :commodities    (str "struct<average:double,close:double,volume:double,open:double,dataset:string,ticker:string>")}
         schema  (-> job keyword schemas)]
     (orca/write-rows file row schema {:overwrite? true})
     row))
