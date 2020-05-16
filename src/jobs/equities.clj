@@ -195,7 +195,9 @@
       (->> data
            (map #(zipmap columns %))
            (map #(update % :date coerce/to-sql-date))
-           (map #(update % :open (-> % util/string->decimal)))
+           (map #(update % :open (fn [v] (-> v        ; benchmark complains about
+                                             java.math.BigDecimal. ; ctor
+                                             (.setScale 4 BigDecimal/ROUND_HALF_UP)))))
            (map #(assoc %
                         :dataset dataset
                         :ticker ticker))))))
