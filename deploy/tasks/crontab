@@ -4,8 +4,7 @@
   app_dir="/home/skilbjo/dev/markets-etl"
 
 ## -- jobs ----------------------------------------
-### equities
-#### update the stocks
+## ------ equities --------------------------------
 0  11 * * 1-5 skilbjo . /home/skilbjo/.profilelocal; cd "$app_dir" ; $cmd -m jobs.equities >/dev/null 2>&1
 0  14 * * 1-5 skilbjo . /home/skilbjo/.profilelocal; cd "$app_dir" ; $cmd -m jobs.equities >/dev/null 2>&1
 #### when morningstar api is ready
@@ -14,14 +13,14 @@
 40 17 * * 1-5 skilbjo . /home/skilbjo/.profilelocal; cd "$app_dir" ; $cmd -m jobs.equities >/dev/null 2>&1
 ### when alpha-vantage api is ready
 00 19 * * 1-5 skilbjo . /home/skilbjo/.profilelocal; cd "$app_dir" ; $cmd -m jobs.equities --pull-new-image >/dev/null 2>&1
-### when everything fails
 00 21 * * 1-5 skilbjo . /home/skilbjo/.profilelocal; cd "$app_dir" ; $cmd -m jobs.equities >/dev/null 2>&1
 
-### others
-00 19 * * * skilbjo . /home/skilbjo/.profilelocal; cd "$app_dir" ; $cmd -m jobs.currency >/dev/null 2>&1
-0 6 */4  * *  skilbjo . /home/skilbjo/.profilelocal; cd "$app_dir" ; $cmd -m jobs.economics >/dev/null 2>&1
-5 6 */4  * *  skilbjo . /home/skilbjo/.profilelocal; cd "$app_dir" ; $cmd -m jobs.interest-rates >/dev/null 2>&1
-#0 6 */15 * *  skilbjo . /home/skilbjo/.profilelocal; cd "$app_dir" ; $cmd -m jobs.real-estate >/dev/null 2>&1
+## ------ others ----------------------------------
+00 19 * * *  skilbjo . /home/skilbjo/.profilelocal; cd "$app_dir" ; $cmd -m jobs.currency >/dev/null 2>&1
+0  12 * * *  skilbjo . /home/skilbjo/.profilelocal; cd "$app_dir" ; $cmd -m jobs.economics >/dev/null 2>&1
+5  12 * * *  skilbjo . /home/skilbjo/.profilelocal; cd "$app_dir" ; $cmd -m jobs.interest-rates >/dev/null 2>&1
+0  12 * * *  skilbjo . /home/skilbjo/.profilelocal; cd "$app_dir" ; $cmd -m jobs.real-estate >/dev/null 2>&1
+40 17 * * *  skilbjo . /home/skilbjo/.profilelocal; cd "$app_dir" ; $cmd -m jobs.commodities >/dev/null 2>&1
 
 ## -- clear the cache -----------------------------
 #0 3 */20 */2 * skilbjo function _(){ docker images | awk '{print $3}' | grep -v IMAGE | xargs docker rmi --force;};_ >/dev/null
