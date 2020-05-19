@@ -9,8 +9,8 @@ update_crond(){
   sudo bash -c "cat ${dir}/deploy/tasks/crontab >/etc/cron.d/${app}"
 
   case "$(uname)" in
-    ('FreeBSD') sed -i '' $'1i\\\n SHELL="/usr/local/bin/bash"\n' "/etc/cron.d/${app}"
-                sed -i '' $'1i\\\n cmd="deploy/bin/run-job"\n'    "/etc/cron.d/${app}" ;;
+    ('FreeBSD') sudo sed -i '' $'1i\\\n SHELL="/usr/local/bin/bash"\n' "/etc/cron.d/${app}"
+                sudo sed -i '' $'1i\\\n cmd="deploy/bin/run-job"\n'    "/etc/cron.d/${app}" ;;
   esac
 }
 
