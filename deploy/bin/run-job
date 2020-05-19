@@ -6,11 +6,12 @@ app="$(basename $(pwd))"
 tmp_dir='/tmp'
 
 update_crond(){
-  case "$(uname)" in
-    ('FreeBSD') sed -i '' $'1i\\\n SHELL="/usr/local/bin/bash"\n' "${dir}/deploy/tasks/crontab"
-                sed -i '' $'1i\\\n cmd="deploy/bin/run-job"\n'    "${dir}/deploy/tasks/crontab" ;;
-  esac
   sudo bash -c "cat ${dir}/deploy/tasks/crontab >/etc/cron.d/${app}"
+
+  case "$(uname)" in
+    ('FreeBSD') sed -i '' $'1i\\\n SHELL="/usr/local/bin/bash"\n' "/etc/cron.d/${app}"
+                sed -i '' $'1i\\\n cmd="deploy/bin/run-job"\n'    "/etc/cron.d/${app}" ;;
+  esac
 }
 
 get_artifact_from_circle_ci(){
