@@ -4,6 +4,16 @@ set -eou pipefail
 dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )/../../" && pwd )" && cd "$dir"
 app="$(basename $(pwd))"
 tmp_dir='/tmp'
+pull_new_image=''
+
+usage(){ echo "Usage: ${0} [<--pull-new-image>]" 1>&2; exit 1; }
+arg_arr=("$@")
+for i in "${!arg_arr[@]}"; do
+  if [[ ${arg_arr[$i]} == '--pull-new-image' ]]; then
+    pull_new_image='y'
+    set -- "${@:1:${i}-1+1}" "${@:${i}+1+1}" # remove --pull-new-image from args list
+  fi
+done
 
 update_crond(){
   sudo bash -c "cat ${dir}/deploy/tasks/crontab >/etc/cron.d/${app}"
@@ -15,8 +25,6 @@ update_crond(){
 }
 
 get_artifact_from_circle_ci(){
-  git pull -f
-
   local url="https://circleci.com/api/v1.1/project/github/skilbjo/${app}"
   local last_build_num="$(curl "${url}/tree/master?circle-token=${circleci_markets_api_key}" | \
     jq -r '.[0].build_num')"
@@ -39,9 +47,16 @@ esac
 
 case "$(uname)" in
   FreeBSD | Darwin )
-    if [[ $(uname) == 'FreeBSD' ]]; then git pull -f; update_crond; fi
-    if [[ -f ${tmp_dir}/${app}.jar ]]; then rm "${tmp_dir}/${app}.jar"; fi
-    get_artifact_from_circle_ci
+    if [[ $(uname) == 'FreeBSD' ]]; then
+      # any scripts need updating?
+      git pull -f && \
+        update_crond
+    fi
+
+    if [[ -n $pull_new_image ]]; then
+      if [[ -f ${tmp_dir}/${app}.jar ]]; then rm "${tmp_dir}/${app}.jar"; fi
+      get_artifact_from_circle_ci
+    fi
 
     JAVA_OPTS="-Duser.timezone=UTC -Xms256m -Xmx512m -XX:MaxMetaspaceSize=128m" ;;
   Linux )

@@ -52,7 +52,7 @@ update_crond(){
 git pull -f && \
   update_crond
 
-if [[ -n pull_new_image ]]; then
+if [[ -n $pull_new_image ]]; then
   get_current_artifacts
 fi
 
