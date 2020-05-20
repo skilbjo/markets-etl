@@ -25,7 +25,7 @@
 
 (def datasets
   '({:dataset "ZILLOW"
-     :ticker ["Z94108_ZHVIAH"]}))
+     :ticker ["Z94108_ZHVIAH" "Z91311_ZHVIAH" "Z91307_ZHVIAH"]}))
 
 (def query-params
   {:limit      500

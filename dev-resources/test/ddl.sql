@@ -40,6 +40,8 @@ begin;
     (   'USTREASURY', 'LONGTERMRATES', 'Treasury long term rates, 30-year constant maturity series'),
     (         'ZILL',      'Z94108_A', 'Zillow home value index, all properties (condos, SFR) in zipcode'),
     (       'ZILLOW', 'Z94108_ZHVIAH', 'Zillow home value index, all homes (condos, SFR) in zipcode'),
+    (       'ZILLOW', 'Z91311_ZHVIAH', 'Zillow home value index, all homes (condos, SFR) in zipcode'),
+    (       'ZILLOW', 'Z91307_ZHVIAH', 'Zillow home value index, all homes (condos, SFR) in zipcode'),
     (       'CURRFX',        'EURUSD', 'Value of 1 EUR in USD'),
     (       'CURRFX',        'GBPUSD', 'Value of 1 GBP in USD'),
 
