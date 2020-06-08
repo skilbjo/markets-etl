@@ -1,0 +1,82 @@
+#!/usr/bin/env bash
+set -eou pipefail
+
+dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+task=''
+file=''
+schema=''
+
+usage(){ echo "Usage: ${0} [--task <serialize|deserialize>] "            1>&2;
+  echo "                   [--schema <schema>] [--file </path/to/file>]" 1>&2; exit 1; }
+# ex usage:
+# ./orc --task serialize --file ~/Downloads/equities.csv --schema 'struct<open:double,adj_volume:double,adj_close:double,ticker:string,adj_low:double,ex_dividend:double,close:double,volume:double,high:double,split_ratio:double,low:double,adj_open:double,dataset:string>'
+# ./orc --task deserialize --file ~/Downloads/equities.orc
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    --task)   task="$2"; shift ;;
+    --file)   file="$2"; shift ;;
+    --schema) schema="$2"; shift ;;
+    *) break ;;
+  esac
+  shift
+done
+if [[ -z $task ]] || [[ -z $file ]]; then usage; fi
+if [[ $task == 'serialize' ]] && [[ -z $schema ]]; then
+  usage
+fi
+
+rm_tmp_files(){
+  if [[ -f output.orc ]]; then
+    rm output.orc
+  fi
+  if [[ -f .output.orc.crc ]]; then
+    rm .output.orc.crc
+  fi
+}
+
+orc_serialize(){
+  local file="$1"
+  local schema="$2"
+  local jar_dir="$dir"
+  local dirname="$(dirname "$file")"
+  local filename="$(basename -- "$file")"
+  local filename="${filename%.*}"
+
+  rm_tmp_files
+
+  java -jar "${dir}/orc-tools-1.6.3-uber.jar" convert "$file" -s "$schema" -o "${dirname}/${filename}.orc" # uberjar comes from: https://repo1.maven.org/maven2/org/apache/orc/orc-tools/
+
+  rm_tmp_files
+}
+
+orc_deserialize(){
+  local file="$1"
+  local jar_dir="$dir"
+  local filename="$(basename -- "$file")"
+  local filename="${filename%.*}"
+  local dirname="$(dirname "$file")"
+  local gnu_sed="$(which gsed)"
+
+  java -jar "${dir}/orc-tools-1.6.3-uber.jar" data "$file" | \
+    "$gnu_sed" ':a;$!N;1,2ba;P;$d;D' \
+    >"${dirname}/${filename}.json"
+
+  "${dir}/json-to-csv.py" --file "${dirname}/${filename}.json"
+
+  rm "${dirname}/${filename}.json"
+}
+
+: '(let [schemas {:currency       (str "struct<dataset:string,ticker:string,currency:string,rate:double,high:double,low:double>")
+                  :equities       (str "struct<open:double,adj_volume:double,adj_close:double,ticker:string,adj_low:double,ex_dividend:double,close:double,volume:double,high:double,split_ratio:double,low:double,adj_open:double,dataset:string>")
+                  :economics      (str "struct<value:double,dataset:string,ticker:string>")
+                  :interest-rates (str "struct<key:string,value:double,dataset:string,ticker:string>")
+                  :real-estate    (str "struct<dataset:string,ticker:string,value:double,area_category:string,indicator_code:string,area:string>")
+                  :commodities    (str "struct<average:double,close:double,volume:double,open:double,dataset:string,ticker:string>")}
+       schema  (-> job keyword schemas)]
+'
+
+case "$task" in
+  serialize )   orc_serialize "$file" "$schema" ;;
+  deserialize ) orc_deserialize "$file" ;;
+esac
