@@ -53,6 +53,7 @@ begin;
     (         'WIKI',          'TWTR', 'Twitter Inc.'),
     (         'WIKI',          'INTU', 'Intuit Inc.'),
     (         'WIKI',            'GS', 'Goldman Sachs Group Inc'),
+    (         'WIKI',           'PCG', 'PG&E Corporation'),
 
     (        'MSTAR',         'VEMAX', 'Vanguard Emerging Markets Stock Index Fund Admiral Shares'),
     (        'MSTAR',         'VEURX', 'Vanguard European Stock Index Fund Investor Shares'),
@@ -116,6 +117,7 @@ begin;
     (        'MSTAR',          'NDAQ', 'Nasdaq Inc'),
     (        'MSTAR',           'ICE', 'Intercontinental Exchange Inc'),
     (        'MSTAR',          'APPF', 'AppFolio Inc'),
+    (        'MSTAR',           'PCG', 'PG&E Corporation'),
 
     (       'TIINGO',         'VEMAX', 'Vanguard Emerging Markets Stock Index Fund Admiral Shares'),
     (       'TIINGO',         'VEURX', 'Vanguard European Stock Index Fund Investor Shares'),
@@ -193,6 +195,7 @@ begin;
     (       'TIINGO',          'NDAQ', 'Nasdaq Inc'),
     (       'TIINGO',           'ICE', 'Intercontinental Exchange Inc'),
     (       'TIINGO',          'APPF', 'AppFolio Inc'),
+    (       'TIINGO',           'PCG', 'PG&E Corporation'),
 
     (     'INTRINIO',            'FB', 'Facebook'),
     (     'INTRINIO',          'AMZN', 'Amazon'),
@@ -289,6 +292,7 @@ begin;
     ('ALPHA-VANTAGE',          'NDAQ', 'Nasdaq Inc'),
     ('ALPHA-VANTAGE',           'ICE', 'Intercontinental Exchange Inc'),
     ('ALPHA-VANTAGE',          'APPF', 'AppFolio Inc'),
+    ('ALPHA-VANTAGE',           'PCG', 'PG&E Corporation'),
 
     ('ALPHA-VANTAGE',        'EURUSD', 'Value of 1 EUR in USD'),
     ('ALPHA-VANTAGE',        'GBPUSD', 'Value of 1 GBP in USD'),
