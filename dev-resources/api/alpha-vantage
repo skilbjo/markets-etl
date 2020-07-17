@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -eou pipefail
 
-ticker='LON:FCH'
+ticker='VITAX'
 params='outputsize=compact&datatype=json'
 
 # docs: https://www.alphavantage.co/documentation/

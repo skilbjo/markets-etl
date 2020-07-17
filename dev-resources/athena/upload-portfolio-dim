@@ -12,7 +12,7 @@ get_dw_portfolio(){
 
 upload_portfolio_to_s3(){
   aws s3 cp \
-    --profile personal \
+    --profile skilbjo \
     ~/Downloads/file.csv s3://skilbjo-data/datalake/markets-etl/portfolio/file.csv
 }
 
