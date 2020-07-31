@@ -120,6 +120,7 @@ begin;
     (        'MSTAR',           'PCG', 'PG&E Corporation'),
     (        'MSTAR',           'IBM', 'IBM Common Stock'),
     (        'MSTAR',          'HTGC', 'Hercules Capital Inc'),
+    (        'MSTAR',           'VTI', 'Vanguard Total Stock Market ETF'),
 
     (       'TIINGO',         'VEMAX', 'Vanguard Emerging Markets Stock Index Fund Admiral Shares'),
     (       'TIINGO',         'VEURX', 'Vanguard European Stock Index Fund Investor Shares'),
@@ -200,6 +201,7 @@ begin;
     (       'TIINGO',           'PCG', 'PG&E Corporation'),
     (       'TIINGO',           'IBM', 'IBM Common Stock'),
     (       'TIINGO',          'HTGC', 'Hercules Capital Inc'),
+    (       'TIINGO',           'VTI', 'Vanguard Total Stock Market ETF'),
 
     (     'INTRINIO',            'FB', 'Facebook'),
     (     'INTRINIO',          'AMZN', 'Amazon'),
@@ -299,6 +301,7 @@ begin;
     ('ALPHA-VANTAGE',           'PCG', 'PG&E Corporation'),
     ('ALPHA-VANTAGE',           'IBM', 'IBM Common Stock'),
     ('ALPHA-VANTAGE',          'HTGC', 'Hercules Capital Inc'),
+    ('ALPHA-VANTAGE',           'VTI', 'Vanguard Total Stock Market ETF'),
 
     ('ALPHA-VANTAGE',        'EURUSD', 'Value of 1 EUR in USD'),
     ('ALPHA-VANTAGE',        'GBPUSD', 'Value of 1 GBP in USD'),
